@@ -1,0 +1,56 @@
+environment: local
+
+port: 8080
+
+service-name:
+  binance-future: BNF
+  binance-spot: BNS
+  okx-future: OKXF
+  okx-spot: OKXS
+  kucoin-future: KCF
+  kucoin-spot: KCS
+  kub-spot: BKS
+
+secrets:
+  binance-apikey: 
+  binance-secretKey: 
+  okx-apiKey: 
+  okx-secretKey: 
+  okx-passPhase: 
+  bitkub-apikey: 
+  bitkub-secretKey: 
+  kucoin-apiKey: 
+  kucoin-apiKey-Version: 
+  kucoin-secretKey: 
+  kucoin-passphase: 
+  
+
+binance-future-url:
+  set-leverage: /fapi/v1/leverage
+  single-order: /fapi/v1/order
+  miltiple-order: /fapi/v1/batchOrders
+  binance-future-baseUrl:
+    binance1: https://testnet.binancefuture.com
+
+okx-future-url:
+  set-leverage: /api/v5/account/set-leverage
+  place-position: /api/v5/trade/order
+  multi-position: /api/v5/trade/batch-orders
+  okx-future-baseUrl:
+    okx1: https://www.okx.com
+
+kucoin-spot-url:
+  base-url: https://api.kucoin.com
+  place-order-url: /api/v1/orders/test
+
+kucoin-future-url:
+  base-url: https://api-futures.kucoin.com
+  place-position: /api/v1/orders/test
+
+
+kub-spot-url:
+  base-url: https://api.bitkub.com
+  sell-order-url: /api/v3/market/place-ask/test
+  buy-order-url: /api/v3/market/place-bid/test
+  server-time-url: /api/v3/servertime
+  balance-url: /api/market/balances

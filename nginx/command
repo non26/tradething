@@ -1,0 +1,7 @@
+Linux x86_64
+
+sudo apt update
+sudo snap install go         # version 1.21.4, or
+sudo apt  install golang-go  # version 2:1.18~0ubuntu2
+sudo apt  install gccgo-go   # version 2:1.18~0ubuntu2
+sudo apt-get remove golang-go
