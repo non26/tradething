@@ -34,4 +34,9 @@ func BnRouting(
 		service,
 	)
 	binanceGroup.POST("/set-leverage", setLeverageHandler.Handler)
+
+	queryOrderHandler := handler.NewqueryOrderHandler(
+		service,
+	)
+	binanceGroup.POST("/query-order", queryOrderHandler.Handler)
 }
