@@ -1,10 +1,10 @@
 package route
 
 import (
-	bkservice "tradetoolv2/app/bk/app/bkservice/order"
-	"tradetoolv2/app/bk/app/handler"
-	service "tradetoolv2/app/bk/app/service/spot/order"
-	"tradetoolv2/config"
+	bkservice "tradething/app/bk/app/bkservice/order"
+	"tradething/app/bk/app/handler"
+	service "tradething/app/bk/app/service/spot/order"
+	"tradething/config"
 
 	"github.com/labstack/echo/v4"
 )

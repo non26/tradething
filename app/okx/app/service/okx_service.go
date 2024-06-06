@@ -1,8 +1,8 @@
 package service
 
 import (
-	handlermodel "tradetoolv2/app/okx/app/model/handlermodel"
-	"tradetoolv2/app/okx/app/okxservice"
+	handlermodel "tradething/app/okx/app/model/handlermodel"
+	"tradething/app/okx/app/okxservice"
 )
 
 type IOkxAppService interface {

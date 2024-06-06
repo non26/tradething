@@ -3,7 +3,7 @@ package bkcommon_test
 import (
 	"net/http"
 	"testing"
-	"tradetoolv2/app/bk/bkcommon"
+	"tradething/app/bk/bkcommon"
 
 	"github.com/stretchr/testify/assert"
 )

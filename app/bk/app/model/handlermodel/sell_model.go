@@ -1,6 +1,6 @@
 package model
 
-import model "tradetoolv2/app/bk/app/model/bitkubservicemodel"
+import model "tradething/app/bk/app/model/bitkubservicemodel"
 
 type SellHandlerRequest struct {
 	Symbol   string  `json:"symbol"`

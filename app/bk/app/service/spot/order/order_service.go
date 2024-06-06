@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	bkservice "tradetoolv2/app/bk/app/bkservice/order"
-	model "tradetoolv2/app/bk/app/model/handlermodel"
+	bkservice "tradething/app/bk/app/bkservice/order"
+	model "tradething/app/bk/app/model/handlermodel"
 )
 
 type IOrderService interface {

@@ -6,8 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	model "tradetoolv2/app/okx/app/model/okxservicemodel"
-	"tradetoolv2/app/okx/okxcommon"
+	model "tradething/app/okx/app/model/okxservicemodel"
+	"tradething/app/okx/okxcommon"
 )
 
 func (o *okxExternalService) SetLeverage(

@@ -2,9 +2,9 @@ package handler
 
 import (
 	"net/http"
-	handlermodel "tradetoolv2/app/okx/app/model/handlermodel"
-	"tradetoolv2/app/okx/app/service"
-	"tradetoolv2/common"
+	handlermodel "tradething/app/okx/app/model/handlermodel"
+	"tradething/app/okx/app/service"
+	"tradething/common"
 
 	"github.com/labstack/echo/v4"
 )

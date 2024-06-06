@@ -2,8 +2,8 @@ package kcservice
 
 import (
 	"context"
-	model "tradetoolv2/app/kc/app/model/kcservicemodel/future/order"
-	"tradetoolv2/config"
+	model "tradething/app/kc/app/model/kcservicemodel/future/order"
+	"tradething/config"
 )
 
 type IFutureKcService interface {

@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	bnservice "tradetoolv2/app/bn/app/bnservice/future"
-	model "tradetoolv2/app/bn/app/model/handlermodel/future"
+	bnservice "tradething/app/bn/app/bnservice/future"
+	model "tradething/app/bn/app/model/handlermodel/future"
 )
 
 type IBinanceFutureService interface {

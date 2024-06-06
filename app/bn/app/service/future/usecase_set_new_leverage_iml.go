@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	bnmodel "tradetoolv2/app/bn/app/model/bnservicemodel/future"
-	model "tradetoolv2/app/bn/app/model/handlermodel/future"
-	"tradetoolv2/common"
+	bnmodel "tradething/app/bn/app/model/bnservicemodel/future"
+	model "tradething/app/bn/app/model/handlermodel/future"
+	"tradething/common"
 )
 
 func (bfs *binanceFutureService) SetNewLeverage(

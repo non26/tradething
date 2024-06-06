@@ -3,8 +3,8 @@ package bnservice
 import (
 	"context"
 	"net/http"
-	model "tradetoolv2/app/bn/app/model/handlermodel/future"
-	"tradetoolv2/config"
+	model "tradething/app/bn/app/model/handlermodel/future"
+	"tradething/config"
 )
 
 type IBinanceFutureExternalService interface {

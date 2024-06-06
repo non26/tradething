@@ -3,8 +3,8 @@ package kcservice
 import (
 	"context"
 	"net/http"
-	model "tradetoolv2/app/kc/app/model/kcservicemodel/spot/order"
-	"tradetoolv2/app/kc/kccommon"
+	model "tradething/app/kc/app/model/kcservicemodel/spot/order"
+	"tradething/app/kc/kccommon"
 )
 
 func (s *spotKcService) PlaceSpotOrderKcService(

@@ -3,7 +3,7 @@ package common_test
 import (
 	"encoding/json"
 	"testing"
-	"tradetoolv2/common"
+	"tradething/common"
 
 	"github.com/stretchr/testify/assert"
 )

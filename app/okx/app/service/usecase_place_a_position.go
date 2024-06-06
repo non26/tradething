@@ -1,7 +1,7 @@
 package service
 
 import (
-	handlermodel "tradetoolv2/app/okx/app/model/handlermodel"
+	handlermodel "tradething/app/okx/app/model/handlermodel"
 )
 
 func (o *okxAppService) PlaceAPosition(req *handlermodel.PlaceASinglePositionHandlerRequest) (

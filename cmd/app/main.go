@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
-	route "tradetoolv2/cmd/app/route/app"
-	"tradetoolv2/config"
+	route "tradething/cmd/app/route/app"
+	"tradething/config"
 
 	"github.com/labstack/echo/v4"
 )

@@ -2,8 +2,8 @@ package bkservice
 
 import (
 	"context"
-	model "tradetoolv2/app/bk/app/model/bitkubservicemodel/account"
-	"tradetoolv2/config"
+	model "tradething/app/bk/app/model/bitkubservicemodel/account"
+	"tradething/config"
 )
 
 type IAccountBkService interface {

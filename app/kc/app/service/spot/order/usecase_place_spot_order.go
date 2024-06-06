@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	model "tradetoolv2/app/kc/app/model/handlermodel/spot/order"
+	model "tradething/app/kc/app/model/handlermodel/spot/order"
 )
 
 func (s *spotOrderService) PlaceSpotOrderService(

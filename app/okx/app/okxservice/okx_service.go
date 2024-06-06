@@ -2,8 +2,8 @@ package okxservice
 
 import (
 	"net/http"
-	model "tradetoolv2/app/okx/app/model/okxservicemodel"
-	"tradetoolv2/config"
+	model "tradething/app/okx/app/model/okxservicemodel"
+	"tradething/config"
 )
 
 type IOKXExternalService interface {

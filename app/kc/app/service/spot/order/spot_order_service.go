@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	kcservice "tradetoolv2/app/kc/app/kcservice/spot/order"
-	model "tradetoolv2/app/kc/app/model/handlermodel/spot/order"
+	kcservice "tradething/app/kc/app/kcservice/spot/order"
+	model "tradething/app/kc/app/model/handlermodel/spot/order"
 )
 
 type ISpotOrderService interface {

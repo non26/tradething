@@ -1,10 +1,10 @@
 package route
 
 import (
-	"tradetoolv2/app/okx/app/handler"
-	"tradetoolv2/app/okx/app/okxservice"
-	"tradetoolv2/app/okx/app/service"
-	"tradetoolv2/config"
+	"tradething/app/okx/app/handler"
+	"tradething/app/okx/app/okxservice"
+	"tradething/app/okx/app/service"
+	"tradething/config"
 
 	"github.com/labstack/echo/v4"
 )

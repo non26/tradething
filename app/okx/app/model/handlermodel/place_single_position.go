@@ -1,6 +1,6 @@
 package model
 
-import okxservicemodel "tradetoolv2/app/okx/app/model/okxservicemodel"
+import okxservicemodel "tradething/app/okx/app/model/okxservicemodel"
 
 type PlaceASinglePositionHandlerRequest struct {
 	InstId  string `json:"instId"`

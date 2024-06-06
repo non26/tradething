@@ -1,13 +1,13 @@
 package route
 
 import (
-	futurehandler "tradetoolv2/app/kc/app/handler/future/order"
-	spothandler "tradetoolv2/app/kc/app/handler/spot/order"
-	kcfutureservice "tradetoolv2/app/kc/app/kcservice/future/order"
-	kcspotservice "tradetoolv2/app/kc/app/kcservice/spot/order"
-	futureservice "tradetoolv2/app/kc/app/service/future/order"
-	spotservice "tradetoolv2/app/kc/app/service/spot/order"
-	"tradetoolv2/config"
+	futurehandler "tradething/app/kc/app/handler/future/order"
+	spothandler "tradething/app/kc/app/handler/spot/order"
+	kcfutureservice "tradething/app/kc/app/kcservice/future/order"
+	kcspotservice "tradething/app/kc/app/kcservice/spot/order"
+	futureservice "tradething/app/kc/app/service/future/order"
+	spotservice "tradething/app/kc/app/service/spot/order"
+	"tradething/config"
 
 	"github.com/labstack/echo/v4"
 )

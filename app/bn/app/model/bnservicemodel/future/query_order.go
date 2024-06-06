@@ -1,6 +1,6 @@
 package model
 
-import handelrmodel "tradetoolv2/app/bn/app/model/handlermodel/future"
+import handelrmodel "tradething/app/bn/app/model/handlermodel/future"
 
 type QueryOrderBinanceServiceRequest struct {
 	Symbol            string  `json:"symbol"`

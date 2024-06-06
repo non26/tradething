@@ -3,8 +3,8 @@ package bkservice
 import (
 	"context"
 	"net/http"
-	model "tradetoolv2/app/bk/app/model/bitkubservicemodel"
-	"tradetoolv2/app/bk/bkcommon"
+	model "tradething/app/bk/app/model/bitkubservicemodel"
+	"tradething/app/bk/bkcommon"
 )
 
 func (o *orderBkService) SellOrder(

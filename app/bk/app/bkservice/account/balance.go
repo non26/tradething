@@ -3,8 +3,8 @@ package bkservice
 import (
 	"context"
 	"net/http"
-	model "tradetoolv2/app/bk/app/model/bitkubservicemodel/account"
-	"tradetoolv2/app/bk/bkcommon"
+	model "tradething/app/bk/app/model/bitkubservicemodel/account"
+	"tradething/app/bk/bkcommon"
 )
 
 func (a *accountBkService) GetBalances(

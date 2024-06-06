@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	kcservice "tradetoolv2/app/kc/app/kcservice/future/order"
-	model "tradetoolv2/app/kc/app/model/handlermodel/future/order"
+	kcservice "tradething/app/kc/app/kcservice/future/order"
+	model "tradething/app/kc/app/model/handlermodel/future/order"
 )
 
 type IFutureOrderService interface {

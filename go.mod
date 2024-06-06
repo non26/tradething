@@ -1,4 +1,4 @@
-module tradetoolv2
+module tradething
 
 go 1.21
 

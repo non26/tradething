@@ -1,10 +1,10 @@
 package route
 
 import (
-	bnservice "tradetoolv2/app/bn/app/bnservice/future"
-	handler "tradetoolv2/app/bn/app/handler/future"
-	service "tradetoolv2/app/bn/app/service/future"
-	"tradetoolv2/config"
+	bnservice "tradething/app/bn/app/bnservice/future"
+	handler "tradething/app/bn/app/handler/future"
+	service "tradething/app/bn/app/service/future"
+	"tradething/config"
 
 	"github.com/labstack/echo/v4"
 )
