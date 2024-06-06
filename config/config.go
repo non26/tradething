@@ -49,6 +49,7 @@ type BinanceFutureUrl struct {
 	SetLeverage          string               `mapstructure:"set-leverage"`
 	SingleOrder          string               `mapstructure:"single-order"`
 	MultipleOrder        string               `mapstructure:"miltiple-order"`
+	QueryOrder           string               `mapstructure:"query-order"`
 	BinanceFutureBaseUrl BinanceFutureBaseUrl `mapstructure:"binance-future-baseUrl"`
 }
 

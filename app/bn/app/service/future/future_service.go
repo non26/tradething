@@ -14,6 +14,10 @@ type IBinanceFutureService interface {
 		ctx context.Context,
 		request *model.PlaceSignleOrderHandlerRequest,
 	) (*model.PlaceSignleOrderHandlerResponse, error)
+	QueryOrder(
+		ctx context.Context,
+		request *model.QueryOrderBinanceHandlerRequest,
+	) (*model.QueryOrderBinanceHandlerResponse, error)
 }
 
 type binanceFutureService struct {

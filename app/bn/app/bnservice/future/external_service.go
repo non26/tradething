@@ -15,6 +15,10 @@ type IBinanceFutureExternalService interface {
 		ctx context.Context,
 		request *model.PlaceSignleOrderHandlerRequest,
 	) (*http.Response, error)
+	QueryOrder(
+		ctx context.Context,
+		request *model.QueryOrderBinanceHandlerRequest,
+	) (*http.Response, error)
 }
 
 type binanceFutureExternalService struct {

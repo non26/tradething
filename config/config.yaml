@@ -29,6 +29,7 @@ binance-future-url:
   set-leverage: /fapi/v1/leverage
   single-order: /fapi/v1/order
   miltiple-order: /fapi/v1/batchOrders
+  query-order:
   binance-future-baseUrl:
     binance1: https://testnet.binancefuture.com
 
@@ -36,6 +37,7 @@ okx-future-url:
   set-leverage: /api/v5/account/set-leverage
   place-position: /api/v5/trade/order
   multi-position: /api/v5/trade/batch-orders
+  query-order:
   okx-future-baseUrl:
     okx1: https://www.okx.com
 
@@ -46,6 +48,7 @@ kucoin-spot-url:
 kucoin-future-url:
   base-url: https://api-futures.kucoin.com
   place-position: /api/v1/orders/test
+  get-position-detail-url:
 
 
 kub-spot-url:
