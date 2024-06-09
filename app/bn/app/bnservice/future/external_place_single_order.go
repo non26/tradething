@@ -19,7 +19,7 @@ func (bfes *binanceFutureExternalService) PlaceSingleOrder(
 ) (*http.Response, error) {
 	endPoint := bfes.binanceFutureUrl.SingleOrder
 	_url := fmt.Sprintf("%v%v", bfes.binanceFutureUrl.BinanceFutureBaseUrl.BianceUrl1, endPoint)
-
+	request.NewClientOrderId = request.Symbol
 	t := time.Now().Unix() * 1000
 	data := url.Values{}
 	data.Set("symbol", request.Symbol)
@@ -28,6 +28,7 @@ func (bfes *binanceFutureExternalService) PlaceSingleOrder(
 	data.Set("type", "MARKET")
 	data.Set("quantity", fmt.Sprintf("%v", request.EntryQuantity))
 	data.Set("timestamp", strconv.FormatInt(t, 10))
+	data.Set("newClientOrderId", request.NewClientOrderId)
 	encodeData := bncommon.CreateBinanceSignature(&data, bfes.secrets.BinanceSecretKey)
 
 	req, err := http.NewRequest(http.MethodPost, _url, strings.NewReader(encodeData))
