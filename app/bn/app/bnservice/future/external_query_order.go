@@ -33,15 +33,7 @@ func (bfes *binanceFutureExternalService) QueryOrder(
 		return nil, errors.New("Query Order Request Error: " + err.Error())
 	}
 
-	// q := req.URL.Query()
-	// q.Add("symbol", request.Symbol)
-	// q.Add("timestamp", tt)
-	// q.Add("signature", encodeData)
-	// req.URL.RawQuery = q.Encode()
 	req.URL.RawQuery = encodeData
-	println(req.URL.RawQuery)
-	println(req.URL.Path)
-	println(req.URL.Host)
 
 	req.Header.Add("X-MBX-APIKEY", bfes.secrets.BinanceApiKey)
 	req.Header.Add("CONTENT-TYPE", "application/x-www-form-urlencoded")
