@@ -2,36 +2,41 @@ package bnservice
 
 import (
 	"context"
-	"net/http"
-	model "tradething/app/bn/app/model/handlermodel/future"
+	bnserivcemodelreq "tradething/app/bn/app/model/bnservicemodel/future/request"
+	bnservicemodelres "tradething/app/bn/app/model/bnservicemodel/future/response"
 	"tradething/config"
 )
 
 type IBinanceFutureExternalService interface {
 	SetNewLeverage(
 		ctx context.Context,
-		request *model.SetLeverageHandlerRequest) (*http.Response, error)
+		request *bnserivcemodelreq.SetLeverageBinanceServiceRequest) error
+
 	PlaceSingleOrder(
 		ctx context.Context,
-		request *model.PlaceSignleOrderHandlerRequest,
-	) (*http.Response, error)
+		request *bnserivcemodelreq.PlaceSignleOrderBinanceServiceRequest,
+	) (*bnservicemodelres.PlaceSignleOrderBinanceServiceResponse, error)
+
 	QueryOrder(
 		ctx context.Context,
-		request *model.QueryOrderBinanceHandlerRequest,
-	) (*http.Response, error)
+		request *bnserivcemodelreq.QueryOrderBinanceServiceRequest,
+	) (*bnservicemodelres.QueryOrderBinanceServiceResponse, error)
 }
 
 type binanceFutureExternalService struct {
-	binanceFutureUrl *config.BinanceFutureUrl
-	secrets          *config.Secrets
+	binanceFutureUrl         *config.BinanceFutureUrl
+	secrets                  *config.Secrets
+	binanceFutureServiceName string
 }
 
 func NewBinanceFutureExternalService(
 	binanceFutureUrl *config.BinanceFutureUrl,
 	secrets *config.Secrets,
+	binanceFutureServiceName string,
 ) IBinanceFutureExternalService {
 	return &binanceFutureExternalService{
 		binanceFutureUrl,
 		secrets,
+		binanceFutureServiceName,
 	}
 }

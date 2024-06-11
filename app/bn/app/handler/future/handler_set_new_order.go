@@ -2,7 +2,7 @@ package handler
 
 import (
 	"net/http"
-	model "tradething/app/bn/app/model/handlermodel/future"
+	bnhandlerreq "tradething/app/bn/app/model/handlermodel/future/request"
 	service "tradething/app/bn/app/service/future"
 	"tradething/common"
 
@@ -10,7 +10,7 @@ import (
 )
 
 type ISetNewLeveragehandler interface {
-	GetRequestBody(c echo.Context) (*model.SetLeverageHandlerRequest, error)
+	GetRequestBody(c echo.Context) (*bnhandlerreq.SetLeverageHandlerRequest, error)
 	Handler(c echo.Context) error
 }
 
@@ -26,8 +26,8 @@ func NewsetNewLeveragehandler(
 	}
 }
 
-func (h *setNewLeveragehandler) GetRequestBody(c echo.Context) (*model.SetLeverageHandlerRequest, error) {
-	req := new(model.SetLeverageHandlerRequest)
+func (h *setNewLeveragehandler) GetRequestBody(c echo.Context) (*bnhandlerreq.SetLeverageHandlerRequest, error) {
+	req := new(bnhandlerreq.SetLeverageHandlerRequest)
 	if err := c.Bind(req); err != nil {
 		return nil, err
 	}

@@ -3,6 +3,7 @@ package bncommon
 import (
 	"net/url"
 	"reflect"
+	"time"
 )
 
 func GetQueryStringFromStructType[T any](m *T) (q *url.Values) {
@@ -14,4 +15,8 @@ func GetQueryStringFromStructType[T any](m *T) (q *url.Values) {
 		q.Add(field, value)
 	}
 	return q
+}
+
+func GetTimeStamp() int64 {
+	return time.Now().Unix() * 1000
 }

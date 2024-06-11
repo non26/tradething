@@ -3,21 +3,22 @@ package service
 import (
 	"context"
 	bnservice "tradething/app/bn/app/bnservice/future"
-	model "tradething/app/bn/app/model/handlermodel/future"
+	bnhandlerreq "tradething/app/bn/app/model/handlermodel/future/request"
+	bnhandlerres "tradething/app/bn/app/model/handlermodel/future/response"
 )
 
 type IBinanceFutureService interface {
 	SetNewLeverage(
 		ctx context.Context,
-		request *model.SetLeverageHandlerRequest) error
+		request *bnhandlerreq.SetLeverageHandlerRequest) error
 	PlaceSingleOrder(
 		ctx context.Context,
-		request *model.PlaceSignleOrderHandlerRequest,
-	) (*model.PlaceSignleOrderHandlerResponse, error)
+		request *bnhandlerreq.PlaceSignleOrderHandlerRequest,
+	) (*bnhandlerres.PlaceSignleOrderHandlerResponse, error)
 	QueryOrder(
 		ctx context.Context,
-		request *model.QueryOrderBinanceHandlerRequest,
-	) (*model.QueryOrderBinanceHandlerResponse, error)
+		request *bnhandlerreq.QueryOrderBinanceHandlerRequest,
+	) (*bnhandlerres.QueryOrderBinanceHandlerResponse, error)
 }
 
 type binanceFutureService struct {

@@ -12,8 +12,8 @@ service-name:
   kub-spot: BKS
 
 secrets:
-  binance-apikey: 
-  binance-secretKey: 
+  binance-apikey: 818a296894ac07183f7595444e21b08e5b307c81e905c65fefdeeccc9ac507d5
+  binance-secretKey: 4a5df610beb4ae7d3b16a87170a407c1d88611908948bb7a972e25c887f7df91
   okx-apiKey: 
   okx-secretKey: 
   okx-passPhase: 

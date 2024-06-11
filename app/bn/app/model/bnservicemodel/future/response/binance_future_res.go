@@ -1,4 +1,4 @@
-package model
+package bnservicemodelres
 
 type ResponseBinanceFutureError struct {
 	Code    int    `json:"code"`

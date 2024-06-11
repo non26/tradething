@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	bnmodel "tradething/app/bn/app/model/bnservicemodel/future"
+	bnservicemodelres "tradething/app/bn/app/model/bnservicemodel/future/response"
 	"tradething/common"
 )
 
@@ -24,7 +24,7 @@ func (b *binanceServiceHttpResponse[R]) DecodeBinanceServiceResponse(
 	binanceFutureServiceName string,
 ) error {
 	if b.res.StatusCode != http.StatusOK {
-		bnResponseError := new(bnmodel.ResponseBinanceFutureError)
+		bnResponseError := new(bnservicemodelres.ResponseBinanceFutureError)
 		json.NewDecoder(b.res.Body).Decode(bnResponseError)
 		msg := common.FormatMessageOtherThanHttpStatus200(
 			binanceFutureServiceName,

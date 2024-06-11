@@ -2,7 +2,7 @@ package handler
 
 import (
 	"net/http"
-	model "tradething/app/bn/app/model/handlermodel/future"
+	bnhandlerreq "tradething/app/bn/app/model/handlermodel/future/request"
 	service "tradething/app/bn/app/service/future"
 	"tradething/common"
 
@@ -10,7 +10,7 @@ import (
 )
 
 type IPlaceSingleOrderHandler interface {
-	GetRequestBody(c echo.Context) (*model.PlaceSignleOrderHandlerRequest, error)
+	GetRequestBody(c echo.Context) (*bnhandlerreq.PlaceSignleOrderHandlerRequest, error)
 	Handler(c echo.Context) error
 }
 
@@ -28,8 +28,8 @@ func NewPlaceSinglerOrderHandler(
 
 func (h *placeSinglerOrderHandler) GetRequestBody(
 	c echo.Context,
-) (*model.PlaceSignleOrderHandlerRequest, error) {
-	req := new(model.PlaceSignleOrderHandlerRequest)
+) (*bnhandlerreq.PlaceSignleOrderHandlerRequest, error) {
+	req := new(bnhandlerreq.PlaceSignleOrderHandlerRequest)
 	if err := c.Bind(req); err != nil {
 		return nil, err
 	}

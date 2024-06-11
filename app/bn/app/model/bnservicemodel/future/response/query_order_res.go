@@ -1,14 +1,8 @@
-package model
+package bnservicemodelres
 
-import handelrmodel "tradething/app/bn/app/model/handlermodel/future"
-
-type QueryOrderBinanceServiceRequest struct {
-	Symbol            string  `json:"symbol"`
-	OrderId           float64 `json:"orderId"`
-	OrigClientOrderId string  `json:"origClientOrderId"`
-	RecvWindow        float64 `json:"recvWindow"`
-	Timestamp         float64 `json:"timestamp"`
-}
+import (
+	bnhandlerres "tradething/app/bn/app/model/handlermodel/future/response"
+)
 
 type QueryOrderBinanceServiceResponse struct {
 	AvgPrice                string `json:"avgPrice"`
@@ -39,8 +33,8 @@ type QueryOrderBinanceServiceResponse struct {
 	GoodTillDate            int    `json:"goodTillDate"`
 }
 
-func (q *QueryOrderBinanceServiceResponse) ToHandlerResponse() *handelrmodel.QueryOrderBinanceHandlerResponse {
-	h := &handelrmodel.QueryOrderBinanceHandlerResponse{
+func (q *QueryOrderBinanceServiceResponse) ToHandlerResponse() *bnhandlerres.QueryOrderBinanceHandlerResponse {
+	h := &bnhandlerres.QueryOrderBinanceHandlerResponse{
 		AvgPrice:                q.AvgPrice,
 		ClientOrderID:           q.ClientOrderID,
 		CumQuote:                q.CumQuote,

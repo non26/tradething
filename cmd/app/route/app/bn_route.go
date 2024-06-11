@@ -19,6 +19,7 @@ func BnRouting(
 	binanceServie := bnservice.NewBinanceFutureExternalService(
 		bnFutureConfig,
 		secret,
+		serviceName,
 	)
 	service := service.NewBinanceFutureService(
 		serviceName,

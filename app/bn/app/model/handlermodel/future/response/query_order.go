@@ -1,8 +1,4 @@
-package model
-
-type QueryOrderBinanceHandlerRequest struct {
-	Symbol string `json:"symbol"`
-}
+package bnhandlerres
 
 type QueryOrderBinanceHandlerResponse struct {
 	AvgPrice                string `json:"avgPrice"`

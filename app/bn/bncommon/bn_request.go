@@ -3,7 +3,6 @@ package bncommon
 import (
 	"io"
 	"net/http"
-	"net/url"
 	"strings"
 )
 
@@ -37,9 +36,9 @@ func (b *binanceServiceHttpRequest[T]) CreateRequestSignUrl(request *T, secretKe
 	return sig
 }
 
-func (b *binanceServiceHttpRequest[T]) RequestPostMethod(signature *url.Values) {
+func (b *binanceServiceHttpRequest[T]) RequestPostMethod(signature string) {
 	b.req.Method = http.MethodPost
-	var body io.Reader = strings.NewReader(signature.Encode())
+	var body io.Reader = strings.NewReader(signature)
 	rc, ok := body.(io.ReadCloser)
 	if !ok {
 		rc = io.NopCloser(body)
@@ -47,9 +46,9 @@ func (b *binanceServiceHttpRequest[T]) RequestPostMethod(signature *url.Values) 
 	b.req.Body = rc
 }
 
-func (b *binanceServiceHttpRequest[T]) RequestGetMethod(signature url.Values) {
+func (b *binanceServiceHttpRequest[T]) RequestGetMethod(signature string) {
 	b.req.Method = http.MethodGet
-	b.req.URL.RawQuery = signature.Encode()
+	b.req.URL.RawQuery = signature
 }
 
 func (b *binanceServiceHttpRequest[T]) AddHeader(apiKey string) {
