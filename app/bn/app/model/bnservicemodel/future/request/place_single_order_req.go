@@ -9,20 +9,20 @@ import (
 type PlaceSignleOrderBinanceServiceRequest struct {
 	PositionSide  string `json:"positionSide"`
 	Side          string `json:"side"`
-	EntryQuantity string `json:"entryQuantity"`
+	EntryQuantity string `json:"quantity"`
 	Symbol        string `json:"symbol"`
 	ClientOrderId string `json:"newClientOrderId"`
-	Timestamp     string `json:"timestamp"`
 	Type          string `json:"type"`
+	Timestamp     string `json:"timestamp"`
 }
 
 func (p *PlaceSignleOrderBinanceServiceRequest) PrepareRequest() {
 	p.Symbol = strings.ToUpper(p.Symbol)
 	p.Side = strings.ToUpper(p.Side)
 	p.PositionSide = strings.ToUpper(p.PositionSide)
-	p.setTimestamp()
 	p.checkClientOrderId()
 	p.checkOrderType()
+	p.setTimestamp()
 }
 
 func (p *PlaceSignleOrderBinanceServiceRequest) setTimestamp() {

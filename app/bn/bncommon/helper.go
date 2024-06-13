@@ -6,9 +6,10 @@ import (
 	"time"
 )
 
-func GetQueryStringFromStructType[T any](m *T) (q *url.Values) {
+func GetQueryStringFromStructType[T any](m T) url.Values {
 	st := reflect.TypeOf(m)
 	v := reflect.ValueOf(m)
+	q := url.Values{}
 	for i := 0; i < st.NumField(); i++ {
 		field := st.Field(i).Tag.Get("json")
 		value := v.FieldByIndex([]int{i}).String()

@@ -75,7 +75,10 @@ func (bfes *binanceFutureExternalService) PlaceSingleOrder(
 
 	bnres := bncommon.NewBinanceServiceHttpResponse[bnservicemodelres.PlaceSignleOrderBinanceServiceResponse](
 		bnclient.GetBinanceHttpClientResponse())
-	bnres.DecodeBinanceServiceResponse(bfes.binanceFutureServiceName)
+	err = bnres.DecodeBinanceServiceResponse(bfes.binanceFutureServiceName)
+	if err != nil {
+		return nil, err
+	}
 
 	return bnres.GetBinanceServiceResponse(), nil
 }

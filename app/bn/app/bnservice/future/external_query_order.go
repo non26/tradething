@@ -9,10 +9,10 @@ import (
 	"tradething/app/bn/bncommon"
 )
 
-// func (bfes *binanceFutureExternalService) Q2ueryOrder(
+// func (bfes *binanceFutureExternalService) QueryOrder(
 // 	ctx context.Context,
-// 	request *model.QueryOrderBinanceHandlerRequest,
-// ) (*http.Response, error) {
+// 	request *bnserivcemodelreq.QueryOrderBinanceServiceRequest,
+// ) (*bnservicemodelres.QueryOrderBinanceServiceResponse, error) {
 // 	endPoint := bfes.binanceFutureUrl.QueryOrder
 // 	_url := fmt.Sprintf("%v%v", bfes.binanceFutureUrl.BinanceFutureBaseUrl.BianceUrl1, endPoint)
 
@@ -22,7 +22,7 @@ import (
 // 	data.Set("symbol", request.Symbol)
 // 	data.Set("timestamp", tt)
 // 	data.Set("origClientOrderId", request.Symbol)
-// 	encodeData := bncommon.CreateBinanceSignature(&data, bfes.secrets.BinanceSecretKey)
+// 	encodeData := bncommon.CreateBinanceSignature(data, bfes.secrets.BinanceSecretKey)
 
 // 	req, err := http.NewRequest(http.MethodGet, _url, nil)
 // 	// req, err := http.NewRequest(http.MethodGet, _url, strings.NewReader(encodeData))
@@ -45,7 +45,10 @@ import (
 // 		return nil, errors.New("Query Order Response Error: " + err.Error())
 // 	}
 
-// 	return res, nil
+// 	var m *bnservicemodelres.QueryOrderBinanceServiceResponse
+// 	json.NewDecoder(res.Body).Decode(m)
+
+// 	return (*bnservicemodelres.QueryOrderBinanceServiceResponse)(m.ToHandlerResponse()), nil
 // }
 
 func (bfes *binanceFutureExternalService) QueryOrder(
@@ -77,7 +80,10 @@ func (bfes *binanceFutureExternalService) QueryOrder(
 	bnres := bncommon.NewBinanceServiceHttpResponse[bnservicemodelres.QueryOrderBinanceServiceResponse](
 		bnclient.GetBinanceHttpClientResponse(),
 	)
-	bnres.DecodeBinanceServiceResponse(bfes.binanceFutureServiceName)
+	err = bnres.DecodeBinanceServiceResponse(bfes.binanceFutureServiceName)
+	if err != nil {
+		return nil, err
+	}
 
 	return bnres.GetBinanceServiceResponse(), nil
 }

@@ -23,6 +23,7 @@ func NewBinanceServiceHttpResponse[R any](res *http.Response) *binanceServiceHtt
 func (b *binanceServiceHttpResponse[R]) DecodeBinanceServiceResponse(
 	binanceFutureServiceName string,
 ) error {
+	defer b.res.Body.Close()
 	if b.res.StatusCode != http.StatusOK {
 		bnResponseError := new(bnservicemodelres.ResponseBinanceFutureError)
 		json.NewDecoder(b.res.Body).Decode(bnResponseError)
@@ -32,13 +33,16 @@ func (b *binanceServiceHttpResponse[R]) DecodeBinanceServiceResponse(
 			bnResponseError.Code,
 			bnResponseError.Message,
 		)
-		defer b.res.Body.Close()
 		return errors.New(msg)
 	}
 
 	bnResponse := new(R)
-	json.NewDecoder(b.res.Body).Decode(bnResponse)
+	err := json.NewDecoder(b.res.Body).Decode(bnResponse)
+	if err != nil {
+		return err
+	}
 	b.bnres = bnResponse
+
 	return nil
 }
 
