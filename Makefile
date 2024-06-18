@@ -45,3 +45,7 @@ deploy:
 		--service-name ${CONTAINER_SERVICE_NAME} \
 		--containers '{"'$(CONTAINER_IMAGE_LABEL)'":{"image":"'$(image)'","environment":{"HOST":"","PORT":"8080","LOG_ENV":"production"},"ports":{"8080":"HTTP"}}}' \
 		--public-endpoint '{"containerName":"'$(CONTAINER_IMAGE_LABEL)'","containerPort":8080,"healthCheck":{"path":"/"}}'
+
+
+go-curl:
+	go run curl/main.go

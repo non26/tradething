@@ -12,7 +12,6 @@ type PlaceSignleOrderHandlerRequest struct {
 	Symbol        string  `json:"symbol"`
 	LeverageLevel int     `json:"leverageLevel"`
 	ClientOrderId string  `json:"newClientOrderId"`
-	Timestamp     string  `json:"timestamp"`
 }
 
 func (p *PlaceSignleOrderHandlerRequest) ToBinanceServiceModel() *bnserivcemodelreq.PlaceSignleOrderBinanceServiceRequest {
@@ -22,7 +21,6 @@ func (p *PlaceSignleOrderHandlerRequest) ToBinanceServiceModel() *bnserivcemodel
 		EntryQuantity: fmt.Sprintf("%v", p.EntryQuantity),
 		Symbol:        p.Symbol,
 		ClientOrderId: p.ClientOrderId,
-		Timestamp:     p.Timestamp,
 	}
 	return &m
 }

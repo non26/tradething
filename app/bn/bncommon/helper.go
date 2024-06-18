@@ -7,8 +7,8 @@ import (
 )
 
 func GetQueryStringFromStructType[T any](m T) url.Values {
-	st := reflect.TypeOf(m)
-	v := reflect.ValueOf(m)
+	st := reflect.TypeOf(m).Elem()
+	v := reflect.ValueOf(m).Elem()
 	q := url.Values{}
 	for i := 0; i < st.NumField(); i++ {
 		field := st.Field(i).Tag.Get("json")
