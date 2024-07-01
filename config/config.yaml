@@ -29,7 +29,7 @@ binance-future-url:
   set-leverage: /fapi/v1/leverage
   single-order: /fapi/v1/order
   miltiple-order: /fapi/v1/batchOrders
-  query-order:
+  query-order: /fapi/v1/order
   binance-future-baseUrl:
     binance1: https://testnet.binancefuture.com
 

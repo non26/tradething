@@ -29,3 +29,9 @@ func (q *QueryOrderBinanceServiceRequest) checkClientId() {
 		q.OrigClientOrderId = q.Symbol
 	}
 }
+
+func NewQueryOrderBinanceServiceRequest(
+	q *QueryOrderBinanceServiceRequest,
+) IBnFutureServiceRequest {
+	return q
+}

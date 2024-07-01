@@ -40,3 +40,9 @@ func (p *PlaceSignleOrderBinanceServiceRequest) checkOrderType() {
 		p.Type = "MARKET"
 	}
 }
+
+func NewPlaceSignleOrderBinanceServiceRequest(
+	p *PlaceSignleOrderBinanceServiceRequest,
+) IBnFutureServiceRequest {
+	return p
+}

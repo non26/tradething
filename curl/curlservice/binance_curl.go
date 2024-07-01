@@ -22,27 +22,29 @@ func NewBinanceCurl(config *config.AppConfig) ICurl {
 	header[constant.Bn_Header_Content_Type] = constant.Bn_Content_Type
 	b := &binanceCurl{}
 	b.header = header
-	return &binanceCurl{}
+	b.curl_command = []string{}
+	return b
 }
 
 func (b *binanceCurl) PrepareCurl() ICurl {
 
-	b.curl_command[0] = "curl"
-	b.curl_command[1] = "-H"
-	b.curl_command[2] = curlcommon.MatchHeader(constant.Bn_Header_BMX, b.header[constant.Bn_Header_BMX])
-	b.curl_command[3] = "-H"
-	b.curl_command[4] = curlcommon.MatchHeader(constant.Bn_Header_Content_Type, b.header[constant.Bn_Header_Content_Type])
+	b.curl_command = append(b.curl_command, "curl")
+	b.curl_command = append(b.curl_command, "-H")
+	b.curl_command = append(b.curl_command, curlcommon.MatchHeader(constant.Bn_Header_BMX, b.header[constant.Bn_Header_BMX]))
+	b.curl_command = append(b.curl_command, "-H")
+
+	b.curl_command = append(b.curl_command, curlcommon.MatchHeader(constant.Bn_Header_Content_Type, b.header[constant.Bn_Header_Content_Type]))
 	switch b.method {
 	case http.MethodPost:
-		b.curl_command[5] = "-X"
-		b.curl_command[6] = http.MethodPost
-		b.curl_command[7] = "-d"
-		b.curl_command[8] = b.post_req_body
-		b.curl_command[9] = b._url
-		b.curl_command[10] = "-k"
+		b.curl_command = append(b.curl_command, "-X")
+		b.curl_command = append(b.curl_command, http.MethodPost)
+		b.curl_command = append(b.curl_command, "-d")
+		b.curl_command = append(b.curl_command, b.post_req_body)
+		b.curl_command = append(b.curl_command, b._url)
+		b.curl_command = append(b.curl_command, "-k")
 	case http.MethodGet:
-		b.curl_command[5] = b._url
-		b.curl_command[6] = "-k"
+		b.curl_command = append(b.curl_command, b._url+"?"+b.post_req_body)
+		b.curl_command = append(b.curl_command, "-k")
 	}
 	return b
 }
@@ -64,12 +66,7 @@ func (b *binanceCurl) SetUrl(url string) {
 }
 
 func (b *binanceCurl) SetBody(body interface{}) {
-	switch b.method {
-	case b.method:
-		b.post_req_body = body.(string)
-	default:
-		b.post_req_body = ""
-	}
+	b.post_req_body = body.(string)
 }
 
 func SetBinanceSignUrl[T any](m T, binance_secret_key string) string {

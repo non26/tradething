@@ -20,3 +20,9 @@ func (s *SetLeverageBinanceServiceRequest) PrepareRequest() {
 func (s *SetLeverageBinanceServiceRequest) setTimeStamp() {
 	s.Timestamp = strconv.FormatInt(bncommon.GetTimeStamp(), 10)
 }
+
+func NewSetLeverageBinanceServiceRequest(
+	s *SetLeverageBinanceServiceRequest,
+) IBnFutureServiceRequest {
+	return s
+}

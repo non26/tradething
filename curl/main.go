@@ -15,57 +15,61 @@ func main() {
 		panic(err.Error())
 	}
 	// select exchange
+	exchanges := thisinit.InitExchangeMenu()[thisconstant.ExchangesKey]
 	exchange := promptui.Select{
 		Label: thisconstant.ChooseExchanges,
-		Items: thisinit.InitExchangeMenu()[thisconstant.ExchangesKey],
+		Items: exchanges,
 	}
-	_, exchangeResult, err := exchange.Run()
+	_, exchange_result, err := exchange.Run()
 	if err != nil {
 		fmt.Printf("Prompt failed %v\n as exchange", err)
 		return
 	}
-	fmt.Printf("You choose %q\n as exchange", exchangeResult)
+	fmt.Printf("You choose %q\n as exchange", exchange_result)
 
 	// select api
+	apis := thisinit.InitExchangeApiMenu()[exchange_result]
 	api := promptui.Select{
 		Label: thisconstant.SelectApi,
-		Items: thisinit.InitExchangeApiMenu()[exchangeResult],
+		Items: apis,
 	}
-	_, apiResult, err := api.Run()
+	_, api_result, err := api.Run()
 	if err != nil {
 		fmt.Printf("Prompt failed %v\n as api", err)
 		return
 	}
-	fmt.Printf("You choose %q\n as api", apiResult)
-	apiMap := thisinit.InitApiRequestBodyMenu()
+	fmt.Printf("You choose %q\n as api", api_result)
 
-	newApi, err := apiMap[exchangeResult][apiResult](config)
+	api_maps := thisinit.InitApiRequestBodyMenu()
+	select_exchange := api_maps[exchange_result]
+	_ = select_exchange
+	select_api, err := api_maps[exchange_result][api_result](config)
 	if err != nil {
 		fmt.Printf("Cann't Get Api %v\n", err)
 		return
 	}
-	fieldValue := []string{}
-	fields := newApi.GetUserInputField()
+	field_value := []string{}
+	fields := select_api.GetUserInputField()
 	for _, field := range fields {
 		label := fmt.Sprintf(thisconstant.InputFiledValue, field)
 		fieldPrompt := promptui.Prompt{
 			Label: label,
 		}
-		fieldResult, err := fieldPrompt.Run()
+		field_result, err := fieldPrompt.Run()
 		if err != nil {
 			fmt.Printf("Prompt failed %v\n as user input", err)
 			return
 		}
-		fieldValue = append(fieldValue, fieldResult)
-		fmt.Printf("You choose %q\n as field value", fieldResult)
+		field_value = append(field_value, field_result)
+		fmt.Printf("You choose %q\n as field value", field_result)
 	}
 
-	err = newApi.SetUserInputValue(fieldValue)
+	err = select_api.SetUserInputValue(field_value)
 	if err != nil {
 		fmt.Printf("Set User Input Fail %v\n", err)
 	}
 
-	err = newApi.GenerateCurl()
+	err = select_api.ExecuteCurl()
 	if err != nil {
 		fmt.Printf("Execute Curl Fail %v\n", err)
 	}
