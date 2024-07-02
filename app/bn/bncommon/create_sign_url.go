@@ -14,7 +14,7 @@ func Sign(payload []byte, key []byte) string {
 	return hex.EncodeToString(mac.Sum(nil))
 }
 
-func CreateBinanceSignature(data url.Values, binanceSecretKey string) string {
+func CreateBinanceSignature(data *url.Values, binanceSecretKey string) string {
 	payload := data.Encode()
 	encodeString := Sign([]byte(payload), []byte(binanceSecretKey))
 	encodeData := fmt.Sprintf("%v&signature=%v", data.Encode(), encodeString)

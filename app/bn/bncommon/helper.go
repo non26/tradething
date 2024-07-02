@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func GetQueryStringFromStructType[T any](m T) url.Values {
+func GetQueryStringFromStructType[T any](m *T) url.Values {
 	st := reflect.TypeOf(m).Elem()
 	v := reflect.ValueOf(m).Elem()
 	q := url.Values{}

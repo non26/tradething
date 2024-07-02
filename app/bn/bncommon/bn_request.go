@@ -31,8 +31,8 @@ func (b *binanceServiceHttpRequest[T]) NewBinanceHttpRequest(
 }
 
 func (b *binanceServiceHttpRequest[T]) CreateRequestSignUrl(request *T, secretKey string) string {
-	data := GetQueryStringFromStructType(*request)
-	sig := CreateBinanceSignature(data, secretKey)
+	data := GetQueryStringFromStructType(request)
+	sig := CreateBinanceSignature(&data, secretKey)
 	return sig
 }
 

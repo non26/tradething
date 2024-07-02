@@ -69,8 +69,8 @@ func (b *binanceCurl) SetBody(body interface{}) {
 	b.post_req_body = body.(string)
 }
 
-func SetBinanceSignUrl[T any](m T, binance_secret_key string) string {
+func SetBinanceSignUrl[T any](m *T, binance_secret_key string) string {
 	_url_value := bncommon.GetQueryStringFromStructType(m)
-	sign := bncommon.CreateBinanceSignature(_url_value, binance_secret_key)
+	sign := bncommon.CreateBinanceSignature(&_url_value, binance_secret_key)
 	return sign
 }

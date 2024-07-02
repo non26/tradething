@@ -49,3 +49,6 @@ deploy:
 
 go-curl:
 	go run curl/main.go
+
+go-app:
+	go run cmd/app/main.go
