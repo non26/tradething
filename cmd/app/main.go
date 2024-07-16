@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	route "tradething/cmd/app/route/app"
+	routetimeinterval "tradething/cmd/app/route/bot_semi_mannual/timeinterval"
 	"tradething/config"
 
 	"github.com/labstack/echo/v4"
@@ -61,6 +62,11 @@ func main() {
 		&config.OkxFutureUrl,
 		&config.Secrets,
 		config.Env,
+	)
+
+	routetimeinterval.TimeIntervalRoute(
+		app,
+		config,
 	)
 
 	app.Start(fmt.Sprintf(":%v", config.Port))

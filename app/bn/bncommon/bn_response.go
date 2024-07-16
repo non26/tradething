@@ -27,6 +27,10 @@ func (b *binanceServiceHttpResponse[R]) DecodeBinanceServiceResponse(
 	if b.res.StatusCode != http.StatusOK {
 		bnResponseError := new(bnservicemodelres.ResponseBinanceFutureError)
 		json.NewDecoder(b.res.Body).Decode(bnResponseError)
+		if bnResponseError.Code == -2013 {
+			b.bnres = new(R)
+			return nil
+		}
 		msg := common.FormatMessageOtherThanHttpStatus200(
 			binanceFutureServiceName,
 			b.res.StatusCode,
