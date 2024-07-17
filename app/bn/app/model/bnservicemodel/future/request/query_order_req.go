@@ -20,6 +20,10 @@ func (q *QueryOrderBinanceServiceRequest) PrepareRequest() {
 	q.checkClientId()
 }
 
+func (q *QueryOrderBinanceServiceRequest) GetData() interface{} {
+	return q
+}
+
 func (q *QueryOrderBinanceServiceRequest) setTimeStamp() {
 	q.Timestamp = strconv.FormatInt(bncommon.GetTimeStamp(), 10)
 }

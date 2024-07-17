@@ -17,6 +17,10 @@ func (s *SetLeverageBinanceServiceRequest) PrepareRequest() {
 	s.setTimeStamp()
 }
 
+func (s *SetLeverageBinanceServiceRequest) GetData() interface{} {
+	return s
+}
+
 func (s *SetLeverageBinanceServiceRequest) setTimeStamp() {
 	s.Timestamp = strconv.FormatInt(bncommon.GetTimeStamp(), 10)
 }

@@ -25,6 +25,10 @@ func (p *PlaceSignleOrderBinanceServiceRequest) PrepareRequest() {
 	p.setTimestamp()
 }
 
+func (p *PlaceSignleOrderBinanceServiceRequest) GetData() interface{} {
+	return p
+}
+
 func (p *PlaceSignleOrderBinanceServiceRequest) setTimestamp() {
 	p.Timestamp = strconv.FormatInt(bncommon.GetTimeStamp(), 10)
 }
