@@ -118,7 +118,7 @@ func (t *bnTimeInterval) TimeIntervalSemiBotService(
 	}
 	if open_order_req != nil {
 		if req.LeverageLevel != "" {
-			err := t.bn_service.SetNewLeverage(ctx, &bnserivcemodelreq.SetLeverageBinanceServiceRequest{
+			_, err := t.bn_service.SetNewLeverage(ctx, &bnserivcemodelreq.SetLeverageBinanceServiceRequest{
 				Symbol:   open_order_req.Symbol,
 				Leverage: req.LeverageLevel,
 			})

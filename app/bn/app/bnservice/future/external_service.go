@@ -3,6 +3,7 @@ package bnservice
 import (
 	"context"
 	bnserivcemodelreq "tradething/app/bn/app/model/bnservicemodel/future/request"
+	bnserivcemodelres "tradething/app/bn/app/model/bnservicemodel/future/response"
 	bnservicemodelres "tradething/app/bn/app/model/bnservicemodel/future/response"
 	"tradething/config"
 )
@@ -10,7 +11,8 @@ import (
 type IBinanceFutureExternalService interface {
 	SetNewLeverage(
 		ctx context.Context,
-		request *bnserivcemodelreq.SetLeverageBinanceServiceRequest) error
+		request *bnserivcemodelreq.SetLeverageBinanceServiceRequest,
+	) (*bnserivcemodelres.SetLeverageBinanceServiceResponse, error)
 
 	PlaceSingleOrder(
 		ctx context.Context,

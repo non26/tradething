@@ -48,7 +48,7 @@ func (h *setNewLeveragehandler) Handler(c echo.Context) error {
 		)
 	}
 
-	err = h.service.SetNewLeverage(
+	res, err := h.service.SetNewLeverage(
 		c.Request().Context(),
 		request,
 	)
@@ -68,7 +68,7 @@ func (h *setNewLeveragehandler) Handler(c echo.Context) error {
 		common.CommonResponse{
 			Code:    common.SuccessCode,
 			Message: "success",
-			Data:    nil,
+			Data:    res,
 		},
 	)
 }

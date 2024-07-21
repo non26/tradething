@@ -10,7 +10,8 @@ import (
 type IBinanceFutureService interface {
 	SetNewLeverage(
 		ctx context.Context,
-		request *bnhandlerreq.SetLeverageHandlerRequest) error
+		request *bnhandlerreq.SetLeverageHandlerRequest,
+	) (*bnhandlerres.SetLeverageBinanceHandlerResponse, error)
 	PlaceSingleOrder(
 		ctx context.Context,
 		request *bnhandlerreq.PlaceSignleOrderHandlerRequest,
