@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 	bnserivcemodelreq "tradething/app/bn/app/model/bnservicemodel/future/request"
-	bnservicemodelres "tradething/app/bn/app/model/bnservicemodel/future/response"
 )
 
 func (bfes *binanceFutureExternalService) SetNewLeverage(
@@ -13,7 +12,8 @@ func (bfes *binanceFutureExternalService) SetNewLeverage(
 
 	_, err := CallBinance[
 		bnserivcemodelreq.SetLeverageBinanceServiceRequest,
-		bnservicemodelres.SetLeverageBinanceServiceResponse,
+		// bnservicemodelres.SetLeverageBinanceServiceResponse,
+		struct{},
 	](
 		request,
 		bfes.binanceFutureUrl.BinanceFutureBaseUrl.BianceUrl1,

@@ -39,13 +39,17 @@ func (b *binanceServiceHttpResponse[R]) DecodeBinanceServiceResponse(
 		)
 		return errors.New(msg)
 	}
-
-	bnResponse := new(R)
-	err := json.NewDecoder(b.res.Body).Decode(bnResponse)
-	if err != nil {
-		return err
+	b.bnres = new(R)
+	switch any(*b.bnres).(type) {
+	case struct{}:
+	default:
+		bnResponse := new(R)
+		err := json.NewDecoder(b.res.Body).Decode(bnResponse)
+		if err != nil {
+			return err
+		}
+		b.bnres = bnResponse
 	}
-	b.bnres = bnResponse
 
 	return nil
 }

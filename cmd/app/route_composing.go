@@ -1,8 +1,6 @@
-package main
+package app
 
 import (
-	"fmt"
-	"net/http"
 	route "tradething/cmd/app/route/app"
 	routetimeinterval "tradething/cmd/app/route/bot_semi_mannual/timeinterval"
 	"tradething/config"
@@ -10,26 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func main() {
-	config, err := config.ReadConfig()
-	if err != nil {
-		panic(err.Error())
-	}
-
-	app := echo.New()
-
-	app.GET("/", func(c echo.Context) error {
-		type HealthCheck struct {
-			Message string `json:"message"`
-		}
-		return c.JSON(
-			http.StatusOK,
-			&HealthCheck{
-				Message: "success",
-			},
-		)
-	})
-
+func RouteRestApiConposing(app *echo.Echo, config *config.AppConfig) {
 	route.BkRouting(
 		app,
 		config.Secrets.BitkubApikey,
@@ -63,11 +42,11 @@ func main() {
 		&config.Secrets,
 		config.Env,
 	)
+}
 
+func RouteSemiBotRestApiConposing(app *echo.Echo, config *config.AppConfig) {
 	routetimeinterval.TimeIntervalRoute(
 		app,
 		config,
 	)
-
-	app.Start(fmt.Sprintf(":%v", config.Port))
 }

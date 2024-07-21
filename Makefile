@@ -51,4 +51,4 @@ go-curl:
 	go run curl/main.go
 
 go-app:
-	go run cmd/app/main.go
+	go run cmd/app/echo/main.go
