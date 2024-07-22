@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"tradething/cmd/app"
-	"tradething/config"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -20,14 +19,12 @@ func init() {
 	// 	panic(fmt.Sprintf("This Lambda Function config not found %v", err.Error()))
 	// }
 
-	var config *config.AppConfig
-
 	app_echo := echo.New()
 
 	app.MiddlerwareConposing(app_echo)
 	app.HealthCheck(app_echo)
-	app.RouteRestApiConposing(app_echo, config)
-	app.RouteSemiBotRestApiConposing(app_echo, config)
+	// app.RouteRestApiConposing(app_echo, config)
+	// app.RouteSemiBotRestApiConposing(app_echo, config)
 
 	echoLambda = echoadapter.New(app_echo)
 }
