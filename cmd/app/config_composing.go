@@ -2,8 +2,8 @@ package app
 
 import "tradething/config"
 
-func ReadLog() (*config.AppConfig, error) {
-	config, err := config.ReadConfig()
+func ReadLog(path_config string) (*config.AppConfig, error) {
+	config, err := config.ReadConfig(path_config)
 	if err != nil {
 		return nil, err
 	}

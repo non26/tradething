@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	config, err := app.ReadLog()
+	config, err := app.ReadLog("./config")
 	if err != nil {
 		panic(err.Error())
 	}

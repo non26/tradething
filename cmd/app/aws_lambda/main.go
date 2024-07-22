@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"tradething/cmd/app"
+	"tradething/config"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -14,10 +15,12 @@ var echoLambda *echoadapter.EchoLambda
 
 func init() {
 
-	config, err := app.ReadLog()
-	if err != nil {
-		panic(err.Error())
-	}
+	// config, err := app.ReadLog("./opt")
+	// if err != nil {
+	// 	panic(fmt.Sprintf("This Lambda Function config not found %v", err.Error()))
+	// }
+
+	var config *config.AppConfig
 
 	app_echo := echo.New()
 

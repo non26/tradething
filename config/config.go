@@ -80,7 +80,7 @@ type KubSpotUrl struct {
 	Balances      string `json:"balance-url"`
 }
 
-func ReadConfig() (c *AppConfig, err error) {
+func ReadConfig(path_config string) (c *AppConfig, err error) {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("./config")

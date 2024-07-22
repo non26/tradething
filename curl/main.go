@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	config, err := config.ReadConfig()
+	config, err := config.ReadConfig("./config")
 	if err != nil {
 		panic(err.Error())
 	}
