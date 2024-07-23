@@ -3,6 +3,7 @@ package app
 import (
 	route "tradething/cmd/app/route/app"
 	routetimeinterval "tradething/cmd/app/route/bot_semi_mannual/timeinterval"
+	lambdaroute "tradething/cmd/app/route/lambda"
 	"tradething/config"
 
 	"github.com/labstack/echo/v4"
@@ -49,4 +50,10 @@ func RouteSemiBotRestApiConposing(app *echo.Echo, config *config.AppConfig) {
 		app,
 		config,
 	)
+}
+
+func RouteLambda(
+	app *echo.Echo, config *config.AppConfig,
+) {
+	lambdaroute.UpdateAWSAppConfig(app, config)
 }
