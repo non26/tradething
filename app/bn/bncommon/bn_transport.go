@@ -2,15 +2,17 @@ package bncommon
 
 import "net/http"
 
+type IBinanceServiceHttpTransport interface {
+	GetTransport() *http.Transport
+}
+
 type binanceServiceHttpTransport struct {
 	t *http.Transport
 }
 
-func NewBinanceTransport(
-	t *http.Transport,
-) *binanceServiceHttpTransport {
+func NewBinanceTransport(t *http.Transport) *binanceServiceHttpTransport {
 	b := binanceServiceHttpTransport{
-		t,
+		t: t,
 	}
 	return &b
 }

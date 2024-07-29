@@ -6,6 +6,15 @@ import (
 	"strings"
 )
 
+type IBinanceServiceHttpRequest[T any] interface {
+	NewBinanceHttpRequest(url string) error
+	CreateRequestSignUrl(request *T, secretKey string) string
+	RequestPostMethod(signature string)
+	RequestGetMethod(signature string)
+	AddHeader(apiKey string)
+	GetBinanceRequest() *http.Request
+}
+
 /*
 T is type of request
 */
@@ -13,7 +22,7 @@ type binanceServiceHttpRequest[T any] struct {
 	req *http.Request
 }
 
-func NewBinanceServiceHttpRequest[T any]() *binanceServiceHttpRequest[T] {
+func NewBinanceServiceHttpRequest[T any]() IBinanceServiceHttpRequest[T] {
 	return &binanceServiceHttpRequest[T]{}
 }
 

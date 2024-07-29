@@ -2,19 +2,26 @@ package bncommon
 
 import "net/http"
 
+type IBinanceSerivceHttpClient interface {
+	Do(bnreq *http.Request) error
+	GetBinanceHttpClientResponse() *http.Response
+	SetClient(t *http.Transport)
+}
+
 type binanceSerivceHttpClient struct {
 	client   *http.Client
 	response *http.Response
 }
 
-func NewBinanceSerivceHttpClient(
-	t *http.Transport,
-) *binanceSerivceHttpClient {
+func NewBinanceSerivceHttpClient() IBinanceSerivceHttpClient {
 	binanceClient := binanceSerivceHttpClient{}
-	binanceClient.client = &http.Client{
+	return &binanceClient
+}
+
+func (b *binanceSerivceHttpClient) SetClient(t *http.Transport) {
+	b.client = &http.Client{
 		Transport: t,
 	}
-	return &binanceClient
 }
 
 func (b *binanceSerivceHttpClient) Do(bnreq *http.Request) error {

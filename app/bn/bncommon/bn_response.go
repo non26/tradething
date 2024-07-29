@@ -8,16 +8,24 @@ import (
 	"tradething/common"
 )
 
+type IBinanceServiceHttpResponse[R any] interface {
+	SetResponse(res *http.Response)
+	DecodeBinanceServiceResponse(binanceFutureServiceName string) error
+	GetBinanceServiceResponse() *R
+}
+
 type binanceServiceHttpResponse[R any] struct {
 	res   *http.Response
 	bnres *R
 }
 
-func NewBinanceServiceHttpResponse[R any](res *http.Response) *binanceServiceHttpResponse[R] {
-	b := binanceServiceHttpResponse[R]{
-		res: res,
-	}
+func NewBinanceServiceHttpResponse[R any]() *binanceServiceHttpResponse[R] {
+	b := binanceServiceHttpResponse[R]{}
 	return &b
+}
+
+func (b *binanceServiceHttpResponse[R]) SetResponse(res *http.Response) {
+	b.res = res
 }
 
 func (b *binanceServiceHttpResponse[R]) DecodeBinanceServiceResponse(

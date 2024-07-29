@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 )
@@ -18,7 +19,11 @@ func ReadAWSAppConfig() (*AppConfig, error) {
 	if res.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("http status from AWS app config is not ok: %v", res.StatusCode)
 	}
-	var m *AppConfig
-	json.NewDecoder(res.Body).Decode(m)
-	return m, nil
+	var m AppConfig
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, fmt.Errorf("readAll error %v", err.Error())
+	}
+	json.Unmarshal(body, &m)
+	return &m, nil
 }

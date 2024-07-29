@@ -5,6 +5,7 @@ import (
 	"net/http"
 	bnserivcemodelreq "tradething/app/bn/app/model/bnservicemodel/future/request"
 	bnservicemodelres "tradething/app/bn/app/model/bnservicemodel/future/response"
+	"tradething/app/bn/bncommon"
 )
 
 func (bfes *binanceFutureExternalService) PlaceSingleOrder(
@@ -12,10 +13,14 @@ func (bfes *binanceFutureExternalService) PlaceSingleOrder(
 	request *bnserivcemodelreq.PlaceSignleOrderBinanceServiceRequest,
 ) (*bnservicemodelres.PlaceSignleOrderBinanceServiceResponse, error) {
 
-	res, err := CallBinance[
-		bnserivcemodelreq.PlaceSignleOrderBinanceServiceRequest,
-		bnservicemodelres.PlaceSignleOrderBinanceServiceResponse,
-	](
+	c := NewCallBinance(
+		bncommon.NewBinanceServiceHttpRequest[bnserivcemodelreq.PlaceSignleOrderBinanceServiceRequest](),
+		bncommon.NewBinanceServiceHttpResponse[bnservicemodelres.PlaceSignleOrderBinanceServiceResponse](),
+		bncommon.NewBinanceTransport(&http.Transport{}),
+		bncommon.NewBinanceSerivceHttpClient(),
+	)
+
+	res, err := c.CallBinance(
 		bnserivcemodelreq.NewPlaceSignleOrderBinanceServiceRequest(request),
 		bfes.binanceFutureUrl.BinanceFutureBaseUrl.BianceUrl1,
 		bfes.binanceFutureUrl.SingleOrder,

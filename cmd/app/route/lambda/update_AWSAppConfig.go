@@ -1,6 +1,7 @@
 package route
 
 import (
+	"net/http"
 	"tradething/config"
 
 	"github.com/labstack/echo/v4"
@@ -13,6 +14,11 @@ func UpdateAWSAppConfig(app *echo.Echo, _config *config.AppConfig) {
 		if err != nil {
 			return err
 		}
-		return nil
+		type Res struct {
+			Message string `json:"message"`
+		}
+		m := Res{}
+		m.Message = "success"
+		return c.JSON(http.StatusOK, &m)
 	})
 }
