@@ -30,6 +30,7 @@ binance-future-url:
   single-order: /fapi/v1/order
   miltiple-order: /fapi/v1/batchOrders
   query-order: /fapi/v1/order
+  exchange-info: /fapi/v1/exchangeInfo
   binance-future-baseUrl:
     binance1: https://testnet.binancefuture.com
 

@@ -48,6 +48,7 @@ type BinanceFutureUrl struct {
 	SingleOrder          string               `mapstructure:"single-order" json:"single-order"`
 	MultipleOrder        string               `mapstructure:"miltiple-order" json:"miltiple-order"`
 	QueryOrder           string               `mapstructure:"query-order" json:"query-order"`
+	ExchangeInfo         string               `mapstructure:"exchange-info" json:"exchange-info"`
 	BinanceFutureBaseUrl BinanceFutureBaseUrl `mapstructure:"binance-future-baseUrl" json:"binance-future-baseUrl"`
 }
 
