@@ -1,7 +1,7 @@
 package init
 
 import (
-	bnserivcemodelreq "tradething/app/bn/app/model/bnservicemodel/future/request"
+	bnserivcemodelreq "tradething/app/bn/bn_future/bnservice_request_model"
 	"tradething/config"
 	"tradething/curl/api"
 	bnapi "tradething/curl/api/bn_api"

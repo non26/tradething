@@ -1,7 +1,7 @@
 package route
 
 import (
-	bnservice "tradething/app/bn/app/bnservice/future"
+	bnservice "tradething/app/bn/bn_future/bnservice"
 	"tradething/config"
 	timeinterval "tradething/semibot/timeinterval/bn"
 

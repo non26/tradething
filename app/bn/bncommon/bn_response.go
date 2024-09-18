@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	bnservicemodelres "tradething/app/bn/app/model/bnservicemodel/future/response"
+	bnservicemodelres "tradething/app/bn/bn_future/bnservice_response_model"
 	"tradething/common"
 )
 

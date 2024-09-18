@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	bnservice "tradething/app/bn/app/bnservice/future"
-	bnserivcemodelreq "tradething/app/bn/app/model/bnservicemodel/future/request"
+	bnservice "tradething/app/bn/bn_future/bnservice"
+	bnserivcemodelreq "tradething/app/bn/bn_future/bnservice_request_model"
 )
 
 type bnTimeInterval struct {

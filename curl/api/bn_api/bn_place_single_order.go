@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"strconv"
 	"time"
-	bnserivcemodelreq "tradething/app/bn/app/model/bnservicemodel/future/request"
+	bnserivcemodelreq "tradething/app/bn/bn_future/bnservice_request_model"
 	"tradething/config"
 	"tradething/curl/api"
 	"tradething/curl/curlcommon"
