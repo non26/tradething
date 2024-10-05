@@ -26,7 +26,7 @@ func init() {
 	app.MiddlerwareConposing(app_echo)
 	app.HealthCheck(app_echo)
 	app.RouteRestApiConposing(app_echo, _config)
-	app.RouteSemiBotRestApiConposing(app_echo, _config)
+	app.RouteSemiBotComposing(app_echo, _config)
 	app.RouteLambda(app_echo, _config)
 
 	echoLambda = echoadapter.New(app_echo)

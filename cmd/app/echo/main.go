@@ -16,7 +16,7 @@ func main() {
 	app_echo := echo.New()
 	app.HealthCheck(app_echo)
 	app.RouteRestApiConposing(app_echo, config)
-	app.RouteSemiBotRestApiConposing(app_echo, config)
+	app.RouteSemiBotComposing(app_echo, config)
 
 	app_echo.Start(fmt.Sprintf(":%v", config.Port))
 }

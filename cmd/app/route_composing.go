@@ -2,7 +2,7 @@ package app
 
 import (
 	route "tradething/cmd/app/route/app"
-	routetimeinterval "tradething/cmd/app/route/bot_semi_mannual/timeinterval"
+	semibotroute "tradething/cmd/app/route/bot_route"
 	lambdaroute "tradething/cmd/app/route/lambda"
 	"tradething/config"
 
@@ -43,10 +43,11 @@ func RouteRestApiConposing(app *echo.Echo, config *config.AppConfig) {
 		&config.Secrets,
 		config.Env,
 	)
+
 }
 
-func RouteSemiBotRestApiConposing(app *echo.Echo, config *config.AppConfig) {
-	routetimeinterval.TimeIntervalRoute(
+func RouteSemiBotComposing(app *echo.Echo, config *config.AppConfig) {
+	semibotroute.SemiBotBnFuture(
 		app,
 		config,
 	)
