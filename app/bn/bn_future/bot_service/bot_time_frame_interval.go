@@ -1,30 +1,18 @@
-package timeinterval
+package bnfuture
 
 import (
 	"context"
 	"fmt"
 	"strings"
-	bnservice "tradething/app/bn/bn_future/bnservice"
 	bnserivcemodelreq "tradething/app/bn/bn_future/bnservice_request_model"
+	bothandlerreq "tradething/app/bn/bn_future/bot_handler_request"
+	bothandlerres "tradething/app/bn/bn_future/bot_handler_response"
 )
 
-type bnTimeInterval struct {
-	bn_service bnservice.IBinanceFutureExternalService
-}
-
-func NewBnTimeIntervalService(
-	bn_service bnservice.IBinanceFutureExternalService,
-) *bnTimeInterval {
-	return &bnTimeInterval{
-		bn_service,
-	}
-}
-
-func (t *bnTimeInterval) TimeIntervalSemiBotService(
+func (t *botService) TimeIntervalSemiBotService(
 	ctx context.Context,
-	req *TradeTimeIntervalBinanceFutureRequest,
-) (*TradeTimeIntervalBinanceFutureResponse, error) {
-
+	req *bothandlerreq.TradeTimeIntervalBinanceFutureRequest,
+) (*bothandlerres.TradeTimeIntervalBinanceFutureResponse, error) {
 	query_request := bnserivcemodelreq.QueryOrderBinanceServiceRequest{
 		Symbol:            req.Symbol,
 		OrigClientOrderId: req.PrevClientId,
@@ -131,12 +119,12 @@ func (t *bnTimeInterval) TimeIntervalSemiBotService(
 		if err != nil {
 			return nil, err
 		}
-		return &TradeTimeIntervalBinanceFutureResponse{
+		return &bothandlerres.TradeTimeIntervalBinanceFutureResponse{
 			Message: "Suucess",
 		}, nil
 	}
 
-	return &TradeTimeIntervalBinanceFutureResponse{
+	return &bothandlerres.TradeTimeIntervalBinanceFutureResponse{
 		Message: "Suucess But No Order Made",
 	}, nil
 }
