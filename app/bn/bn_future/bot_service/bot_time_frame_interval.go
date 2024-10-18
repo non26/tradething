@@ -13,13 +13,10 @@ func (t *botService) TimeIntervalSemiBotService(
 	ctx context.Context,
 	req *bothandlerreq.TradeTimeIntervalBinanceFutureRequest,
 ) (*bothandlerres.TradeTimeIntervalBinanceFutureResponse, error) {
-	query_request := bnserivcemodelreq.QueryOrderBinanceServiceRequest{
-		Symbol:            req.Symbol,
-		OrigClientOrderId: req.PrevClientId,
-	}
+	query_request := req.ToQueryOrderBinanceServiceRequest()
 	q_data, err := t.bn_service.QueryOrder(
 		ctx,
-		&query_request)
+		query_request)
 	if err != nil {
 		return nil, err
 	}
@@ -31,71 +28,64 @@ func (t *botService) TimeIntervalSemiBotService(
 	var close_order_req *bnserivcemodelreq.PlaceSignleOrderBinanceServiceRequest
 	if !is_prev_closed && prev_side != "" {
 		if prev_side == "BUY" && prev_position_side == "LONG" {
-			if req.PositionSide == "LONG" {
-				open_order_req = CreateOpenOrder(
-					req.PositionSide,
-					"BUY",
-					"MARKET",
-					fmt.Sprintf("%v", req.EntryQuantity),
-					req.Symbol,
-					req.CurrentClientId,
-				)
-			} else if req.PositionSide == "SHORT" {
-				open_order_req = CreateOpenOrder(
-					req.PositionSide,
-					"SELL",
-					"MARKET",
-					fmt.Sprintf("%v", req.EntryQuantity),
-					req.Symbol,
-					req.CurrentClientId,
-				)
+			if req.IsPositionSideLong() {
+				open_order_req = open_order_req.New()
+				open_order_req.SetPositionSide(req.PositionSide)
+				open_order_req.SetSide("BUY")
+				open_order_req.SetType("MARKET")
+				open_order_req.SetEntryQuantity(fmt.Sprintf("%v", req.EntryQuantity))
+				open_order_req.SetSymbol(req.Symbol)
+				open_order_req.SetClientOrderId(req.CurrentClientId)
+			} else if req.IsPositionSideShort() {
+				open_order_req = open_order_req.New()
+				open_order_req.SetPositionSide(req.PositionSide)
+				open_order_req.SetSide("SELL")
+				open_order_req.SetType("MARKET")
+				open_order_req.SetEntryQuantity(fmt.Sprintf("%v", req.EntryQuantity))
+				open_order_req.SetSymbol(req.Symbol)
+				open_order_req.SetClientOrderId(req.CurrentClientId)
 			}
-			close_order_req = CreateOpenOrder(
-				"LONG",
-				"SELL",
-				"MARKET",
-				q_data.ExecutedQty,
-				q_data.Symbol,
-				req.PrevClientId,
-			)
+			close_order_req = close_order_req.New()
+			close_order_req.SetPositionSide("LONG")
+			close_order_req.SetSide("SELL")
+			close_order_req.SetType("MARKET")
+			close_order_req.SetEntryQuantity(q_data.ExecutedQty)
+			close_order_req.SetSymbol(q_data.Symbol)
+			close_order_req.SetClientOrderId(req.PrevClientId)
 		} else if prev_side == "SELL" && prev_position_side == "SHORT" {
-			if req.PositionSide == "LONG" {
-				open_order_req = CreateOpenOrder(
-					req.PositionSide,
-					"BUY",
-					"MARKET",
-					fmt.Sprintf("%v", req.EntryQuantity),
-					req.Symbol,
-					req.CurrentClientId,
-				)
-			} else if req.PositionSide == "SHORT" {
-				open_order_req = CreateOpenOrder(
-					req.PositionSide,
-					"SELL",
-					"MARKET",
-					fmt.Sprintf("%v", req.EntryQuantity),
-					req.Symbol,
-					req.CurrentClientId,
-				)
+			if req.IsPositionSideLong() {
+				open_order_req = open_order_req.New()
+				open_order_req.SetPositionSide(req.PositionSide)
+				open_order_req.SetSide("BUY")
+				open_order_req.SetType("MARKET")
+				open_order_req.SetEntryQuantity(fmt.Sprintf("%v", req.EntryQuantity))
+				open_order_req.SetSymbol(req.Symbol)
+				open_order_req.SetClientOrderId(req.CurrentClientId)
+			} else if req.IsPositionSideShort() {
+				open_order_req = open_order_req.New()
+				open_order_req.SetPositionSide(req.PositionSide)
+				open_order_req.SetSide("SELL")
+				open_order_req.SetType("MARKET")
+				open_order_req.SetEntryQuantity(fmt.Sprintf("%v", req.EntryQuantity))
+				open_order_req.SetSymbol(req.Symbol)
+				open_order_req.SetClientOrderId(req.CurrentClientId)
 			}
-			close_order_req = CreateOpenOrder(
-				"SHORT",
-				"BUY",
-				"MARKET",
-				q_data.ExecutedQty,
-				q_data.Symbol,
-				req.PrevClientId,
-			)
+			close_order_req = close_order_req.New()
+			close_order_req.SetPositionSide("SHORT")
+			close_order_req.SetSide("BUY")
+			close_order_req.SetType("MARKET")
+			close_order_req.SetEntryQuantity(q_data.ExecutedQty)
+			close_order_req.SetSymbol(q_data.Symbol)
+			close_order_req.SetClientOrderId(req.PrevClientId)
 		}
 	} else {
-		open_order_req = CreateOpenOrder(
-			req.PositionSide,
-			"BUY",
-			"MARKET",
-			fmt.Sprintf("%v", req.EntryQuantity),
-			req.Symbol,
-			req.CurrentClientId,
-		)
+		open_order_req = open_order_req.New()
+		open_order_req.SetPositionSide(req.PositionSide)
+		open_order_req.SetSide("BUY")
+		open_order_req.SetType("MARKET")
+		open_order_req.SetEntryQuantity(fmt.Sprintf("%v", req.EntryQuantity))
+		open_order_req.SetSymbol(req.Symbol)
+		open_order_req.SetClientOrderId(req.CurrentClientId)
 	}
 
 	if close_order_req != nil {
@@ -127,24 +117,4 @@ func (t *botService) TimeIntervalSemiBotService(
 	return &bothandlerres.TradeTimeIntervalBinanceFutureResponse{
 		Message: "Suucess But No Order Made",
 	}, nil
-}
-
-func CreateOpenOrder(
-	position_side string,
-	side string,
-	order_type string,
-	quantity string,
-	symbol string,
-	clientId string,
-
-) *bnserivcemodelreq.PlaceSignleOrderBinanceServiceRequest {
-	order := &bnserivcemodelreq.PlaceSignleOrderBinanceServiceRequest{
-		PositionSide:  position_side,
-		Side:          side,
-		Type:          order_type,
-		EntryQuantity: quantity,
-		Symbol:        symbol,
-		ClientOrderId: clientId,
-	}
-	return order
 }

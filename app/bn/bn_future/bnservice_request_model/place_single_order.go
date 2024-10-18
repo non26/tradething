@@ -16,6 +16,10 @@ type PlaceSignleOrderBinanceServiceRequest struct {
 	Timestamp     string `json:"timestamp"`
 }
 
+func (p *PlaceSignleOrderBinanceServiceRequest) New() *PlaceSignleOrderBinanceServiceRequest {
+	return &PlaceSignleOrderBinanceServiceRequest{}
+}
+
 func (p *PlaceSignleOrderBinanceServiceRequest) PrepareRequest() {
 	p.Symbol = strings.ToUpper(p.Symbol)
 	p.Side = strings.ToUpper(p.Side)
@@ -43,6 +47,38 @@ func (p *PlaceSignleOrderBinanceServiceRequest) checkOrderType() {
 	if p.Type == "" {
 		p.Type = "MARKET"
 	}
+}
+
+func (p *PlaceSignleOrderBinanceServiceRequest) IsOrderTypeMarket() bool {
+	return p.Type == "MARKET"
+}
+
+func (p *PlaceSignleOrderBinanceServiceRequest) IsOrderTypeLimit() bool {
+	return p.Type == "LIMIT"
+}
+
+func (p *PlaceSignleOrderBinanceServiceRequest) SetPositionSide(position string) {
+	p.PositionSide = strings.ToUpper(position)
+}
+
+func (p *PlaceSignleOrderBinanceServiceRequest) SetSide(side string) {
+	p.Side = strings.ToUpper(side)
+}
+
+func (p *PlaceSignleOrderBinanceServiceRequest) SetEntryQuantity(quantity string) {
+	p.EntryQuantity = quantity
+}
+
+func (p *PlaceSignleOrderBinanceServiceRequest) SetSymbol(symbol string) {
+	p.Symbol = strings.ToUpper(symbol)
+}
+
+func (p *PlaceSignleOrderBinanceServiceRequest) SetClientOrderId(client_order_id string) {
+	p.ClientOrderId = client_order_id
+}
+
+func (p *PlaceSignleOrderBinanceServiceRequest) SetType(order_type string) {
+	p.Type = strings.ToUpper(order_type)
 }
 
 func NewPlaceSignleOrderBinanceServiceRequest(
