@@ -1,6 +1,6 @@
 package bnfuture
 
-type BinanceFutureHistoryTable struct {
+type BinanceFutureHistory struct {
 	Id            string `dynamodbav:"id"`
 	ExchangeId    int    `dynamodbav:"exchange_id"`
 	ClientId      string `dynamodbav:"client_id"`
@@ -15,4 +15,9 @@ type BinanceFutureHistoryTable struct {
 	// SellOrderCreatedAt string `dynamodbav:"sell_order_created_at"`
 	// BuyUpdatedAt       string `dynamodb:"buy_updated_at"`
 	// SellUpdatedAt      string `dynamodbav:"sell_updated_at"`
+}
+
+type BinanceFutureHistoryTable struct {
+	TableName string `table:"bn_future_history_table"`
+	*BinanceFutureHistory
 }

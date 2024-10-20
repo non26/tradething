@@ -52,7 +52,7 @@ func (h *placeSinglerOrderHandler) Handler(c echo.Context) error {
 
 	res, err := h.service.PlaceSingleOrder(
 		c.Request().Context(),
-		request,
+		request.ToServiceModel(),
 	)
 	if err != nil {
 		return c.JSON(

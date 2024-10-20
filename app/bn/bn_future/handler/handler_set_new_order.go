@@ -50,7 +50,7 @@ func (h *setNewLeveragehandler) Handler(c echo.Context) error {
 
 	res, err := h.service.SetNewLeverage(
 		c.Request().Context(),
-		request,
+		request.ToServiceModel(),
 	)
 	if err != nil {
 		return c.JSON(

@@ -52,7 +52,7 @@ func (h *queryOrderHandler) Handler(c echo.Context) error {
 
 	res, err := h.service.QueryOrder(
 		c.Request().Context(),
-		request,
+		request.ToServiceModel(),
 	)
 	if err != nil {
 		return c.JSON(

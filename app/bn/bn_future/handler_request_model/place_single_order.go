@@ -1,27 +1,25 @@
 package bnfuture
 
 import (
-	"fmt"
-	bnfuture "tradething/app/bn/bn_future/bnservice_request_model"
+	svcfuture "tradething/app/bn/bn_future/service_model"
 )
 
 type PlaceSignleOrderHandlerRequest struct {
-	PositionSide  string  `json:"positionSide"`
-	Side          string  `json:"side"`
-	EntryQuantity float64 `json:"entryQuantity"`
-	Symbol        string  `json:"symbol"`
-	LeverageLevel int     `json:"leverageLevel"`
-	ClientOrderId string  `json:"newClientOrderId"`
+	PositionSide  string `json:"positionSide"`
+	Side          string `json:"side"`
+	EntryQuantity string `json:"entryQuantity"`
+	Symbol        string `json:"symbol"`
+	LeverageLevel int    `json:"leverageLevel"`
+	ClientOrderId string `json:"newClientOrderId"`
 }
 
-func (p *PlaceSignleOrderHandlerRequest) ToBinanceServiceModel() *bnfuture.PlaceSignleOrderBinanceServiceRequest {
-	m := bnfuture.PlaceSignleOrderBinanceServiceRequest{
-		PositionSide:  p.PositionSide,
-		Side:          p.Side,
-		EntryQuantity: fmt.Sprintf("%v", p.EntryQuantity),
-		Symbol:        p.Symbol,
-		ClientOrderId: p.ClientOrderId,
-	}
+func (p *PlaceSignleOrderHandlerRequest) ToServiceModel() *svcfuture.PlaceSignleOrderServiceRequest {
+	m := svcfuture.PlaceSignleOrderServiceRequest{}
+	m.SetPositionSide(p.PositionSide)
+	m.SetSide(p.Side)
+	m.SetEntryQuantity(p.EntryQuantity)
+	m.SetSymbol(p.Symbol)
+	m.SetClientOrderId(p.ClientOrderId)
 	return &m
 }
 

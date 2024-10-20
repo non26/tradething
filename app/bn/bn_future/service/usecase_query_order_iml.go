@@ -2,13 +2,13 @@ package service
 
 import (
 	"context"
-	bnfuturereq "tradething/app/bn/bn_future/handler_request_model"
 	bnfutureres "tradething/app/bn/bn_future/handler_response_model"
+	svcFuture "tradething/app/bn/bn_future/service_model"
 )
 
 func (bfs *binanceFutureService) QueryOrder(
 	ctx context.Context,
-	request *bnfuturereq.QueryOrderBinanceHandlerRequest,
+	request *svcFuture.QueryOrderServiceRequest,
 ) (*bnfutureres.QueryOrderBinanceHandlerResponse, error) {
 
 	queryOrderRes, err := bfs.binanceService.QueryOrder(

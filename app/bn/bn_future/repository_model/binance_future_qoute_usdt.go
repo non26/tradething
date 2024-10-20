@@ -6,3 +6,8 @@ type BinanceFutureQouteUSDT struct {
 	Symbol         string `dynamodb:"symbol"`
 	CountingSymbol int    `dynamodbav:"counting_symbol"`
 }
+
+type BinanceFutureQouteUSTDTable struct {
+	TableName string `table:"bn_future_qoute_usdt"`
+	*BinanceFutureQouteUSDT
+}

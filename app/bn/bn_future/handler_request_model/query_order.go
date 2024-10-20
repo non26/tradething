@@ -1,17 +1,18 @@
 package bnfuture
 
-import bnfuture "tradething/app/bn/bn_future/bnservice_request_model"
+import (
+	svcfuture "tradething/app/bn/bn_future/service_model"
+)
 
 type QueryOrderBinanceHandlerRequest struct {
 	Symbol            string `json:"symbol"`
 	OrigClientOrderId string `json:"origClientOrderId"`
 }
 
-func (q *QueryOrderBinanceHandlerRequest) ToBinanceServiceQueryOrder() *bnfuture.QueryOrderBinanceServiceRequest {
-	m := bnfuture.QueryOrderBinanceServiceRequest{
-		Symbol:            q.Symbol,
-		OrigClientOrderId: q.OrigClientOrderId,
-	}
+func (q *QueryOrderBinanceHandlerRequest) ToServiceModel() *svcfuture.QueryOrderServiceRequest {
+	m := svcfuture.QueryOrderServiceRequest{}
+	m.SetSymbol(q.Symbol)
+	m.SetOrigClientOrderId(q.OrigClientOrderId)
 	return &m
 }
 

@@ -21,3 +21,7 @@ func GetQueryStringFromStructType[T any](m *T) url.Values {
 func GetTimeStamp() int64 {
 	return time.Now().Unix() * 1000
 }
+
+func GetStructTagValueByIndex(st reflect.Type, tag string, index int) string {
+	return st.FieldByIndex([]int{index}).Tag.Get(tag)
+}

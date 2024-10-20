@@ -1,0 +1,10 @@
+write a pine script's strategy whic has user inout as follow
+1 start time for the script will run acording to time frame it was set
+2 end time 
+3 position side which has value as LONG or SELL as a string
+4 client id as a string
+the strategy will run in between start time and end time acording to time frame that it was set
+and the strategy will trigger an alert when the bar closed.
+the alert function will take message as a string of json form which has fields as follow
+1 positionSide which receive from the position side that user input
+2 clientId which receive from the client id that user input
