@@ -5,6 +5,7 @@ import (
 
 	bnfuturereq "tradething/app/bn/bn_future/bnservice_request_model"
 	bnfutureres "tradething/app/bn/bn_future/bnservice_response_model"
+	"tradething/app/bn/bncommon"
 	"tradething/config"
 )
 
@@ -29,16 +30,22 @@ type binanceFutureExternalService struct {
 	binanceFutureUrl         *config.BinanceFutureUrl
 	secrets                  *config.Secrets
 	binanceFutureServiceName string
+	httpttransport           bncommon.IBinanceServiceHttpTransport
+	httpclient               bncommon.IBinanceSerivceHttpClient
 }
 
 func NewBinanceFutureExternalService(
 	binanceFutureUrl *config.BinanceFutureUrl,
 	secrets *config.Secrets,
 	binanceFutureServiceName string,
+	httpttransport bncommon.IBinanceServiceHttpTransport,
+	httpclient bncommon.IBinanceSerivceHttpClient,
 ) IBinanceFutureExternalService {
 	return &binanceFutureExternalService{
 		binanceFutureUrl,
 		secrets,
 		binanceFutureServiceName,
+		httpttransport,
+		httpclient,
 	}
 }

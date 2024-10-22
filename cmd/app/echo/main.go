@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"tradething/cmd/app"
 
 	svcrepository "tradething/app/bn/bn_future/repository"
@@ -25,10 +26,13 @@ func main() {
 	dynamodbclient := svcrepository.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).New()
 	svcrepository := svcrepository.NewDynamoDBRepository(dynamodbclient)
 
+	httptransport := bncommon.NewBinanceTransport(&http.Transport{})
+	httpclient := bncommon.NewBinanceSerivceHttpClient()
+
 	app_echo := echo.New()
 	app.HealthCheck(app_echo)
-	app.RouteRestApiConposing(app_echo, config, ordertype, positionSide, side, svcrepository)
-	app.RouteSemiBotComposing(app_echo, config, ordertype, positionSide, side, svcrepository)
+	app.RouteRestApiConposing(app_echo, config, ordertype, positionSide, side, svcrepository, httptransport, httpclient)
+	app.RouteSemiBotComposing(app_echo, config, ordertype, positionSide, side, svcrepository, httptransport, httpclient)
 
 	app_echo.Start(fmt.Sprintf(":%v", config.Port))
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"net/http"
 	"tradething/app/bn/bncommon"
 	"tradething/cmd/app"
 	"tradething/config"
@@ -33,12 +34,14 @@ func init() {
 	dynamodbcredential := svcrepository.NewCredential(_config.Dynamodb.Ak, _config.Dynamodb.Sk)
 	dynamodbclient := svcrepository.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).New()
 	svcrepository := svcrepository.NewDynamoDBRepository(dynamodbclient)
+	httptransport := bncommon.NewBinanceTransport(&http.Transport{})
+	httpclient := bncommon.NewBinanceSerivceHttpClient()
 
 	app_echo := echo.New()
 	app.MiddlerwareComposing(app_echo)
 	app.HealthCheck(app_echo)
-	app.RouteRestApiConposing(app_echo, _config, ordertype, positionSide, side, svcrepository)
-	app.RouteSemiBotComposing(app_echo, _config, ordertype, positionSide, side, svcrepository)
+	app.RouteRestApiConposing(app_echo, _config, ordertype, positionSide, side, svcrepository, httptransport, httpclient)
+	app.RouteSemiBotComposing(app_echo, _config, ordertype, positionSide, side, svcrepository, httptransport, httpclient)
 	app.RouteLambda(app_echo, _config)
 
 	echoLambda = echoadapter.New(app_echo)
