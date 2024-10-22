@@ -17,8 +17,8 @@ func (bfes *binanceFutureExternalService) PlaceSingleOrder(
 	c := NewCallBinance(
 		bncommon.NewBinanceServiceHttpRequest[bnfuturereq.PlaceSignleOrderBinanceServiceRequest](),
 		bncommon.NewBinanceServiceHttpResponse[bnfutureres.PlaceSignleOrderBinanceServiceResponse](),
-		bncommon.NewBinanceTransport(&http.Transport{}),
-		bncommon.NewBinanceSerivceHttpClient(),
+		bfes.httpttransport,
+		bfes.httpclient,
 	)
 
 	res, err := c.CallBinance(

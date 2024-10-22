@@ -15,8 +15,8 @@ func (bfes *binanceFutureExternalService) SetNewLeverage(
 	c := NewCallBinance(
 		bncommon.NewBinanceServiceHttpRequest[bnfuturereq.SetLeverageBinanceServiceRequest](),
 		bncommon.NewBinanceServiceHttpResponse[bnfutureres.SetLeverageBinanceServiceResponse](),
-		bncommon.NewBinanceTransport(&http.Transport{}),
-		bncommon.NewBinanceSerivceHttpClient(),
+		bfes.httpttransport,
+		bfes.httpclient,
 	)
 	res, err := c.CallBinance(
 		request,

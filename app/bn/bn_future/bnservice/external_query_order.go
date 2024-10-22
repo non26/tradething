@@ -16,8 +16,8 @@ func (bfes *binanceFutureExternalService) QueryOrder(
 	c := NewCallBinance(
 		bncommon.NewBinanceServiceHttpRequest[bnfuturereq.QueryOrderBinanceServiceRequest](),
 		bncommon.NewBinanceServiceHttpResponse[bnfutureres.QueryOrderBinanceServiceResponse](),
-		bncommon.NewBinanceTransport(&http.Transport{}),
-		bncommon.NewBinanceSerivceHttpClient(),
+		bfes.httpttransport,
+		bfes.httpclient,
 	)
 	res, err := c.CallBinance(
 		request,
