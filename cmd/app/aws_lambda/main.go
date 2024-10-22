@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
+	"tradething/app/bn/bncommon"
 	"tradething/cmd/app"
 	"tradething/config"
+
+	svcrepository "tradething/app/bn/bn_future/repository"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -22,11 +25,20 @@ func init() {
 		panic(err.Error())
 	}
 
+	ordertype := bncommon.NewOrderType()
+	side := bncommon.NewSide()
+	positionSide := bncommon.NewPositionSide()
+	dynamodbconfig := svcrepository.NewDynamodbConfig()
+	dynamodbendpoint := svcrepository.NewEndPointResolver(_config.Dynamodb.Region, _config.Dynamodb.Endpoint)
+	dynamodbcredential := svcrepository.NewCredential(_config.Dynamodb.Ak, _config.Dynamodb.Sk)
+	dynamodbclient := svcrepository.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).New()
+	svcrepository := svcrepository.NewDynamoDBRepository(dynamodbclient)
+
 	app_echo := echo.New()
-	app.MiddlerwareConposing(app_echo)
+	app.MiddlerwareComposing(app_echo)
 	app.HealthCheck(app_echo)
-	app.RouteRestApiConposing(app_echo, _config)
-	app.RouteSemiBotComposing(app_echo, _config)
+	app.RouteRestApiConposing(app_echo, _config, ordertype, positionSide, side, svcrepository)
+	app.RouteSemiBotComposing(app_echo, _config, ordertype, positionSide, side, svcrepository)
 	app.RouteLambda(app_echo, _config)
 
 	echoLambda = echoadapter.New(app_echo)

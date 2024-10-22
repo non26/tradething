@@ -62,6 +62,7 @@ func (h *setNewLeveragehandler) Handler(c echo.Context) error {
 			},
 		)
 	}
+	request.Transform()
 
 	return c.JSON(
 		http.StatusOK,

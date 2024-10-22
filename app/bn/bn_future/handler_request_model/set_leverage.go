@@ -2,6 +2,7 @@ package bnfuture
 
 import (
 	"strconv"
+	"strings"
 	bnSvcfuture "tradething/app/bn/bn_future/bnservice_request_model"
 	svcfuture "tradething/app/bn/bn_future/service_model"
 )
@@ -9,6 +10,10 @@ import (
 type SetLeverageHandlerRequest struct {
 	Leverage int    `json:"leverage"`
 	Symbol   string `json:"symbol"`
+}
+
+func (s *SetLeverageHandlerRequest) Transform() {
+	s.Symbol = strings.ToUpper(s.Symbol)
 }
 
 func (s *SetLeverageHandlerRequest) ToBinanceServiceSetLeverage() *bnSvcfuture.SetLeverageBinanceServiceRequest {

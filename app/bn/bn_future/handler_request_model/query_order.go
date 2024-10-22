@@ -1,12 +1,17 @@
 package bnfuture
 
 import (
+	"strings"
 	svcfuture "tradething/app/bn/bn_future/service_model"
 )
 
 type QueryOrderBinanceHandlerRequest struct {
 	Symbol            string `json:"symbol"`
 	OrigClientOrderId string `json:"origClientOrderId"`
+}
+
+func (q *QueryOrderBinanceHandlerRequest) Transform() {
+	q.Symbol = strings.ToUpper(q.Symbol)
 }
 
 func (q *QueryOrderBinanceHandlerRequest) ToServiceModel() *svcfuture.QueryOrderServiceRequest {

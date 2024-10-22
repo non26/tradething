@@ -15,6 +15,7 @@ type BinanceFutureOpeningPosition struct {
 	// Type               string `dynamodbav:"type"`
 	Leverage     int    `dynamodbav:"leverage"`
 	PositionSide string `dynamodbav:"position_side"`
+	Side         string `dynamodbav:"side"`
 	// Amount             string `dynamodbav:"amount"`
 	// AmountCurrency     string `dynamodbav:"amount_currency"`
 	AmountQ string `dynamodbav:"amount_q"`
@@ -28,6 +29,10 @@ type BinanceFutureOpeningPosition struct {
 	// SellUpdatedAt      string `dynamodbav:"sell_updated_at"`
 	BuyOrderCreatedAt  string `dynamodbav:"buy_created_at"`
 	SellOrderCreatedAt string `dynamodbav:"sell_created_at"`
+}
+
+func (b *BinanceFutureOpeningPosition) IsEmpty() bool {
+	return b.Symbol == ""
 }
 
 func (b *BinanceFutureOpeningPosition) GetKeyBySymbol() map[string]types.AttributeValue {

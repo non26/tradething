@@ -20,6 +20,15 @@ func (h *botHandler) BotTimeFrameIntervalHandler(c echo.Context) error {
 			},
 		)
 	}
+	err = payload.Validate()
+	if err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			&bothandlerres.TradeTimeIntervalBinanceFutureResponse{
+				Message: err.Error(),
+			},
+		)
+	}
 	payload.ToUpper()
 
 	data, err := h.semibot.TimeIntervalSemiBotService(

@@ -3,36 +3,40 @@ package service
 import (
 	"context"
 	bnfuture "tradething/app/bn/bn_future/bnservice"
-	bnfutureres "tradething/app/bn/bn_future/handler_response_model"
-	svcFuture "tradething/app/bn/bn_future/service_model"
+	svchandlerres "tradething/app/bn/bn_future/handler_response_model"
+	svcrepo "tradething/app/bn/bn_future/repository"
+	svcfuture "tradething/app/bn/bn_future/service_model"
 )
 
 type IBinanceFutureService interface {
 	SetNewLeverage(
 		ctx context.Context,
-		request *svcFuture.SetLeverageServiceRequest,
-	) (*bnfutureres.SetLeverageBinanceHandlerResponse, error)
+		request *svcfuture.SetLeverageServiceRequest,
+	) (*svchandlerres.SetLeverageBinanceHandlerResponse, error)
 	PlaceSingleOrder(
 		ctx context.Context,
-		request *svcFuture.PlaceSignleOrderServiceRequest,
-	) (*bnfutureres.PlaceSignleOrderHandlerResponse, error)
+		request *svcfuture.PlaceSignleOrderServiceRequest,
+	) (*svchandlerres.PlaceSignleOrderHandlerResponse, error)
 	QueryOrder(
 		ctx context.Context,
-		request *svcFuture.QueryOrderServiceRequest,
-	) (*bnfutureres.QueryOrderBinanceHandlerResponse, error)
+		request *svcfuture.QueryOrderServiceRequest,
+	) (*svchandlerres.QueryOrderBinanceHandlerResponse, error)
 }
 
 type binanceFutureService struct {
 	binanceFutureServiceName string
 	binanceService           bnfuture.IBinanceFutureExternalService
+	repository               svcrepo.IRepository
 }
 
 func NewBinanceFutureService(
 	binanceFutureServiceName string,
 	binanceService bnfuture.IBinanceFutureExternalService,
+	repository svcrepo.IRepository,
 ) IBinanceFutureService {
 	return &binanceFutureService{
 		binanceFutureServiceName,
 		binanceService,
+		repository,
 	}
 }

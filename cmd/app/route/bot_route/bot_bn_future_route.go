@@ -4,6 +4,8 @@ import (
 	bnservice "tradething/app/bn/bn_future/bnservice"
 	bothandler "tradething/app/bn/bn_future/bot_handler"
 	botservice "tradething/app/bn/bn_future/bot_service"
+	svcrepository "tradething/app/bn/bn_future/repository"
+	"tradething/app/bn/bncommon"
 	"tradething/config"
 
 	"github.com/labstack/echo/v4"
@@ -12,6 +14,10 @@ import (
 func SemiBotBnFuture(
 	app *echo.Echo,
 	config *config.AppConfig,
+	orderType bncommon.IOrderType,
+	positionSide bncommon.IPositionSide,
+	side bncommon.ISide,
+	svcRepository svcrepository.IRepository,
 ) {
 	service_name := "bn-future-semibot"
 
@@ -20,9 +26,9 @@ func SemiBotBnFuture(
 		&config.Secrets,
 		config.ServiceName.BinanceFuture,
 	)
-	_botservice := botservice.NewBotService(bnservice)
+	botservice := botservice.NewBotService(bnservice, svcRepository, orderType, positionSide, side)
 
-	_bothandler := bothandler.NewBotHandler(config, service_name, _botservice)
+	bothandler := bothandler.NewBotHandler(config, service_name, botservice)
 	bnTimeIntervalGroup := app.Group("/" + service_name)
-	bnTimeIntervalGroup.POST("/time-frame-interval", _bothandler.BotTimeFrameIntervalHandler)
+	bnTimeIntervalGroup.POST("/time-frame-interval", bothandler.BotTimeFrameIntervalHandler)
 }

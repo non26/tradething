@@ -49,6 +49,7 @@ func (h *placeSinglerOrderHandler) Handler(c echo.Context) error {
 			},
 		)
 	}
+	request.Transform()
 
 	res, err := h.service.PlaceSingleOrder(
 		c.Request().Context(),

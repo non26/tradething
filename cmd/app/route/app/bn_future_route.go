@@ -3,7 +3,9 @@ package route
 import (
 	bnservice "tradething/app/bn/bn_future/bnservice"
 	handler "tradething/app/bn/bn_future/handler"
+	svcrepository "tradething/app/bn/bn_future/repository"
 	service "tradething/app/bn/bn_future/service"
+	"tradething/app/bn/bncommon"
 	"tradething/config"
 
 	"github.com/labstack/echo/v4"
@@ -14,6 +16,10 @@ func BnRouting(
 	serviceName string,
 	secret *config.Secrets,
 	bnFutureConfig *config.BinanceFutureUrl,
+	orderType bncommon.IOrderType,
+	positionSide bncommon.IPositionSide,
+	side bncommon.ISide,
+	svcRepository svcrepository.IRepository,
 ) {
 	binanceGroup := app.Group("/" + serviceName)
 	binanceServie := bnservice.NewBinanceFutureExternalService(
@@ -24,6 +30,7 @@ func BnRouting(
 	service := service.NewBinanceFutureService(
 		serviceName,
 		binanceServie,
+		svcRepository,
 	)
 
 	placeOrderHandler := handler.NewPlaceSinglerOrderHandler(

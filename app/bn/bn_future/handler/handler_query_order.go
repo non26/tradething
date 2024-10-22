@@ -49,6 +49,7 @@ func (h *queryOrderHandler) Handler(c echo.Context) error {
 			},
 		)
 	}
+	request.Transform()
 
 	res, err := h.service.QueryOrder(
 		c.Request().Context(),

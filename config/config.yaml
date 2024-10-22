@@ -2,6 +2,12 @@ environment: local
 
 port: 8080
 
+dynamodb:
+  region:
+  ak:
+  sk:
+  endpoint:
+
 service-name:
   binance-future: BNF
   binance-spot: BNS

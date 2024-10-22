@@ -10,6 +10,14 @@ type AppConfig struct {
 	KCFutureUrl      KCFutureUrl      `mapstructure:"kucoin-future-url" json:"kucoin-future-url"`
 	KCSpotUrl        KCSpotUrl        `mapstructure:"kucoin-spot-url" json:"kucoin-spot-url"`
 	KubSpotUrl       KubSpotUrl       `mapstructure:"kub-spot-url" json:"kub-spot-url"`
+	Dynamodb         Dynamodb         `mapstructure:"dynamodb" json:"dynamodb"`
+}
+
+type Dynamodb struct {
+	Region   string `mapstructure:"region" json:"region"`
+	Ak       string `mapstructure:"ak" json:"ak"`
+	Sk       string `mapstructure:"sk" json:"sk"`
+	Endpoint string `mapstructure:"endpoint" json:"endpoint"`
 }
 
 type Secrets struct {

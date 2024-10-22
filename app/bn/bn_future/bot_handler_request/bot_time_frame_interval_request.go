@@ -1,8 +1,10 @@
 package bnfuture
 
 import (
+	"fmt"
 	"strings"
 	bnserivcemodelreq "tradething/app/bn/bn_future/bnservice_request_model"
+	"tradething/app/bn/bncommon"
 )
 
 type TradeTimeIntervalBinanceFutureRequest struct {
@@ -12,20 +14,26 @@ type TradeTimeIntervalBinanceFutureRequest struct {
 	Symbol          string  `json:"symbol"`        // btcusdt
 	PrevClientId    string  `json:"prevCliId"`
 	CurrentClientId string  `json:"currCliId"`
-	LeverageLevel   string  `json:"leverageLevel"` // 125
+	// LeverageLevel   string  `json:"leverageLevel"` // 125
+}
+
+func (t *TradeTimeIntervalBinanceFutureRequest) Validate() error {
+	position_side := bncommon.NewPositionSide()
+	if !(position_side.IsLong(t.PositionSide) || position_side.IsShort(t.PositionSide)) {
+		return fmt.Errorf("invalid position side")
+	}
+	if t.Symbol == "" {
+		return fmt.Errorf("symbol is required")
+	}
+	if t.EntryQuantity <= 0 {
+		return fmt.Errorf("entry quantity must be greater than 0")
+	}
+	return nil
 }
 
 func (t *TradeTimeIntervalBinanceFutureRequest) ToUpper() {
 	t.PositionSide = strings.ToUpper(t.PositionSide)
 	t.Symbol = strings.ToUpper(t.Symbol)
-}
-
-func (t TradeTimeIntervalBinanceFutureRequest) IsPositionSideLong() bool {
-	return t.PositionSide == "LONG"
-}
-
-func (t TradeTimeIntervalBinanceFutureRequest) IsPositionSideShort() bool {
-	return t.PositionSide == "SHORT"
 }
 
 func (t *TradeTimeIntervalBinanceFutureRequest) ToQueryOrderBinanceServiceRequest() *bnserivcemodelreq.QueryOrderBinanceServiceRequest {
