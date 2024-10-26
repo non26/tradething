@@ -50,3 +50,10 @@ func (t *TradeTimeIntervalBinanceFutureRequest) ToBnFutureOpeningPositionEntity(
 		SellOrderCreatedAt: "",
 	}
 }
+
+func (t *TradeTimeIntervalBinanceFutureRequest) ToBnFutureQouteUSDTEntity(countingSymbol int) *svcrepo.BinanceFutureQouteUSDT {
+	return &svcrepo.BinanceFutureQouteUSDT{
+		Symbol:         t.Symbol,
+		CountingSymbol: countingSymbol,
+	}
+}

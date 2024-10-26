@@ -21,13 +21,10 @@ func (b *botService) TimeIntervalSemiBotService(
 		return nil, err
 	}
 
-	prev_side := openingOrder.Side
-	prev_position_side := openingOrder.PositionSide
-
 	var openNewOrderReq *bnserivcemodelreq.PlaceSignleOrderBinanceServiceRequest
 	var closeOlderOrderReq *bnserivcemodelreq.PlaceSignleOrderBinanceServiceRequest
 	if !openingOrder.IsEmpty() {
-		if b.side.IsBuy(prev_side) && b.position_side.IsLong(prev_position_side) {
+		if b.side.IsBuy(openingOrder.Side) && b.position_side.IsLong(openingOrder.PositionSide) {
 			if b.position_side.IsLong(req.PositionSide) {
 				openNewOrderReq = openNewOrderReq.New()
 				openNewOrderReq.SetPositionSide(req.PositionSide)
@@ -52,7 +49,7 @@ func (b *botService) TimeIntervalSemiBotService(
 			closeOlderOrderReq.SetEntryQuantity(openingOrder.AmountQ)
 			closeOlderOrderReq.SetSymbol(req.Symbol)
 			closeOlderOrderReq.SetClientOrderId(openNewOrderReq.ClientOrderId)
-		} else if b.side.IsSell(prev_side) && b.position_side.IsShort(prev_position_side) {
+		} else if b.side.IsSell(openingOrder.Side) && b.position_side.IsShort(openingOrder.PositionSide) {
 			if b.position_side.IsLong(req.PositionSide) {
 				openNewOrderReq = openNewOrderReq.New()
 				openNewOrderReq.SetPositionSide(req.PositionSide)
@@ -119,10 +116,12 @@ func (b *botService) TimeIntervalSemiBotService(
 		if err != nil {
 			return nil, err
 		}
-		err = b.bn_repository.UpdateCountingSymbolQouteUSDT(ctx, currentSymbolQoute)
+		err = b.bn_repository.UpdateCountingSymbolQouteUSDT(
+			ctx, req.ToBnFutureQouteUSDTEntity(currentSymbolQoute.GetNextCounting().Int()))
 		if err != nil {
 			return nil, err
 		}
+
 		if !openingOrder.IsEmpty() {
 			err = b.bn_repository.DeleteOpenOrderBySymbol(ctx, req.Symbol)
 			if err != nil {
@@ -134,7 +133,7 @@ func (b *botService) TimeIntervalSemiBotService(
 			req.ToBnFutureOpeningPositionEntity(
 				openNewOrderReq.Side,
 				req.LeverageLevel,
-				currentSymbolQoute.GetNextCounting().String()))
+				openNewOrderReq.ClientOrderId))
 		if err != nil {
 			return nil, err
 		}
