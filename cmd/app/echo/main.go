@@ -23,7 +23,7 @@ func main() {
 	dynamodbconfig := svcrepository.NewDynamodbConfig()
 	dynamodbendpoint := svcrepository.NewEndPointResolver(config.Dynamodb.Region, config.Dynamodb.Endpoint)
 	dynamodbcredential := svcrepository.NewCredential(config.Dynamodb.Ak, config.Dynamodb.Sk)
-	dynamodbclient := svcrepository.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).New()
+	dynamodbclient := svcrepository.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewLocal()
 	svcrepository := svcrepository.NewDynamoDBRepository(dynamodbclient)
 
 	httptransport := bncommon.NewBinanceTransport(&http.Transport{})

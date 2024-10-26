@@ -1,6 +1,7 @@
 package bncommon
 
 import (
+	"fmt"
 	"net/url"
 	"reflect"
 	"time"
@@ -24,4 +25,12 @@ func GetTimeStamp() int64 {
 
 func GetStructTagValueByIndex(st reflect.Type, tag string, index int) string {
 	return st.FieldByIndex([]int{index}).Tag.Get(tag)
+}
+
+func GetStructTagValueByField(st reflect.Type, field string) (string, error) {
+	_field, found := st.FieldByName(field)
+	if !found {
+		return "", fmt.Errorf("field not found under %s field", field)
+	}
+	return string(_field.Name), nil
 }

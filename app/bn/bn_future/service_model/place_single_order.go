@@ -1,6 +1,7 @@
 package bnfuture
 
 import (
+	"fmt"
 	"strings"
 	bnSvcfuture "tradething/app/bn/bn_future/bnservice_request_model"
 	repomodel "tradething/app/bn/bn_future/repository_model"
@@ -79,6 +80,6 @@ func (p *PlaceSignleOrderServiceRequest) ToRepositoryModel() *repomodel.BinanceF
 	m.Symbol = p.symbol
 	m.PositionSide = p.positionSide
 	m.AmountQ = p.entryQuantity
-	m.Leverage = p.leverageLevel
+	m.Leverage = fmt.Sprintf("%v", p.leverageLevel)
 	return m
 }

@@ -13,6 +13,14 @@ type AppConfig struct {
 	Dynamodb         Dynamodb         `mapstructure:"dynamodb" json:"dynamodb"`
 }
 
+func (c *AppConfig) IsLocal() bool {
+	return c.Env == "local"
+}
+
+func (c *AppConfig) IsPrd() bool {
+	return c.Env == "prd"
+}
+
 type Dynamodb struct {
 	Region   string `mapstructure:"region" json:"region"`
 	Ak       string `mapstructure:"ak" json:"ak"`

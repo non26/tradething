@@ -1,6 +1,7 @@
 package bnfuture
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 	"tradething/app/bn/bncommon"
@@ -75,6 +76,10 @@ func (p *PlaceSignleOrderBinanceServiceRequest) SetSymbol(symbol string) {
 
 func (p *PlaceSignleOrderBinanceServiceRequest) SetClientOrderId(client_order_id string) {
 	p.ClientOrderId = client_order_id
+}
+
+func (p *PlaceSignleOrderBinanceServiceRequest) SetDefaultClientOrderId(client_order_id string) {
+	p.ClientOrderId = fmt.Sprintf("%v_%v", p.Symbol, client_order_id)
 }
 
 func (p *PlaceSignleOrderBinanceServiceRequest) SetType(order_type string) {

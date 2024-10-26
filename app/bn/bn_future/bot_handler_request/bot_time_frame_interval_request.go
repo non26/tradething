@@ -3,18 +3,18 @@ package bnfuture
 import (
 	"fmt"
 	"strings"
-	bnserivcemodelreq "tradething/app/bn/bn_future/bnservice_request_model"
+	svcrepo "tradething/app/bn/bn_future/repository_model"
 	"tradething/app/bn/bncommon"
 )
 
 type TradeTimeIntervalBinanceFutureRequest struct {
 	// Side          string  `json:"side"`
-	PositionSide    string  `json:"positionSide"`  // long/short
-	EntryQuantity   float64 `json:"entryQuantity"` // 0.005
-	Symbol          string  `json:"symbol"`        // btcusdt
-	PrevClientId    string  `json:"prevCliId"`
-	CurrentClientId string  `json:"currCliId"`
-	// LeverageLevel   string  `json:"leverageLevel"` // 125
+	PositionSide  string  `json:"positionSide"`  // long/short
+	EntryQuantity float64 `json:"entryQuantity"` // 0.005
+	Symbol        string  `json:"symbol"`        // btcusdt
+	// PrevClientId    string  `json:"prevCliId"`
+	// CurrentClientId string  `json:"currCliId"`
+	LeverageLevel string `json:"leverageLevel"` // 125
 }
 
 func (t *TradeTimeIntervalBinanceFutureRequest) Validate() error {
@@ -36,9 +36,17 @@ func (t *TradeTimeIntervalBinanceFutureRequest) ToUpper() {
 	t.Symbol = strings.ToUpper(t.Symbol)
 }
 
-func (t *TradeTimeIntervalBinanceFutureRequest) ToQueryOrderBinanceServiceRequest() *bnserivcemodelreq.QueryOrderBinanceServiceRequest {
-	return &bnserivcemodelreq.QueryOrderBinanceServiceRequest{
-		Symbol:            t.Symbol,
-		OrigClientOrderId: t.PrevClientId,
+func (t *TradeTimeIntervalBinanceFutureRequest) ToBnFutureOpeningPositionEntity(side string, leverage string, clientId string) *svcrepo.BinanceFutureOpeningPosition {
+	return &svcrepo.BinanceFutureOpeningPosition{
+		Symbol:             t.Symbol,
+		PositionSide:       t.PositionSide,
+		ClientId:           clientId,
+		AmountQ:            fmt.Sprintf("%v", t.EntryQuantity),
+		Side:               side,
+		ExchangeId:         0,
+		Leverage:           "",
+		AmountB:            "",
+		BuyOrderCreatedAt:  "",
+		SellOrderCreatedAt: "",
 	}
 }

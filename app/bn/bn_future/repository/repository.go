@@ -44,6 +44,9 @@ type IRepository interface {
 	GetOpenOrderByClientID(ctx context.Context, clientId string) (*repomodel.BinanceFutureOpeningPosition, error)
 	NewOpenOrder(ctx context.Context, openOrder *repomodel.BinanceFutureOpeningPosition) error
 	DeleteOpenOrderBySymbol(ctx context.Context, symbol string) error
+
+	GetQouteUSDT(ctx context.Context, symbol string) (*repomodel.BinanceFutureQouteUSDT, error)
+	UpdateCountingSymbolQouteUSDT(ctx context.Context, qouteUSDT *repomodel.BinanceFutureQouteUSDT) error
 }
 
 type dynamoDBRepository struct {
@@ -64,10 +67,17 @@ type newDynamodb struct {
 	_awsconfig  aws.Config
 }
 
-func (c newDynamodb) New() *dynamodb.Client {
+func (c newDynamodb) NewLocal() *dynamodb.Client {
 	svc := dynamodb.NewFromConfig(c._awsconfig, func(o *dynamodb.Options) {
 		o.Credentials = c._credential
 		o.EndpointResolverV2 = c._endPoint
+	})
+	return svc
+}
+
+func (c newDynamodb) NewPrd() *dynamodb.Client {
+	svc := dynamodb.NewFromConfig(c._awsconfig, func(o *dynamodb.Options) {
+		o.Credentials = c._credential
 	})
 	return svc
 }

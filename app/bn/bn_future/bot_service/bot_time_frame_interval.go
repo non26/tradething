@@ -16,6 +16,11 @@ func (b *botService) TimeIntervalSemiBotService(
 	if err != nil {
 		return nil, err
 	}
+	currentSymbolQoute, err := b.bn_repository.GetQouteUSDT(ctx, req.Symbol)
+	if err != nil {
+		return nil, err
+	}
+
 	prev_side := openingOrder.Side
 	prev_position_side := openingOrder.PositionSide
 
@@ -30,7 +35,7 @@ func (b *botService) TimeIntervalSemiBotService(
 				openNewOrderReq.SetType(b.order_type.Market())
 				openNewOrderReq.SetEntryQuantity(fmt.Sprintf("%v", req.EntryQuantity))
 				openNewOrderReq.SetSymbol(req.Symbol)
-				openNewOrderReq.SetClientOrderId(req.CurrentClientId)
+				openNewOrderReq.SetDefaultClientOrderId(currentSymbolQoute.GetNextCounting().String())
 			} else if b.position_side.IsShort(req.PositionSide) {
 				openNewOrderReq = openNewOrderReq.New()
 				openNewOrderReq.SetPositionSide(req.PositionSide)
@@ -38,7 +43,7 @@ func (b *botService) TimeIntervalSemiBotService(
 				openNewOrderReq.SetType(b.order_type.Market())
 				openNewOrderReq.SetEntryQuantity(fmt.Sprintf("%v", req.EntryQuantity))
 				openNewOrderReq.SetSymbol(req.Symbol)
-				openNewOrderReq.SetClientOrderId(req.CurrentClientId)
+				openNewOrderReq.SetDefaultClientOrderId(currentSymbolQoute.GetNextCounting().String())
 			}
 			closeOlderOrderReq = closeOlderOrderReq.New()
 			closeOlderOrderReq.SetPositionSide(b.position_side.Long())
@@ -46,7 +51,7 @@ func (b *botService) TimeIntervalSemiBotService(
 			closeOlderOrderReq.SetType(b.order_type.Market())
 			closeOlderOrderReq.SetEntryQuantity(openingOrder.AmountQ)
 			closeOlderOrderReq.SetSymbol(req.Symbol)
-			closeOlderOrderReq.SetClientOrderId(req.PrevClientId)
+			closeOlderOrderReq.SetClientOrderId(openNewOrderReq.ClientOrderId)
 		} else if b.side.IsSell(prev_side) && b.position_side.IsShort(prev_position_side) {
 			if b.position_side.IsLong(req.PositionSide) {
 				openNewOrderReq = openNewOrderReq.New()
@@ -55,7 +60,7 @@ func (b *botService) TimeIntervalSemiBotService(
 				openNewOrderReq.SetType(b.order_type.Market())
 				openNewOrderReq.SetEntryQuantity(fmt.Sprintf("%v", req.EntryQuantity))
 				openNewOrderReq.SetSymbol(req.Symbol)
-				openNewOrderReq.SetClientOrderId(req.CurrentClientId)
+				openNewOrderReq.SetDefaultClientOrderId(currentSymbolQoute.GetNextCounting().String())
 			} else if b.position_side.IsShort(req.PositionSide) {
 				openNewOrderReq = openNewOrderReq.New()
 				openNewOrderReq.SetPositionSide(req.PositionSide)
@@ -63,7 +68,7 @@ func (b *botService) TimeIntervalSemiBotService(
 				openNewOrderReq.SetType(b.order_type.Market())
 				openNewOrderReq.SetEntryQuantity(fmt.Sprintf("%v", req.EntryQuantity))
 				openNewOrderReq.SetSymbol(req.Symbol)
-				openNewOrderReq.SetClientOrderId(req.CurrentClientId)
+				openNewOrderReq.SetDefaultClientOrderId(currentSymbolQoute.GetNextCounting().String())
 			}
 			closeOlderOrderReq = closeOlderOrderReq.New()
 			closeOlderOrderReq.SetPositionSide(b.position_side.Short())
@@ -71,16 +76,26 @@ func (b *botService) TimeIntervalSemiBotService(
 			closeOlderOrderReq.SetType(b.order_type.Market())
 			closeOlderOrderReq.SetEntryQuantity(openingOrder.AmountQ)
 			closeOlderOrderReq.SetSymbol(openingOrder.Symbol)
-			closeOlderOrderReq.SetClientOrderId(req.PrevClientId)
+			closeOlderOrderReq.SetClientOrderId(openNewOrderReq.ClientOrderId)
 		}
 	} else {
-		openNewOrderReq = openNewOrderReq.New()
-		openNewOrderReq.SetPositionSide(req.PositionSide)
-		openNewOrderReq.SetSide(b.side.Buy())
-		openNewOrderReq.SetType(b.order_type.Market())
-		openNewOrderReq.SetEntryQuantity(fmt.Sprintf("%v", req.EntryQuantity))
-		openNewOrderReq.SetSymbol(req.Symbol)
-		openNewOrderReq.SetClientOrderId(req.CurrentClientId)
+		if b.position_side.IsLong(req.PositionSide) {
+			openNewOrderReq = openNewOrderReq.New()
+			openNewOrderReq.SetPositionSide(req.PositionSide)
+			openNewOrderReq.SetSide(b.side.Buy())
+			openNewOrderReq.SetType(b.order_type.Market())
+			openNewOrderReq.SetEntryQuantity(fmt.Sprintf("%v", req.EntryQuantity))
+			openNewOrderReq.SetSymbol(req.Symbol)
+			openNewOrderReq.SetDefaultClientOrderId(currentSymbolQoute.GetNextCounting().String())
+		} else {
+			openNewOrderReq = openNewOrderReq.New()
+			openNewOrderReq.SetPositionSide(req.PositionSide)
+			openNewOrderReq.SetSide(b.side.Sell())
+			openNewOrderReq.SetType(b.order_type.Market())
+			openNewOrderReq.SetEntryQuantity(fmt.Sprintf("%v", req.EntryQuantity))
+			openNewOrderReq.SetSymbol(req.Symbol)
+			openNewOrderReq.SetDefaultClientOrderId(currentSymbolQoute.GetNextCounting().String())
+		}
 	}
 
 	if closeOlderOrderReq != nil {
@@ -90,17 +105,36 @@ func (b *botService) TimeIntervalSemiBotService(
 		}
 	}
 	if openNewOrderReq != nil {
-		// if req.LeverageLevel != "" {
-		// 	_, err := b.bn_service.SetNewLeverage(ctx, &bnserivcemodelreq.SetLeverageBinanceServiceRequest{
-		// 		Symbol:   openNewOrderReq.Symbol,
-		// 		Leverage: req.LeverageLevel,
-		// 	})
-		// 	if err != nil {
-		// 		return nil, err
-		// 	}
-		// }
+		if req.LeverageLevel != "" {
+			_, err := b.bn_service.SetNewLeverage(ctx, &bnserivcemodelreq.SetLeverageBinanceServiceRequest{
+				Symbol:   openNewOrderReq.Symbol,
+				Leverage: req.LeverageLevel,
+			})
+			if err != nil {
+				return nil, err
+			}
+		}
 
 		_, err = b.bn_service.PlaceSingleOrder(ctx, openNewOrderReq)
+		if err != nil {
+			return nil, err
+		}
+		err = b.bn_repository.UpdateCountingSymbolQouteUSDT(ctx, currentSymbolQoute)
+		if err != nil {
+			return nil, err
+		}
+		if !openingOrder.IsEmpty() {
+			err = b.bn_repository.DeleteOpenOrderBySymbol(ctx, req.Symbol)
+			if err != nil {
+				return nil, err
+			}
+		}
+		err = b.bn_repository.NewOpenOrder(
+			ctx,
+			req.ToBnFutureOpeningPositionEntity(
+				openNewOrderReq.Side,
+				req.LeverageLevel,
+				currentSymbolQoute.GetNextCounting().String()))
 		if err != nil {
 			return nil, err
 		}

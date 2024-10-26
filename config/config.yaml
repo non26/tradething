@@ -3,10 +3,10 @@ environment: local
 port: 8080
 
 dynamodb:
-  region:
-  ak:
-  sk:
-  endpoint:
+  region: us-west-2
+  ak: w66e3f
+  sk: 4238kj
+  endpoint: http://localhost:8000
 
 service-name:
   binance-future: BNF
@@ -18,8 +18,8 @@ service-name:
   kub-spot: BKS
 
 secrets:
-  binance-apikey: 818a296894ac07183f7595444e21b08e5b307c81e905c65fefdeeccc9ac507d5
-  binance-secretKey: 4a5df610beb4ae7d3b16a87170a407c1d88611908948bb7a972e25c887f7df91
+  binance-apikey: 79c5d0858edfd09a166f5a1c69ad876518174fa72af071a16c2ca21bd50e4c1d
+  binance-secretKey: c921a243ffa6b57dca1db29959d8e2cc0d1828cf3f3848d94a5533de45c2ce1d
   okx-apiKey: 
   okx-secretKey: 
   okx-passPhase: 

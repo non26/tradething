@@ -11,6 +11,7 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	echoadapter "github.com/awslabs/aws-lambda-go-api-proxy/echo"
 	"github.com/labstack/echo/v4"
 )
@@ -32,7 +33,12 @@ func init() {
 	dynamodbconfig := svcrepository.NewDynamodbConfig()
 	dynamodbendpoint := svcrepository.NewEndPointResolver(_config.Dynamodb.Region, _config.Dynamodb.Endpoint)
 	dynamodbcredential := svcrepository.NewCredential(_config.Dynamodb.Ak, _config.Dynamodb.Sk)
-	dynamodbclient := svcrepository.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).New()
+	var dynamodbclient *dynamodb.Client
+	if _config.IsLocal() {
+		dynamodbclient = svcrepository.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewLocal()
+	} else {
+		dynamodbclient = svcrepository.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewPrd()
+	}
 	svcrepository := svcrepository.NewDynamoDBRepository(dynamodbclient)
 	httptransport := bncommon.NewBinanceTransport(&http.Transport{})
 	httpclient := bncommon.NewBinanceSerivceHttpClient()
