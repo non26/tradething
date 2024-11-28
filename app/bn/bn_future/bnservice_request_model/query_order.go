@@ -3,7 +3,8 @@ package bnfuture
 import (
 	"strconv"
 	"strings"
-	"tradething/app/bn/bncommon"
+
+	bnutils "github.com/non26/tradepkg/pkg/bn/utils"
 )
 
 type QueryOrderBinanceServiceRequest struct {
@@ -25,7 +26,7 @@ func (q *QueryOrderBinanceServiceRequest) GetData() interface{} {
 }
 
 func (q *QueryOrderBinanceServiceRequest) setTimeStamp() {
-	q.Timestamp = strconv.FormatInt(bncommon.GetTimeStamp(), 10)
+	q.Timestamp = strconv.FormatInt(bnutils.GetBinanceTimestamp(), 10)
 }
 
 func (q *QueryOrderBinanceServiceRequest) checkClientId() {

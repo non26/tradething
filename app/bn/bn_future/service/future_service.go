@@ -4,8 +4,9 @@ import (
 	"context"
 	bnfuture "tradething/app/bn/bn_future/bnservice"
 	svchandlerres "tradething/app/bn/bn_future/handler_response_model"
-	svcrepo "tradething/app/bn/bn_future/repository"
 	svcfuture "tradething/app/bn/bn_future/service_model"
+
+	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_repository"
 )
 
 type IBinanceFutureService interface {
@@ -26,13 +27,13 @@ type IBinanceFutureService interface {
 type binanceFutureService struct {
 	binanceFutureServiceName string
 	binanceService           bnfuture.IBinanceFutureExternalService
-	repository               svcrepo.IRepository
+	repository               bndynamodb.IRepository
 }
 
 func NewBinanceFutureService(
 	binanceFutureServiceName string,
 	binanceService bnfuture.IBinanceFutureExternalService,
-	repository svcrepo.IRepository,
+	repository bndynamodb.IRepository,
 ) IBinanceFutureService {
 	return &binanceFutureService{
 		binanceFutureServiceName,

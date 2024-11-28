@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"tradething/app/bn/bncommon"
+
+	bnutils "github.com/non26/tradepkg/pkg/bn/utils"
 )
 
 type PlaceSignleOrderBinanceServiceRequest struct {
@@ -35,7 +36,7 @@ func (p *PlaceSignleOrderBinanceServiceRequest) GetData() interface{} {
 }
 
 func (p *PlaceSignleOrderBinanceServiceRequest) setTimestamp() {
-	p.Timestamp = strconv.FormatInt(bncommon.GetTimeStamp(), 10)
+	p.Timestamp = strconv.FormatInt(bnutils.GetBinanceTimestamp(), 10)
 }
 
 func (p *PlaceSignleOrderBinanceServiceRequest) checkClientOrderId() {

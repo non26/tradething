@@ -5,8 +5,10 @@ import (
 	"net/http"
 	"tradething/cmd/app"
 
-	svcrepository "tradething/app/bn/bn_future/repository"
-	"tradething/app/bn/bncommon"
+	bnclient "github.com/non26/tradepkg/pkg/bn/binance_client"
+	bntransport "github.com/non26/tradepkg/pkg/bn/binance_transport"
+	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_repository"
+	positionconst "github.com/non26/tradepkg/pkg/bn/position_constant"
 
 	"github.com/labstack/echo/v4"
 )
@@ -17,17 +19,17 @@ func main() {
 		panic(err.Error())
 	}
 
-	ordertype := bncommon.NewOrderType()
-	side := bncommon.NewSide()
-	positionSide := bncommon.NewPositionSide()
-	dynamodbconfig := svcrepository.NewDynamodbConfig()
-	dynamodbendpoint := svcrepository.NewEndPointResolver(config.Dynamodb.Region, config.Dynamodb.Endpoint)
-	dynamodbcredential := svcrepository.NewCredential(config.Dynamodb.Ak, config.Dynamodb.Sk)
-	dynamodbclient := svcrepository.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewLocal()
-	svcrepository := svcrepository.NewDynamoDBRepository(dynamodbclient)
+	ordertype := positionconst.NewOrderType()
+	side := positionconst.NewSide()
+	positionSide := positionconst.NewPositionSide()
+	dynamodbconfig := bndynamodb.NewDynamodbConfig()
+	dynamodbendpoint := bndynamodb.NewEndPointResolver(config.Dynamodb.Region, config.Dynamodb.Endpoint)
+	dynamodbcredential := bndynamodb.NewCredential(config.Dynamodb.Ak, config.Dynamodb.Sk)
+	dynamodbclient := bndynamodb.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewLocal()
+	svcrepository := bndynamodb.NewDynamoDBRepository(dynamodbclient)
 
-	httptransport := bncommon.NewBinanceTransport(&http.Transport{})
-	httpclient := bncommon.NewBinanceSerivceHttpClient()
+	httptransport := bntransport.NewBinanceTransport(&http.Transport{})
+	httpclient := bnclient.NewBinanceSerivceHttpClient()
 
 	app_echo := echo.New()
 	app.HealthCheck(app_echo)

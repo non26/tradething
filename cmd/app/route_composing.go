@@ -5,10 +5,13 @@ import (
 	bothandler "tradething/app/bn/bn_future/bot_handler"
 	botservice "tradething/app/bn/bn_future/bot_service"
 	handler "tradething/app/bn/bn_future/handler"
-	svcrepository "tradething/app/bn/bn_future/repository"
 	service "tradething/app/bn/bn_future/service"
-	"tradething/app/bn/bncommon"
 	lambdaroute "tradething/cmd/app/route/lambda"
+
+	bnclient "github.com/non26/tradepkg/pkg/bn/binance_client"
+	bntransport "github.com/non26/tradepkg/pkg/bn/binance_transport"
+	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_repository"
+	positionconst "github.com/non26/tradepkg/pkg/bn/position_constant"
 
 	"tradething/config"
 
@@ -18,12 +21,12 @@ import (
 func RouteRestApiConposing(
 	app *echo.Echo,
 	config *config.AppConfig,
-	orderType bncommon.IOrderType,
-	positionSide bncommon.IPositionSide,
-	side bncommon.ISide,
-	svcRepository svcrepository.IRepository,
-	httpttransport bncommon.IBinanceServiceHttpTransport,
-	httpclient bncommon.IBinanceSerivceHttpClient,
+	orderType positionconst.IOrderType,
+	positionSide positionconst.IPositionSide,
+	side positionconst.ISide,
+	svcRepository bndynamodb.IRepository,
+	httpttransport bntransport.IBinanceServiceHttpTransport,
+	httpclient bnclient.IBinanceSerivceHttpClient,
 ) {
 	binanceGroup := app.Group("/" + config.ServiceName.BinanceFuture)
 	binanceServie := bnservice.NewBinanceFutureExternalService(
@@ -59,12 +62,12 @@ func RouteRestApiConposing(
 func RouteSemiBotComposing(
 	app *echo.Echo,
 	config *config.AppConfig,
-	orderType bncommon.IOrderType,
-	positionSide bncommon.IPositionSide,
-	side bncommon.ISide,
-	svcRepository svcrepository.IRepository,
-	httpttransport bncommon.IBinanceServiceHttpTransport,
-	httpclient bncommon.IBinanceSerivceHttpClient,
+	orderType positionconst.IOrderType,
+	positionSide positionconst.IPositionSide,
+	side positionconst.ISide,
+	svcRepository bndynamodb.IRepository,
+	httpttransport bntransport.IBinanceServiceHttpTransport,
+	httpclient bnclient.IBinanceSerivceHttpClient,
 ) {
 	service_name := "bn-future-semibot"
 

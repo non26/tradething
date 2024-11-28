@@ -5,8 +5,9 @@ import (
 	bnservice "tradething/app/bn/bn_future/bnservice"
 	bothandlerreq "tradething/app/bn/bn_future/bot_handler_request"
 	bothandlerres "tradething/app/bn/bn_future/bot_handler_response"
-	bnrepository "tradething/app/bn/bn_future/repository"
-	"tradething/app/bn/bncommon"
+
+	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_repository"
+	positionconstant "github.com/non26/tradepkg/pkg/bn/position_constant"
 )
 
 type IBotService interface {
@@ -18,18 +19,18 @@ type IBotService interface {
 
 type botService struct {
 	bn_service    bnservice.IBinanceFutureExternalService
-	bn_repository bnrepository.IRepository
-	order_type    bncommon.IOrderType
-	position_side bncommon.IPositionSide
-	side          bncommon.ISide
+	bn_repository bndynamodb.IRepository
+	order_type    positionconstant.IOrderType
+	position_side positionconstant.IPositionSide
+	side          positionconstant.ISide
 }
 
 func NewBotService(
 	bn_service bnservice.IBinanceFutureExternalService,
-	bn_repository bnrepository.IRepository,
-	order_type bncommon.IOrderType,
-	position_side bncommon.IPositionSide,
-	side bncommon.ISide,
+	bn_repository bndynamodb.IRepository,
+	order_type positionconstant.IOrderType,
+	position_side positionconstant.IPositionSide,
+	side positionconstant.ISide,
 ) IBotService {
 	return &botService{
 		bn_service:    bn_service,

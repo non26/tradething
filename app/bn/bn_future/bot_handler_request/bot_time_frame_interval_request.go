@@ -3,8 +3,9 @@ package bnfuture
 import (
 	"fmt"
 	"strings"
-	svcrepo "tradething/app/bn/bn_future/repository_model"
-	"tradething/app/bn/bncommon"
+
+	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
+	positionconst "github.com/non26/tradepkg/pkg/bn/position_constant"
 )
 
 type TradeTimeIntervalBinanceFutureRequest struct {
@@ -18,7 +19,7 @@ type TradeTimeIntervalBinanceFutureRequest struct {
 }
 
 func (t *TradeTimeIntervalBinanceFutureRequest) Validate() error {
-	position_side := bncommon.NewPositionSide()
+	position_side := positionconst.NewPositionSide()
 	if !(position_side.IsLong(t.PositionSide) || position_side.IsShort(t.PositionSide)) {
 		return fmt.Errorf("invalid position side")
 	}
@@ -36,8 +37,8 @@ func (t *TradeTimeIntervalBinanceFutureRequest) ToUpper() {
 	t.Symbol = strings.ToUpper(t.Symbol)
 }
 
-func (t *TradeTimeIntervalBinanceFutureRequest) ToBnFutureOpeningPositionEntity(side string, leverage string, clientId string) *svcrepo.BinanceFutureOpeningPosition {
-	return &svcrepo.BinanceFutureOpeningPosition{
+func (t *TradeTimeIntervalBinanceFutureRequest) ToBnFutureOpeningPositionEntity(side string, leverage string, clientId string) *dynamodbmodel.BinanceFutureOpeningPosition {
+	return &dynamodbmodel.BinanceFutureOpeningPosition{
 		Symbol:             t.Symbol,
 		PositionSide:       t.PositionSide,
 		ClientId:           clientId,
@@ -51,8 +52,8 @@ func (t *TradeTimeIntervalBinanceFutureRequest) ToBnFutureOpeningPositionEntity(
 	}
 }
 
-func (t *TradeTimeIntervalBinanceFutureRequest) ToBnFutureQouteUSDTEntity(countingSymbol int) *svcrepo.BinanceFutureQouteUSDT {
-	return &svcrepo.BinanceFutureQouteUSDT{
+func (t *TradeTimeIntervalBinanceFutureRequest) ToBnFutureQouteUSDTEntity(countingSymbol int) *dynamodbmodel.BinanceFutureQouteUSDT {
+	return &dynamodbmodel.BinanceFutureQouteUSDT{
 		Symbol:         t.Symbol,
 		CountingSymbol: countingSymbol,
 	}

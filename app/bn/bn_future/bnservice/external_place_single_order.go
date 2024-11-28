@@ -3,10 +3,13 @@ package bnfuture
 import (
 	"context"
 	"net/http"
-	"tradething/app/bn/bncommon"
 
 	bnfuturereq "tradething/app/bn/bn_future/bnservice_request_model"
 	bnfutureres "tradething/app/bn/bn_future/bnservice_response_model"
+
+	bncaller "github.com/non26/tradepkg/pkg/bn/binance_caller"
+	bnrequest "github.com/non26/tradepkg/pkg/bn/binance_request"
+	bnresponse "github.com/non26/tradepkg/pkg/bn/binance_response"
 )
 
 func (bfes *binanceFutureExternalService) PlaceSingleOrder(
@@ -14,9 +17,9 @@ func (bfes *binanceFutureExternalService) PlaceSingleOrder(
 	request *bnfuturereq.PlaceSignleOrderBinanceServiceRequest,
 ) (*bnfutureres.PlaceSignleOrderBinanceServiceResponse, error) {
 
-	c := NewCallBinance(
-		bncommon.NewBinanceServiceHttpRequest[bnfuturereq.PlaceSignleOrderBinanceServiceRequest](),
-		bncommon.NewBinanceServiceHttpResponse[bnfutureres.PlaceSignleOrderBinanceServiceResponse](),
+	c := bncaller.NewCallBinance(
+		bnrequest.NewBinanceServiceHttpRequest[bnfuturereq.PlaceSignleOrderBinanceServiceRequest](),
+		bnresponse.NewBinanceServiceHttpResponse[bnfutureres.PlaceSignleOrderBinanceServiceResponse](),
 		bfes.httpttransport,
 		bfes.httpclient,
 	)

@@ -3,17 +3,19 @@ package main
 import (
 	"context"
 	"net/http"
-	"tradething/app/bn/bncommon"
 	"tradething/cmd/app"
 	"tradething/config"
-
-	svcrepository "tradething/app/bn/bn_future/repository"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	echoadapter "github.com/awslabs/aws-lambda-go-api-proxy/echo"
 	"github.com/labstack/echo/v4"
+
+	bnclient "github.com/non26/tradepkg/pkg/bn/binance_client"
+	bntransport "github.com/non26/tradepkg/pkg/bn/binance_transport"
+	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_repository"
+	positionconst "github.com/non26/tradepkg/pkg/bn/position_constant"
 )
 
 var echoLambda *echoadapter.EchoLambda
@@ -27,21 +29,21 @@ func init() {
 		panic(err.Error())
 	}
 
-	ordertype := bncommon.NewOrderType()
-	side := bncommon.NewSide()
-	positionSide := bncommon.NewPositionSide()
-	dynamodbconfig := svcrepository.NewDynamodbConfig()
-	dynamodbendpoint := svcrepository.NewEndPointResolver(_config.Dynamodb.Region, _config.Dynamodb.Endpoint)
-	dynamodbcredential := svcrepository.NewCredential(_config.Dynamodb.Ak, _config.Dynamodb.Sk)
+	ordertype := positionconst.NewOrderType()
+	side := positionconst.NewSide()
+	positionSide := positionconst.NewPositionSide()
+	dynamodbconfig := bndynamodb.NewDynamodbConfig()
+	dynamodbendpoint := bndynamodb.NewEndPointResolver(_config.Dynamodb.Region, _config.Dynamodb.Endpoint)
+	dynamodbcredential := bndynamodb.NewCredential(_config.Dynamodb.Ak, _config.Dynamodb.Sk)
 	var dynamodbclient *dynamodb.Client
 	if _config.IsLocal() {
-		dynamodbclient = svcrepository.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewLocal()
+		dynamodbclient = bndynamodb.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewLocal()
 	} else {
-		dynamodbclient = svcrepository.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewPrd()
+		dynamodbclient = bndynamodb.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewPrd()
 	}
-	svcrepository := svcrepository.NewDynamoDBRepository(dynamodbclient)
-	httptransport := bncommon.NewBinanceTransport(&http.Transport{})
-	httpclient := bncommon.NewBinanceSerivceHttpClient()
+	svcrepository := bndynamodb.NewDynamoDBRepository(dynamodbclient)
+	httptransport := bntransport.NewBinanceTransport(&http.Transport{})
+	httpclient := bnclient.NewBinanceSerivceHttpClient()
 
 	app_echo := echo.New()
 	app.MiddlerwareComposing(app_echo)

@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"strings"
 	bnSvcfuture "tradething/app/bn/bn_future/bnservice_request_model"
-	repomodel "tradething/app/bn/bn_future/repository_model"
+
+	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
 )
 
 type PlaceSignleOrderServiceRequest struct {
@@ -75,8 +76,8 @@ func (p *PlaceSignleOrderServiceRequest) ToBinanceServiceModel() *bnSvcfuture.Pl
 	return &m
 }
 
-func (p *PlaceSignleOrderServiceRequest) ToRepositoryModel() *repomodel.BinanceFutureOpeningPositionTable {
-	m := repomodel.NewBinanceFutureOpeningPositionTable()
+func (p *PlaceSignleOrderServiceRequest) ToRepositoryModel() *dynamodbmodel.BinanceFutureOpeningPositionTable {
+	m := dynamodbmodel.NewBinanceFutureOpeningPositionTable()
 	m.Symbol = p.symbol
 	m.PositionSide = p.positionSide
 	m.AmountQ = p.entryQuantity

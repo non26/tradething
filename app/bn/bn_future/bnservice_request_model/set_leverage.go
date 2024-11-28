@@ -3,7 +3,8 @@ package bnfuture
 import (
 	"strconv"
 	"strings"
-	"tradething/app/bn/bncommon"
+
+	bnutils "github.com/non26/tradepkg/pkg/bn/utils"
 )
 
 type SetLeverageBinanceServiceRequest struct {
@@ -22,7 +23,7 @@ func (s *SetLeverageBinanceServiceRequest) GetData() interface{} {
 }
 
 func (s *SetLeverageBinanceServiceRequest) setTimeStamp() {
-	s.Timestamp = strconv.FormatInt(bncommon.GetTimeStamp(), 10)
+	s.Timestamp = strconv.FormatInt(bnutils.GetBinanceTimestamp(), 10)
 }
 
 func NewSetLeverageBinanceServiceRequest(
