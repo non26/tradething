@@ -49,7 +49,7 @@ func init() {
 	app.MiddlerwareComposing(app_echo)
 	app.HealthCheck(app_echo)
 	app.RouteRestApiConposing(app_echo, _config, ordertype, positionSide, side, svcrepository, httptransport, httpclient)
-	app.RouteSemiBotComposing(app_echo, _config, ordertype, positionSide, side, svcrepository, httptransport, httpclient)
+	// app.RouteSemiBotComposing(app_echo, _config, ordertype, positionSide, side, svcrepository, httptransport, httpclient)
 	app.RouteLambda(app_echo, _config)
 
 	echoLambda = echoadapter.New(app_echo)

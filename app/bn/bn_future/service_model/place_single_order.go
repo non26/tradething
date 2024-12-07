@@ -2,7 +2,9 @@ package bnfuture
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
+	"time"
 	bnSvcfuture "tradething/app/bn/bn_future/bnservice_request_model"
 
 	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
@@ -65,6 +67,20 @@ func (p *PlaceSignleOrderServiceRequest) SetClientOrderId(clientOrderId string) 
 	p.clientOrderId = clientOrderId
 }
 
+func (p *PlaceSignleOrderServiceRequest) AddEntryQuantity(entryQuantity string) {
+	var currentQuantity float64
+	currentQuantity, err := strconv.ParseFloat(p.entryQuantity, 64)
+	if err != nil {
+		return
+	}
+	var additionalQuantity float64
+	additionalQuantity, err = strconv.ParseFloat(entryQuantity, 64)
+	if err != nil {
+		return
+	}
+	p.entryQuantity = fmt.Sprintf("%v", currentQuantity+additionalQuantity)
+}
+
 func (p *PlaceSignleOrderServiceRequest) ToBinanceServiceModel() *bnSvcfuture.PlaceSignleOrderBinanceServiceRequest {
 	m := bnSvcfuture.PlaceSignleOrderBinanceServiceRequest{
 		PositionSide:  p.positionSide,
@@ -76,11 +92,17 @@ func (p *PlaceSignleOrderServiceRequest) ToBinanceServiceModel() *bnSvcfuture.Pl
 	return &m
 }
 
-func (p *PlaceSignleOrderServiceRequest) ToRepositoryModel() *dynamodbmodel.BinanceFutureOpeningPositionTable {
-	m := dynamodbmodel.NewBinanceFutureOpeningPositionTable()
-	m.Symbol = p.symbol
-	m.PositionSide = p.positionSide
-	m.AmountQ = p.entryQuantity
-	m.Leverage = fmt.Sprintf("%v", p.leverageLevel)
-	return m
+func (p *PlaceSignleOrderServiceRequest) ToBinanceFutureOpeningPositionRepositoryModel() *dynamodbmodel.BinanceFutureOpeningPosition {
+	m := dynamodbmodel.BinanceFutureOpeningPosition{
+		Symbol:             p.symbol,
+		PositionSide:       p.positionSide,
+		AmountQ:            p.entryQuantity,
+		Leverage:           fmt.Sprintf("%v", p.leverageLevel),
+		ClientId:           p.clientOrderId,
+		Side:               p.side,
+		AmountB:            "",
+		BuyOrderCreatedAt:  time.Now().Format(time.DateTime),
+		SellOrderCreatedAt: time.Now().Format(time.DateTime),
+	}
+	return &m
 }

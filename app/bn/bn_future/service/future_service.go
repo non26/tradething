@@ -7,6 +7,7 @@ import (
 	svcfuture "tradething/app/bn/bn_future/service_model"
 
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_repository"
+	positionconstant "github.com/non26/tradepkg/pkg/bn/position_constant"
 )
 
 type IBinanceFutureService interface {
@@ -22,22 +23,35 @@ type IBinanceFutureService interface {
 		ctx context.Context,
 		request *svcfuture.QueryOrderServiceRequest,
 	) (*svchandlerres.QueryOrderBinanceHandlerResponse, error)
+	PlaceMultiOrder(
+		ctx context.Context,
+		request *svcfuture.PlaceMultiOrderServiceRequest,
+	) (*svchandlerres.PlaceMultipleOrderHandlerResponse, error)
 }
 
 type binanceFutureService struct {
 	binanceFutureServiceName string
 	binanceService           bnfuture.IBinanceFutureExternalService
 	repository               bndynamodb.IRepository
+	orderType                positionconstant.IOrderType
+	positionSideType         positionconstant.IPositionSide
+	sideType                 positionconstant.ISide
 }
 
 func NewBinanceFutureService(
 	binanceFutureServiceName string,
 	binanceService bnfuture.IBinanceFutureExternalService,
 	repository bndynamodb.IRepository,
+	orderType positionconstant.IOrderType,
+	positionSideType positionconstant.IPositionSide,
+	sideType positionconstant.ISide,
 ) IBinanceFutureService {
 	return &binanceFutureService{
 		binanceFutureServiceName,
 		binanceService,
 		repository,
+		orderType,
+		positionSideType,
+		sideType,
 	}
 }
