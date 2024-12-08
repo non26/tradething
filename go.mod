@@ -2,6 +2,8 @@ module tradething
 
 go 1.23.2
 
+replace github.com/non26/tradepkg => ../tradepkg
+
 require (
 	github.com/aws/aws-lambda-go v1.47.0
 	github.com/aws/aws-sdk-go-v2 v1.32.5

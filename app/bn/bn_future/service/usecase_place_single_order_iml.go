@@ -40,8 +40,15 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 		if request.GetSide() == openingOrder.Side && request.GetPositionSide() == openingOrder.PositionSide {
 			if utils.IsBuyCrypto(request.GetSide(), request.GetPositionSide()) {
 				request.AddEntryQuantity(openingOrder.AmountQ)
-			} else {
-				bfs.repository.DeleteOpenOrderBySymbol(ctx, request.GetSymbol())
+				err = bfs.repository.UpdateOpenOrder(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
+				if err != nil {
+					return nil, err
+				}
+			}
+		} else {
+			err = bfs.repository.DeleteOpenOrderByKey(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel().GetKeyByPositionSideAndSymbol())
+			if err != nil {
+				return nil, err
 			}
 		}
 	}
