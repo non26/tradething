@@ -58,6 +58,11 @@ func RouteRestApiConposing(
 	)
 	binanceGroup.POST("/query-order", queryOrderHandler.Handler)
 
+	placeMultipleOrderHandler := handler.NewPlaceMultipleOrderHandler(
+		service,
+	)
+	binanceGroup.POST("/place-multiple-order", placeMultipleOrderHandler.Handler)
+
 }
 
 // func RouteSemiBotComposing(
