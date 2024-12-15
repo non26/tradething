@@ -37,6 +37,8 @@ binance-future-url:
   miltiple-order: /fapi/v1/batchOrders
   query-order: /fapi/v1/order
   exchange-info: /fapi/v1/exchangeInfo
+  market-data:
+    candle-stick: /fapi/v1/klines
   binance-future-baseUrl:
     binance1: https://testnet.binancefuture.com
 

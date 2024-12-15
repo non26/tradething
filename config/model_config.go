@@ -59,13 +59,18 @@ type BinanceFutureBaseUrl struct {
 	// BianceUrl4 string `mapstructure:"binance4"`
 }
 
+type BinanceFutureMarketData struct {
+	CandleStick string `mapstructure:"candle-stick" json:"candle-stick"`
+}
+
 type BinanceFutureUrl struct {
-	SetLeverage          string               `mapstructure:"set-leverage" json:"set-leverage"`
-	SingleOrder          string               `mapstructure:"single-order" json:"single-order"`
-	MultipleOrder        string               `mapstructure:"miltiple-order" json:"miltiple-order"`
-	QueryOrder           string               `mapstructure:"query-order" json:"query-order"`
-	ExchangeInfo         string               `mapstructure:"exchange-info" json:"exchange-info"`
-	BinanceFutureBaseUrl BinanceFutureBaseUrl `mapstructure:"binance-future-baseUrl" json:"binance-future-baseUrl"`
+	SetLeverage             string                  `mapstructure:"set-leverage" json:"set-leverage"`
+	SingleOrder             string                  `mapstructure:"single-order" json:"single-order"`
+	MultipleOrder           string                  `mapstructure:"miltiple-order" json:"miltiple-order"`
+	QueryOrder              string                  `mapstructure:"query-order" json:"query-order"`
+	ExchangeInfo            string                  `mapstructure:"exchange-info" json:"exchange-info"`
+	BinanceFutureBaseUrl    BinanceFutureBaseUrl    `mapstructure:"binance-future-baseUrl" json:"binance-future-baseUrl"`
+	BinanceFutureMarketData BinanceFutureMarketData `mapstructure:"binance-future-market-data" json:"binance-future-market-data"`
 }
 
 type OkxFutureBaseUrl struct {

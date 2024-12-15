@@ -34,7 +34,6 @@ func main() {
 	app_echo := echo.New()
 	app.HealthCheck(app_echo)
 	app.RouteRestApiConposing(app_echo, config, ordertype, positionSide, side, svcrepository, httptransport, httpclient)
-	// app.RouteSemiBotComposing(app_echo, config, ordertype, positionSide, side, svcrepository, httptransport, httpclient)
 
 	app_echo.Start(fmt.Sprintf(":%v", config.Port))
 }
