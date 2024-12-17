@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	bnfuture "tradething/app/bn/bn_future/bnservice"
 	bnmarket "tradething/app/bn/bn_future/bnservice/market_data"
+	bntrade "tradething/app/bn/bn_future/bnservice/trade"
 	svchandlerres "tradething/app/bn/bn_future/handler_response_model"
 	svcfuture "tradething/app/bn/bn_future/service_model"
 
@@ -32,7 +32,7 @@ type IBinanceFutureService interface {
 
 type binanceFutureService struct {
 	binanceFutureServiceName string
-	binanceService           bnfuture.IBinanceFutureExternalService
+	binanceService           bntrade.IBinanceFutureExternalService
 	bnMarketDataService      bnmarket.IBnMarketDataService
 	repository               bndynamodb.IRepository
 	orderType                positionconstant.IOrderType
@@ -42,7 +42,7 @@ type binanceFutureService struct {
 
 func NewBinanceFutureService(
 	binanceFutureServiceName string,
-	binanceService bnfuture.IBinanceFutureExternalService,
+	binanceService bntrade.IBinanceFutureExternalService,
 	bnMarketDataService bnmarket.IBnMarketDataService,
 	repository bndynamodb.IRepository,
 	orderType positionconstant.IOrderType,

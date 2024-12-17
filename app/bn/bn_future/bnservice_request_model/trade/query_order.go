@@ -4,6 +4,8 @@ import (
 	"strconv"
 	"strings"
 
+	ireqmodel "tradething/app/bn/bn_future/bnservice_request_model"
+
 	bnutils "github.com/non26/tradepkg/pkg/bn/utils"
 )
 
@@ -37,6 +39,6 @@ func (q *QueryOrderBinanceServiceRequest) checkClientId() {
 
 func NewQueryOrderBinanceServiceRequest(
 	q *QueryOrderBinanceServiceRequest,
-) IBnFutureServiceRequest {
+) ireqmodel.IBnFutureServiceRequest {
 	return q
 }

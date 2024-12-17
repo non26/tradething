@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	bnfuturereq "tradething/app/bn/bn_future/bnservice_request_model"
-	bnfutureres "tradething/app/bn/bn_future/bnservice_response_model"
+	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
+	bntraderes "tradething/app/bn/bn_future/bnservice_response_model/trade"
 
 	bncaller "github.com/non26/tradepkg/pkg/bn/binance_caller"
 	bnrequest "github.com/non26/tradepkg/pkg/bn/binance_request"
@@ -14,18 +14,18 @@ import (
 
 func (bfes *binanceFutureExternalService) PlaceSingleOrder(
 	ctx context.Context,
-	request *bnfuturereq.PlaceSignleOrderBinanceServiceRequest,
-) (*bnfutureres.PlaceSignleOrderBinanceServiceResponse, error) {
+	request *bntradereq.PlaceSignleOrderBinanceServiceRequest,
+) (*bntraderes.PlaceSignleOrderBinanceServiceResponse, error) {
 
 	c := bncaller.NewCallBinance(
-		bnrequest.NewBinanceServiceHttpRequest[bnfuturereq.PlaceSignleOrderBinanceServiceRequest](),
-		bnresponse.NewBinanceServiceHttpResponse[bnfutureres.PlaceSignleOrderBinanceServiceResponse](),
+		bnrequest.NewBinanceServiceHttpRequest[bntradereq.PlaceSignleOrderBinanceServiceRequest](),
+		bnresponse.NewBinanceServiceHttpResponse[bntraderes.PlaceSignleOrderBinanceServiceResponse](),
 		bfes.httpttransport,
 		bfes.httpclient,
 	)
 
 	res, err := c.CallBinance(
-		bnfuturereq.NewPlaceSignleOrderBinanceServiceRequest(request),
+		bntradereq.NewPlaceSignleOrderBinanceServiceRequest(request),
 		bfes.binanceFutureUrl.BinanceFutureBaseUrl.BianceUrl1,
 		bfes.binanceFutureUrl.SingleOrder,
 		http.MethodPost,

@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	bnSvcfuture "tradething/app/bn/bn_future/bnservice_request_model"
+	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
 	valueobject "tradething/app/bn/bn_future/value_object"
 
 	mkreq "tradething/app/bn/bn_future/bnservice_request_model/market_data"
@@ -143,8 +143,8 @@ func (p *PlaceSignleOrderServiceRequest) AddEntryQuantity(entryQuantity string) 
 	p.entryQuantity = fmt.Sprintf("%v", currentQuantity+additionalQuantity)
 }
 
-func (p *PlaceSignleOrderServiceRequest) ToBinanceServiceModel() *bnSvcfuture.PlaceSignleOrderBinanceServiceRequest {
-	m := bnSvcfuture.PlaceSignleOrderBinanceServiceRequest{
+func (p *PlaceSignleOrderServiceRequest) ToBinanceServiceModel() *bntradereq.PlaceSignleOrderBinanceServiceRequest {
+	m := bntradereq.PlaceSignleOrderBinanceServiceRequest{
 		PositionSide:  p.positionSide,
 		Side:          p.side,
 		EntryQuantity: p.entryQuantity,

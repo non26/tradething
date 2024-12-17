@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	bnfuturereq "tradething/app/bn/bn_future/bnservice_request_model"
-	bnfutureres "tradething/app/bn/bn_future/bnservice_response_model"
+	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
+	bntraderes "tradething/app/bn/bn_future/bnservice_response_model/trade"
 
 	bncaller "github.com/non26/tradepkg/pkg/bn/binance_caller"
 	bnrequest "github.com/non26/tradepkg/pkg/bn/binance_request"
@@ -14,10 +14,11 @@ import (
 
 func (bfes *binanceFutureExternalService) SetNewLeverage(
 	ctx context.Context,
-	request *bnfuturereq.SetLeverageBinanceServiceRequest) (*bnfutureres.SetLeverageBinanceServiceResponse, error) {
+	request *bntradereq.SetLeverageBinanceServiceRequest,
+) (*bntraderes.SetLeverageBinanceServiceResponse, error) {
 	c := bncaller.NewCallBinance(
-		bnrequest.NewBinanceServiceHttpRequest[bnfuturereq.SetLeverageBinanceServiceRequest](),
-		bnresponse.NewBinanceServiceHttpResponse[bnfutureres.SetLeverageBinanceServiceResponse](),
+		bnrequest.NewBinanceServiceHttpRequest[bntradereq.SetLeverageBinanceServiceRequest](),
+		bnresponse.NewBinanceServiceHttpResponse[bntraderes.SetLeverageBinanceServiceResponse](),
 		bfes.httpttransport,
 		bfes.httpclient,
 	)

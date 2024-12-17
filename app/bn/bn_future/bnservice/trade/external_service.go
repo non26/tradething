@@ -3,8 +3,8 @@ package bnfuture
 import (
 	"context"
 
-	bnfuturereq "tradething/app/bn/bn_future/bnservice_request_model"
-	bnfutureres "tradething/app/bn/bn_future/bnservice_response_model"
+	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
+	bntraderes "tradething/app/bn/bn_future/bnservice_response_model/trade"
 	"tradething/config"
 
 	bnclient "github.com/non26/tradepkg/pkg/bn/binance_client"
@@ -14,18 +14,18 @@ import (
 type IBinanceFutureExternalService interface {
 	SetNewLeverage(
 		ctx context.Context,
-		request *bnfuturereq.SetLeverageBinanceServiceRequest,
-	) (*bnfutureres.SetLeverageBinanceServiceResponse, error)
+		request *bntradereq.SetLeverageBinanceServiceRequest,
+	) (*bntraderes.SetLeverageBinanceServiceResponse, error)
 
 	PlaceSingleOrder(
 		ctx context.Context,
-		request *bnfuturereq.PlaceSignleOrderBinanceServiceRequest,
-	) (*bnfutureres.PlaceSignleOrderBinanceServiceResponse, error)
+		request *bntradereq.PlaceSignleOrderBinanceServiceRequest,
+	) (*bntraderes.PlaceSignleOrderBinanceServiceResponse, error)
 
 	QueryOrder(
 		ctx context.Context,
-		request *bnfuturereq.QueryOrderBinanceServiceRequest,
-	) (*bnfutureres.QueryOrderBinanceServiceResponse, error)
+		request *bntradereq.QueryOrderBinanceServiceRequest,
+	) (*bntraderes.QueryOrderBinanceServiceResponse, error)
 }
 
 type binanceFutureExternalService struct {

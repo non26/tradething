@@ -3,7 +3,7 @@ package bnfuture
 import (
 	"strconv"
 	"strings"
-	bnSvcfuture "tradething/app/bn/bn_future/bnservice_request_model"
+	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
 	svcfuture "tradething/app/bn/bn_future/service_model"
 )
 
@@ -16,8 +16,8 @@ func (s *SetLeverageHandlerRequest) Transform() {
 	s.Symbol = strings.ToUpper(s.Symbol)
 }
 
-func (s *SetLeverageHandlerRequest) ToBinanceServiceSetLeverage() *bnSvcfuture.SetLeverageBinanceServiceRequest {
-	m := bnSvcfuture.SetLeverageBinanceServiceRequest{
+func (s *SetLeverageHandlerRequest) ToBinanceServiceSetLeverage() *bntradereq.SetLeverageBinanceServiceRequest {
+	m := bntradereq.SetLeverageBinanceServiceRequest{
 		Symbol:   s.Symbol,
 		Leverage: strconv.Itoa(s.Leverage),
 	}

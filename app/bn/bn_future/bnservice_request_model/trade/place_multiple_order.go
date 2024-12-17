@@ -4,6 +4,8 @@ import (
 	"strconv"
 	"strings"
 
+	ireqmodel "tradething/app/bn/bn_future/bnservice_request_model"
+
 	bnutils "github.com/non26/tradepkg/pkg/bn/utils"
 )
 
@@ -54,6 +56,6 @@ func (p *PlaceMultiOrderBinanceServiceRequest) GetData() interface{} {
 
 func NewPlaceMultiOrderBinanceServiceRequest(
 	request *PlaceMultiOrderBinanceServiceRequest,
-) IBnFutureServiceRequest {
+) ireqmodel.IBnFutureServiceRequest {
 	return request
 }

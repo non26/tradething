@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 
+	ireqmodel "tradething/app/bn/bn_future/bnservice_request_model"
+
 	bnutils "github.com/non26/tradepkg/pkg/bn/utils"
 )
 
@@ -89,6 +91,6 @@ func (p *PlaceSignleOrderBinanceServiceRequest) SetType(order_type string) {
 
 func NewPlaceSignleOrderBinanceServiceRequest(
 	p *PlaceSignleOrderBinanceServiceRequest,
-) IBnFutureServiceRequest {
+) ireqmodel.IBnFutureServiceRequest {
 	return p
 }

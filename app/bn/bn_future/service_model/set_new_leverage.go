@@ -2,7 +2,7 @@ package bnfuture
 
 import (
 	"strconv"
-	bnSvcfuture "tradething/app/bn/bn_future/bnservice_request_model"
+	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
 )
 
 type SetLeverageServiceRequest struct {
@@ -26,8 +26,8 @@ func (s *SetLeverageServiceRequest) SetSymbol(symbol string) {
 	s.symbol = symbol
 }
 
-func (s *SetLeverageServiceRequest) ToBinanceServiceSetLeverage() *bnSvcfuture.SetLeverageBinanceServiceRequest {
-	m := bnSvcfuture.SetLeverageBinanceServiceRequest{
+func (s *SetLeverageServiceRequest) ToBinanceServiceSetLeverage() *bntradereq.SetLeverageBinanceServiceRequest {
+	m := bntradereq.SetLeverageBinanceServiceRequest{
 		Symbol:   s.symbol,
 		Leverage: strconv.Itoa(s.leverage),
 	}

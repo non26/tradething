@@ -1,6 +1,6 @@
 package bnfuture
 
-import bnSvcfuture "tradething/app/bn/bn_future/bnservice_request_model"
+import bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
 
 type QueryOrderServiceRequest struct {
 	symbol            string
@@ -23,8 +23,8 @@ func (q *QueryOrderServiceRequest) SetOrigClientOrderId(origClientOrderId string
 	q.origClientOrderId = origClientOrderId
 }
 
-func (q *QueryOrderServiceRequest) ToBinanceServiceQueryOrder() *bnSvcfuture.QueryOrderBinanceServiceRequest {
-	m := bnSvcfuture.QueryOrderBinanceServiceRequest{
+func (q *QueryOrderServiceRequest) ToBinanceServiceQueryOrder() *bntradereq.QueryOrderBinanceServiceRequest {
+	m := bntradereq.QueryOrderBinanceServiceRequest{
 		Symbol:            q.symbol,
 		OrigClientOrderId: q.origClientOrderId,
 	}

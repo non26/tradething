@@ -1,8 +1,8 @@
 package app
 
 import (
-	bnservice "tradething/app/bn/bn_future/bnservice"
-	bnmkt "tradething/app/bn/bn_future/bnservice/market_data"
+	bnmarket "tradething/app/bn/bn_future/bnservice/market_data"
+	bntrade "tradething/app/bn/bn_future/bnservice/trade"
 	handler "tradething/app/bn/bn_future/handler"
 	service "tradething/app/bn/bn_future/service"
 	lambdaroute "tradething/cmd/app/route/lambda"
@@ -28,14 +28,14 @@ func RouteRestApiConposing(
 	httpclient bnclient.IBinanceSerivceHttpClient,
 ) {
 	binanceGroup := app.Group("/" + config.ServiceName.BinanceFuture)
-	binanceServie := bnservice.NewBinanceFutureExternalService(
+	binanceServie := bntrade.NewBinanceFutureExternalService(
 		&config.BinanceFutureUrl,
 		&config.Secrets,
 		config.ServiceName.BinanceFuture,
 		httpttransport,
 		httpclient,
 	)
-	marketData := bnmkt.NewBnMarketDataService(
+	marketData := bnmarket.NewBnMarketDataService(
 		&config.BinanceFutureUrl,
 		&config.Secrets,
 		config.ServiceName.BinanceFuture,
