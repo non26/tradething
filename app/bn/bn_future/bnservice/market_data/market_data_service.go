@@ -30,5 +30,11 @@ func NewBnMarketDataService(
 	httpttransport bntransport.IBinanceServiceHttpTransport,
 	httpclient bnclient.IBinanceSerivceHttpClient,
 ) IBnMarketDataService {
-	return &bnMarketDataService{}
+	return &bnMarketDataService{
+		binanceFutureUrl:         binanceFutureUrl,
+		secrets:                  secrets,
+		binanceFutureServiceName: binanceFutureServiceName,
+		httpttransport:           httpttransport,
+		httpclient:               httpclient,
+	}
 }

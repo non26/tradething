@@ -187,31 +187,31 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 				}
 			}
 
-			if !request.IsTakeProfitNil() {
-				if request.GetPositionSide() == bfs.positionSideType.Long() {
-					if dbMarketData.GetClosePrice().GetFloat64() > request.GetTakeProfit().Price {
-						request.SetSide(bfs.sideType.Sell())
-						placeSellOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
-						if err != nil {
-							return nil, err
-						}
-						bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
-						bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
-						return placeSellOrderRes.ToBnHandlerResponse(), nil
-					}
-				} else if request.GetPositionSide() == bfs.positionSideType.Short() {
-					if dbMarketData.GetClosePrice().GetFloat64() < request.GetTakeProfit().Price {
-						request.SetSide(bfs.sideType.Buy())
-						placeBuyOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
-						if err != nil {
-							return nil, err
-						}
-						bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
-						bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
-						return placeBuyOrderRes.ToBnHandlerResponse(), nil
-					}
-				}
-			}
+			// if !request.IsTakeProfitNil() {
+			// 	if request.GetPositionSide() == bfs.positionSideType.Long() {
+			// 		if dbMarketData.GetClosePrice().GetFloat64() > request.GetTakeProfit().Price {
+			// 			request.SetSide(bfs.sideType.Sell())
+			// 			placeSellOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
+			// 			if err != nil {
+			// 				return nil, err
+			// 			}
+			// 			bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
+			// 			bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
+			// 			return placeSellOrderRes.ToBnHandlerResponse(), nil
+			// 		}
+			// 	} else if request.GetPositionSide() == bfs.positionSideType.Short() {
+			// 		if dbMarketData.GetClosePrice().GetFloat64() < request.GetTakeProfit().Price {
+			// 			request.SetSide(bfs.sideType.Buy())
+			// 			placeBuyOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
+			// 			if err != nil {
+			// 				return nil, err
+			// 			}
+			// 			bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
+			// 			bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
+			// 			return placeBuyOrderRes.ToBnHandlerResponse(), nil
+			// 		}
+			// 	}
+			// }
 
 		}
 	}

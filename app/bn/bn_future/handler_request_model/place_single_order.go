@@ -32,12 +32,12 @@ func (p *PlaceSignleOrderHandlerRequest) Validate() error {
 		if !slices.Contains(minute_interval, p.Watching.StopLoss.Interval) {
 			return errors.New("invalid minute interval")
 		}
-	}
-
-	if strings.Contains(p.Watching.StopLoss.Interval, "h") {
+	} else if strings.Contains(p.Watching.StopLoss.Interval, "h") {
 		if !slices.Contains(hour_interval, p.Watching.StopLoss.Interval) {
 			return errors.New("invalid hour interval")
 		}
+	} else {
+		return errors.New("invalid timeframe")
 	}
 	return nil
 }

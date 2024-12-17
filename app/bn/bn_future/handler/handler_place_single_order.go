@@ -50,6 +50,17 @@ func (h *placeSinglerOrderHandler) Handler(c echo.Context) error {
 		)
 	}
 	request.Transform()
+	err = request.Validate()
+	if err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			common.CommonResponse{
+				Code:    common.FailCode,
+				Message: err.Error(),
+				Data:    nil,
+			},
+		)
+	}
 
 	res, err := h.service.PlaceSingleOrder(
 		c.Request().Context(),

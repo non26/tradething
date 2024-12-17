@@ -70,7 +70,7 @@ type BinanceFutureUrl struct {
 	QueryOrder              string                  `mapstructure:"query-order" json:"query-order"`
 	ExchangeInfo            string                  `mapstructure:"exchange-info" json:"exchange-info"`
 	BinanceFutureBaseUrl    BinanceFutureBaseUrl    `mapstructure:"binance-future-baseUrl" json:"binance-future-baseUrl"`
-	BinanceFutureMarketData BinanceFutureMarketData `mapstructure:"binance-future-market-data" json:"binance-future-market-data"`
+	BinanceFutureMarketData BinanceFutureMarketData `mapstructure:"market-data" json:"market-data"`
 }
 
 type OkxFutureBaseUrl struct {

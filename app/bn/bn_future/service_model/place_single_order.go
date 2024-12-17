@@ -1,6 +1,7 @@
 package bnfuture
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -166,6 +167,15 @@ func (p *PlaceSignleOrderServiceRequest) ToBinanceFutureOpeningPositionRepositor
 		BuyOrderCreatedAt:  time.Now().Format(time.DateTime),
 		SellOrderCreatedAt: time.Now().Format(time.DateTime),
 	}
+	watchingConfig := valueobject.Watching{
+		StopLoss:   p.stopLoss,
+		TakeProfit: p.takeProfit,
+	}
+	_json, err := json.Marshal(watchingConfig)
+	if err != nil {
+		return nil
+	}
+	m.SetWatchingConfig(_json)
 	return &m
 }
 

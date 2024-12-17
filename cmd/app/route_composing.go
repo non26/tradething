@@ -28,14 +28,14 @@ func RouteRestApiConposing(
 	httpclient bnclient.IBinanceSerivceHttpClient,
 ) {
 	binanceGroup := app.Group("/" + config.ServiceName.BinanceFuture)
-	binanceServie := bntrade.NewBinanceFutureExternalService(
+	marketData := bnmarket.NewBnMarketDataService(
 		&config.BinanceFutureUrl,
 		&config.Secrets,
 		config.ServiceName.BinanceFuture,
 		httpttransport,
 		httpclient,
 	)
-	marketData := bnmarket.NewBnMarketDataService(
+	binanceServie := bntrade.NewBinanceFutureExternalService(
 		&config.BinanceFutureUrl,
 		&config.Secrets,
 		config.ServiceName.BinanceFuture,
@@ -71,6 +71,9 @@ func RouteRestApiConposing(
 		service,
 	)
 	binanceGroup.POST("/place-multiple-order", placeMultipleOrderHandler.Handler)
+
+	// close order by multiple client id
+	// close order by multiple symbol
 
 }
 
