@@ -7,9 +7,15 @@ import (
 	bnfutureres "tradething/app/bn/bn_future/handler_response_model"
 	svcFuture "tradething/app/bn/bn_future/service_model"
 
-	"github.com/non26/tradepkg/pkg/bn/thaitime"
 	utils "github.com/non26/tradepkg/pkg/bn/utils"
 )
+
+// NOTE:
+//1. this function is used to place a single order for buying long/ selling short to open position
+// right now it only support for stop loss and take profit wwatch with "hour timeframe" in intraday .
+//2. close position is not support partially closed
+//3. for accumulate order, client are resposible for calculating the amount of qty to be placed in each bar
+//4. for watching order, it'll be triggered when the bar closed
 
 func (bfs *binanceFutureService) PlaceSingleOrder(
 	ctx context.Context,
@@ -21,7 +27,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 		return nil, err
 	}
 	if positionHistory.IsFound() {
-		return nil, errors.New("position history already exist")
+		return nil, errors.New("position client id is not valid")
 	}
 
 	openingPositionTable := request.ToBinanceFutureOpeningPositionRepositoryModel()
@@ -44,7 +50,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 	}
 
 	if request.IsStopLossNil() {
-		return nil, errors.New("stop loss is nil")
+		return nil, errors.New("stop loss is mandatory")
 	}
 
 	if !dbOpeningOrder.IsFound() { // meaing this is new order, no existing order is found
@@ -115,20 +121,41 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 			return placeOrderRes.ToBnHandlerResponse(), nil
 		} else {
 			// for watching order
-			thaitime, err := thaitime.NewThaiTime()
-			if err != nil {
-				return nil, err
-			}
+			bnTime := utils.NewBinanceTime(time.Now())
 
 			period, unit, err := utils.GetInterval(request.GetStopLoss().Interval)
 			if err != nil {
 				return nil, err
 			}
+			var prv_start, prv_end time.Time
+			/// now support only hourly
+			switch unit {
+			// case utils.Minute:
+			// 	start, end, err := utils.GetPreviousUnixBnStartAndEndOfPeriodHours(bnTime, period)
+			// 	if err != nil {
+			// 		return nil, err
+			// 	}
+			case utils.Hour:
+				var err error
+				prv_start, prv_end, err = bnTime.GetPreviousBnTimeStartHourAndEndHour(period)
+				if err != nil {
+					return nil, err
+				}
+				// case utils.Day:
+				// 	start, end, err := utils.GetPreviousUnixBnStartAndEndOfPeriodHours(bnTime, period)
+				// 	if err != nil {
+				// 		return nil, err
+				// 	}
+				// case utils.Week:
+				// 	start, end, err := utils.GetPreviousUnixBnStartAndEndOfPeriodHours(bnTime, period)
+				// 	if err != nil {
+				// 		return nil, err
+				// 	}
+			}
 
-			start, end := utils.GetPreviousUnixBnStartAndEndOfPeriodHours(time.Now(), thaitime, period, unit)
 			dbMarketData, err := bfs.bnMarketDataService.GetCandleStickData(ctx, request.ToBnCandleStickModel(
-				utils.GetSpecificBnTimestamp(start),
-				utils.GetSpecificBnTimestamp(end),
+				utils.GetSpecificBnTimestamp(&prv_start),
+				utils.GetSpecificBnTimestamp(&prv_end),
 			))
 			if err != nil {
 				return nil, err
