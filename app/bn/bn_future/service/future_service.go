@@ -32,6 +32,10 @@ type IBinanceFutureService interface {
 		ctx context.Context,
 		request *svcfuture.CloseByClientIdServiceRequest,
 	) (*svchandlerres.CloseByClientIdsHandlerResponse, error)
+	CloseBySymbols(
+		ctx context.Context,
+		request *svcfuture.CloseBySymbolsServiceRequest,
+	) (*svchandlerres.CloseBySymbolsHandlerResponse, error)
 }
 
 type binanceFutureService struct {
