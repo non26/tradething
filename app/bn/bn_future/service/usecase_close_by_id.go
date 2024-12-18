@@ -18,13 +18,22 @@ func (b *binanceFutureService) CloseByClientIds(
 	}
 	for _, clientId := range request.GetClientIds() {
 		closeOrder := svchandlerres.CloseByClientIdsHandlerResponseData{}
-		openOrders, err := b.repository.GetOpenOrderByClientID(ctx, clientId)
+		positionHistory, err := b.repository.GetHistoryByClientID(ctx, clientId)
 		if err != nil {
 			return nil, err
 		}
+		if positionHistory.IsFound() {
+			addCloseOrderData(&closeOrders, closeOrder, clientId, "fail", "no position history found")
+			continue
+		}
+		openOrders, err := b.repository.GetOpenOrderByClientID(ctx, clientId)
+		if err != nil {
+			addCloseOrderData(&closeOrders, closeOrder, clientId, "fail", err.Error())
+			continue
+		}
 
-		if openOrders.IsFound() {
-			addCloseOrderData(closeOrders, closeOrder, clientId, "fail", "no open order found")
+		if !openOrders.IsFound() {
+			addCloseOrderData(&closeOrders, closeOrder, clientId, "fail", "no open order found")
 			continue
 		}
 		side := ""
@@ -42,7 +51,7 @@ func (b *binanceFutureService) CloseByClientIds(
 			EntryQuantity: openOrders.AmountQ,
 		})
 		if err != nil {
-			addCloseOrderData(closeOrders, closeOrder, clientId, "fail", err.Error())
+			addCloseOrderData(&closeOrders, closeOrder, clientId, "fail", err.Error())
 			continue
 		}
 
@@ -52,12 +61,12 @@ func (b *binanceFutureService) CloseByClientIds(
 			Symbol:       openOrders.Symbol,
 			PositionSide: openOrders.PositionSide,
 		})
-		addCloseOrderData(closeOrders, closeOrder, clientId, "success", "close order success")
+		addCloseOrderData(&closeOrders, closeOrder, clientId, "success", "close order success")
 	}
 	return &closeOrders, nil
 }
 
-func addCloseOrderData(clsoeOrders svchandlerres.CloseByClientIdsHandlerResponse, closeOrder svchandlerres.CloseByClientIdsHandlerResponseData, clientId string, status string, message string) {
+func addCloseOrderData(clsoeOrders *svchandlerres.CloseByClientIdsHandlerResponse, closeOrder svchandlerres.CloseByClientIdsHandlerResponseData, clientId string, status string, message string) {
 	closeOrder.ClientId = clientId
 	closeOrder.Status = status
 	closeOrder.Message = message
