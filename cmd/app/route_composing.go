@@ -73,6 +73,10 @@ func RouteRestApiConposing(
 	binanceGroup.POST("/place-multiple-order", placeMultipleOrderHandler.Handler)
 
 	// close order by multiple client id
+	closeByClientIdsHandler := handler.NewCloseByClientIdsHandler(
+		service,
+	)
+	binanceGroup.POST("/close-by-client-ids", closeByClientIdsHandler.Handler)
 	// close order by multiple symbol
 
 }

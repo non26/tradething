@@ -28,6 +28,10 @@ type IBinanceFutureService interface {
 		ctx context.Context,
 		request *svcfuture.PlaceMultiOrderServiceRequest,
 	) (*svchandlerres.PlaceMultipleOrderHandlerResponse, error)
+	CloseByClientIds(
+		ctx context.Context,
+		request *svcfuture.CloseByClientIdServiceRequest,
+	) (*svchandlerres.CloseByClientIdsHandlerResponse, error)
 }
 
 type binanceFutureService struct {
