@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+	"strconv"
 	"strings"
 	svcfuture "tradething/app/bn/bn_future/service_model"
 	valueobject "tradething/app/bn/bn_future/value_object"
@@ -36,9 +37,16 @@ func (p *PlaceSignleOrderHandlerRequest) Validate() error {
 		if !slices.Contains(hour_interval, p.Watching.StopLoss.Interval) {
 			return errors.New("invalid hour interval")
 		}
+	} else if strings.Contains(p.Watching.StopLoss.Interval, "d") {
+		period := p.Watching.StopLoss.Interval[:len(p.Watching.StopLoss.Interval)-1]
+		_, err := strconv.Atoi(period)
+		if err != nil {
+			return errors.New("invalid day interval")
+		}
 	} else {
-		return errors.New("invalid timeframe")
+		return errors.New("invalid interval")
 	}
+
 	return nil
 }
 

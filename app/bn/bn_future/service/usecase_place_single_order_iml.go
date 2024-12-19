@@ -130,27 +130,26 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 			var prv_start, prv_end time.Time
 			/// now support only hourly
 			switch unit {
-			// case utils.Minute:
-			// 	start, end, err := utils.GetPreviousUnixBnStartAndEndOfPeriodHours(bnTime, period)
-			// 	if err != nil {
-			// 		return nil, err
-			// 	}
+			case utils.Minute:
+				var err error
+				prv_start, prv_end, err = bnTime.GetPreviousBnTimeStartMinuteAndEndMinute(period)
+				if err != nil {
+					return nil, err
+				}
 			case utils.Hour:
 				var err error
 				prv_start, prv_end, err = bnTime.GetPreviousBnTimeStartHourAndEndHour(period)
 				if err != nil {
 					return nil, err
 				}
-				// case utils.Day:
-				// 	start, end, err := utils.GetPreviousUnixBnStartAndEndOfPeriodHours(bnTime, period)
-				// 	if err != nil {
-				// 		return nil, err
-				// 	}
-				// case utils.Week:
-				// 	start, end, err := utils.GetPreviousUnixBnStartAndEndOfPeriodHours(bnTime, period)
-				// 	if err != nil {
-				// 		return nil, err
-				// 	}
+			case utils.Day:
+				var err error
+				prv_start, prv_end, err = bnTime.GetPreviousBnTimeStartDayAndEndDay(period)
+				if err != nil {
+					return nil, err
+				}
+			default:
+				return nil, errors.New("invalid interval")
 			}
 
 			dbMarketData, err := bfs.bnMarketDataService.GetCandleStickData(ctx, request.ToBnCandleStickModel(
@@ -187,31 +186,31 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 				}
 			}
 
-			// if !request.IsTakeProfitNil() {
-			// 	if request.GetPositionSide() == bfs.positionSideType.Long() {
-			// 		if dbMarketData.GetClosePrice().GetFloat64() > request.GetTakeProfit().Price {
-			// 			request.SetSide(bfs.sideType.Sell())
-			// 			placeSellOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
-			// 			if err != nil {
-			// 				return nil, err
-			// 			}
-			// 			bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
-			// 			bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
-			// 			return placeSellOrderRes.ToBnHandlerResponse(), nil
-			// 		}
-			// 	} else if request.GetPositionSide() == bfs.positionSideType.Short() {
-			// 		if dbMarketData.GetClosePrice().GetFloat64() < request.GetTakeProfit().Price {
-			// 			request.SetSide(bfs.sideType.Buy())
-			// 			placeBuyOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
-			// 			if err != nil {
-			// 				return nil, err
-			// 			}
-			// 			bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
-			// 			bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
-			// 			return placeBuyOrderRes.ToBnHandlerResponse(), nil
-			// 		}
-			// 	}
-			// }
+			if !request.IsTakeProfitNil() {
+				if request.GetPositionSide() == bfs.positionSideType.Long() {
+					if dbMarketData.GetClosePrice().GetFloat64() > request.GetTakeProfit().Price {
+						request.SetSide(bfs.sideType.Sell())
+						placeSellOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
+						if err != nil {
+							return nil, err
+						}
+						bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
+						bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
+						return placeSellOrderRes.ToBnHandlerResponse(), nil
+					}
+				} else if request.GetPositionSide() == bfs.positionSideType.Short() {
+					if dbMarketData.GetClosePrice().GetFloat64() < request.GetTakeProfit().Price {
+						request.SetSide(bfs.sideType.Buy())
+						placeBuyOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
+						if err != nil {
+							return nil, err
+						}
+						bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
+						bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
+						return placeBuyOrderRes.ToBnHandlerResponse(), nil
+					}
+				}
+			}
 
 		}
 	}
