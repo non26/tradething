@@ -48,8 +48,14 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 			log.Println("error place sell order", err.Error())
 			return nil, err
 		}
-		bfs.repository.DeleteOpenOrderByKey(ctx, openingPositionTable.GetKeyByPositionSideAndSymbol())
-		bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
+		err = bfs.repository.DeleteOpenOrderByKey(ctx, openingPositionTable.GetKeyByPositionSideAndSymbol())
+		if err != nil {
+			log.Println("error delete open order by key", err.Error())
+		}
+		err = bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
+		if err != nil {
+			log.Println("error insert history", err.Error())
+		}
 		return placeSellOrderRes.ToBnHandlerResponse(), nil
 	}
 
@@ -182,10 +188,10 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 				log.Println("error get candle stick data for watching order", err.Error())
 				return nil, err
 			}
-
+			closePrice := dbMarketData.GetClosePrice().GetFloat64()
 			if !request.IsStopLossNil() {
 				if request.GetPositionSide() == bfs.positionSideType.Long() {
-					if dbMarketData.GetClosePrice().GetFloat64() < request.GetStopLoss().Price {
+					if closePrice < request.GetStopLoss().Price {
 						request.SetSide(bfs.sideType.Sell())
 						placeSellOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
 						if err != nil {
@@ -197,7 +203,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 						return placeSellOrderRes.ToBnHandlerResponse(), nil
 					}
 				} else if request.GetPositionSide() == bfs.positionSideType.Short() {
-					if dbMarketData.GetClosePrice().GetFloat64() > request.GetStopLoss().Price {
+					if closePrice > request.GetStopLoss().Price {
 						request.SetSide(bfs.sideType.Buy())
 						placeBuyOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
 						if err != nil {
