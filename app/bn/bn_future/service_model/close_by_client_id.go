@@ -1,7 +1,7 @@
 package bnfuture
 
 type CloseByClientIdServiceRequest struct {
-	clientIds []string `json:"client_ids"`
+	clientIds []string
 }
 
 func (m *CloseByClientIdServiceRequest) GetClientIds() []string {
