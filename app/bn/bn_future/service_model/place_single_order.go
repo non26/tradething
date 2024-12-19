@@ -21,9 +21,9 @@ type PlaceSignleOrderServiceRequest struct {
 	symbol        string
 	leverageLevel int
 	clientOrderId string
-	leverage      int
-	stopLoss      *valueobject.StopLoss
-	takeProfit    *valueobject.TakeProfit
+	// leverage      int
+	stopLoss   *valueobject.StopLoss
+	takeProfit *valueobject.TakeProfit
 }
 
 func (p *PlaceSignleOrderServiceRequest) GetPositionSide() string {
