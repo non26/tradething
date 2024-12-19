@@ -6,9 +6,29 @@ import (
 	svcfuture "tradething/app/bn/bn_future/service_model"
 )
 
-func (s *binanceFutureService) CloseBySymbols(
+func (b *binanceFutureService) CloseBySymbols(
 	ctx context.Context,
 	request *svcfuture.CloseBySymbolsServiceRequest,
 ) (*svchandlerres.CloseBySymbolsHandlerResponse, error) {
-	return nil, nil
+	response := svchandlerres.CloseBySymbolsHandlerResponse{
+		Data: []svchandlerres.CloseBySymbolsHandlerResponseData{},
+	}
+	for _, order := range request.GetData() {
+		_, err := b.binanceService.PlaceSingleOrder(ctx, order.ToBinanceServiceModel(b.sideType.Sell()))
+		if err != nil {
+			response.Data = append(response.Data, svchandlerres.CloseBySymbolsHandlerResponseData{
+				Symbol:  order.GetSymbol(),
+				Message: err.Error(),
+				Status:  "fail",
+			})
+			continue
+		}
+		response.Data = append(response.Data, svchandlerres.CloseBySymbolsHandlerResponseData{
+			Symbol:  order.GetSymbol(),
+			Message: "success",
+			Status:  "success",
+		})
+	}
+
+	return &response, nil
 }

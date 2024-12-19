@@ -1,5 +1,10 @@
 package bnfuture
 
+import (
+	"time"
+	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
+)
+
 type CloseBySymbolsServiceRequest struct {
 	data []CloseBySymbolsServiceRequestData
 }
@@ -46,4 +51,15 @@ func (c *CloseBySymbolsServiceRequestData) SetAmountQ(amountQ string) {
 
 func (c *CloseBySymbolsServiceRequestData) GetAmountQ() string {
 	return c.amountQ
+}
+
+func (p *CloseBySymbolsServiceRequestData) ToBinanceServiceModel(side string) *bntradereq.PlaceSignleOrderBinanceServiceRequest {
+	m := bntradereq.PlaceSignleOrderBinanceServiceRequest{
+		PositionSide:  p.positionSide,
+		Side:          side,
+		EntryQuantity: p.amountQ,
+		Symbol:        p.symbol,
+		ClientOrderId: "manual_close" + time.Now().In(time.UTC).Format(time.DateTime),
+	}
+	return &m
 }
