@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"log"
 	"time"
 	bnfutureres "tradething/app/bn/bn_future/handler_response_model"
 	svcFuture "tradething/app/bn/bn_future/service_model"
@@ -24,6 +25,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 
 	positionHistory, err := bfs.repository.GetHistoryByClientID(ctx, request.GetClientOrderId())
 	if err != nil {
+		log.Println("error get history by client id", err.Error())
 		return nil, err
 	}
 	if positionHistory.IsFound() {
@@ -33,6 +35,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 	openingPositionTable := request.ToBinanceFutureOpeningPositionRepositoryModel()
 	dbOpeningOrder, err := bfs.repository.GetOpenOrderByKey(ctx, openingPositionTable.GetKeyByPositionSideAndSymbol())
 	if err != nil {
+		log.Println("error get open order by key", err.Error())
 		return nil, err
 	}
 
@@ -42,6 +45,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 			request.ToBinanceServiceModel(),
 		)
 		if err != nil {
+			log.Println("error place sell order", err.Error())
 			return nil, err
 		}
 		bfs.repository.DeleteOpenOrderByKey(ctx, openingPositionTable.GetKeyByPositionSideAndSymbol())
@@ -56,6 +60,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 	if !dbOpeningOrder.IsFound() { // meaing this is new order, no existing order is found
 		dbQUsdt, err := bfs.repository.GetQouteUSDT(ctx, request.GetSymbol())
 		if err != nil {
+			log.Println("error get qoute usdt", err.Error())
 			return nil, err
 		}
 
@@ -65,6 +70,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 			dbQUsdt.SetCountingShort(0)
 			err = bfs.repository.InsertNewSymbolQouteUSDT(ctx, dbQUsdt)
 			if err != nil {
+				log.Println("error insert new symbol qoute usdt", err.Error())
 				return nil, err
 			}
 		}
@@ -84,6 +90,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 			request.ToBinanceServiceModel(),
 		)
 		if err != nil {
+			log.Println("error place order", err.Error())
 			return nil, err
 		}
 
@@ -92,8 +99,14 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 		} else {
 			dbQUsdt.SetCountingLong(dbQUsdt.GetCountingLong() + 1)
 		}
-		bfs.repository.UpdateQouteUSDT(ctx, dbQUsdt)
-		bfs.repository.NewOpenOrder(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
+		err = bfs.repository.UpdateQouteUSDT(ctx, dbQUsdt)
+		if err != nil {
+			log.Println("error update qoute usdt", err.Error())
+		}
+		err = bfs.repository.NewOpenOrder(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
+		if err != nil {
+			log.Println("error new open order", err.Error())
+		}
 
 		return placeOrderRes.ToBnHandlerResponse(), nil
 	} else { // there is existing order
@@ -114,10 +127,15 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 				request.ToBinanceServiceModel(),
 			)
 			if err != nil {
+				log.Println("error place order for accumulate order", err.Error())
 				return nil, err
 			}
 			dbOpeningOrder.AddMoreAmountQ(request.GetAmountQ())
-			bfs.repository.UpdateOpenOrder(ctx, dbOpeningOrder)
+			err = bfs.repository.UpdateOpenOrder(ctx, dbOpeningOrder)
+			if err != nil {
+				log.Println("error update open order for accumulate order", err.Error())
+				return nil, err
+			}
 			return placeOrderRes.ToBnHandlerResponse(), nil
 		} else {
 			// for watching order
@@ -125,6 +143,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 
 			period, unit, err := utils.GetInterval(request.GetStopLoss().Interval)
 			if err != nil {
+				log.Println("error get interval for watching order", err.Error())
 				return nil, err
 			}
 			var prv_start, prv_end time.Time
@@ -134,18 +153,21 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 				var err error
 				prv_start, prv_end, err = bnTime.GetPreviousBnTimeStartMinuteAndEndMinute(period)
 				if err != nil {
+					log.Println("error get previous bn time start minute and end minute for watching order", err.Error())
 					return nil, err
 				}
 			case utils.Hour:
 				var err error
 				prv_start, prv_end, err = bnTime.GetPreviousBnTimeStartHourAndEndHour(period)
 				if err != nil {
+					log.Println("error get previous bn time start hour and end hour for watching order", err.Error())
 					return nil, err
 				}
 			case utils.Day:
 				var err error
 				prv_start, prv_end, err = bnTime.GetPreviousBnTimeStartDayAndEndDay(period)
 				if err != nil {
+					log.Println("error get previous bn time start day and end day for watching order", err.Error())
 					return nil, err
 				}
 			default:
@@ -157,6 +179,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 				utils.GetSpecificBnTimestamp(&prv_end),
 			))
 			if err != nil {
+				log.Println("error get candle stick data for watching order", err.Error())
 				return nil, err
 			}
 
@@ -166,6 +189,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 						request.SetSide(bfs.sideType.Sell())
 						placeSellOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
 						if err != nil {
+							log.Println("error place sell order for watching order", err.Error())
 							return nil, err
 						}
 						bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
@@ -177,6 +201,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 						request.SetSide(bfs.sideType.Buy())
 						placeBuyOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
 						if err != nil {
+							log.Println("error place buy order for watching order", err.Error())
 							return nil, err
 						}
 						bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
@@ -192,6 +217,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 						request.SetSide(bfs.sideType.Sell())
 						placeSellOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
 						if err != nil {
+							log.Println("error place sell order for watching order", err.Error())
 							return nil, err
 						}
 						bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
@@ -203,6 +229,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 						request.SetSide(bfs.sideType.Buy())
 						placeBuyOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
 						if err != nil {
+							log.Println("error place buy order for watching order", err.Error())
 							return nil, err
 						}
 						bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
