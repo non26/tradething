@@ -77,8 +77,11 @@ func RouteRestApiConposing(
 		service,
 	)
 	binanceGroup.POST("/close-by-client-ids", closeByClientIdsHandler.Handler)
-	// close order by multiple symbol
 
+	setPositionHandler := handler.NewSetPositionHandler(
+		service,
+	)
+	binanceGroup.POST("/set-position", setPositionHandler.Handler)
 }
 
 func RouteLambda(
