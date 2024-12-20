@@ -36,6 +36,10 @@ type IBinanceFutureService interface {
 		ctx context.Context,
 		request *svcfuture.CloseBySymbolsServiceRequest,
 	) (*svchandlerres.CloseBySymbolsHandlerResponse, error)
+	SetPosition(
+		ctx context.Context,
+		request *svcfuture.PlaceSignleOrderServiceRequest,
+	) (*svchandlerres.PlaceSignleOrderHandlerResponse, error)
 }
 
 type binanceFutureService struct {
