@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"log"
 	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
 	svchandlerres "tradething/app/bn/bn_future/handler_response_model"
 	svcfuture "tradething/app/bn/bn_future/service_model"
@@ -55,12 +56,18 @@ func (b *binanceFutureService) CloseByClientIds(
 			continue
 		}
 
-		b.repository.DeleteOpenOrderByKey(ctx, openOrders.GetKeyByPositionSideAndSymbol())
-		b.repository.InsertHistory(ctx, &dynamodbrepository.BinanceFutureHistory{
+		err = b.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, openOrders)
+		if err != nil {
+			log.Println("delete open order error", err)
+		}
+		err = b.repository.InsertHistory(ctx, &dynamodbrepository.BnFtHistory{
 			ClientId:     clientId,
 			Symbol:       openOrders.Symbol,
 			PositionSide: openOrders.PositionSide,
 		})
+		if err != nil {
+			log.Println("insert history error", err)
+		}
 		addCloseOrderData(&closeOrders, closeOrder, clientId, "success", "close order success")
 	}
 	return &closeOrders, nil

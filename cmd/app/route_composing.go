@@ -3,6 +3,8 @@ package app
 import (
 	bnmarket "tradething/app/bn/bn_future/bnservice/market_data"
 	bntrade "tradething/app/bn/bn_future/bnservice/trade"
+	bothandler "tradething/app/bn/bn_future/bot_handler"
+	botservice "tradething/app/bn/bn_future/bot_service"
 	handler "tradething/app/bn/bn_future/handler"
 	service "tradething/app/bn/bn_future/service"
 	lambdaroute "tradething/cmd/app/route/lambda"
@@ -17,7 +19,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func RouteRestApiConposing(
+func RouteRestApiComposing(
 	app *echo.Echo,
 	config *config.AppConfig,
 	orderType positionconst.IOrderType,
@@ -26,26 +28,14 @@ func RouteRestApiConposing(
 	svcRepository bndynamodb.IRepository,
 	httpttransport bntransport.IBinanceServiceHttpTransport,
 	httpclient bnclient.IBinanceSerivceHttpClient,
+	bnTradeService bntrade.IBinanceFutureExternalService,
+	bnMarketService bnmarket.IBnMarketDataService,
 ) {
 	binanceGroup := app.Group("/" + config.ServiceName.BinanceFuture)
-	marketData := bnmarket.NewBnMarketDataService(
-		&config.BinanceFutureUrl,
-		&config.Secrets,
-		config.ServiceName.BinanceFuture,
-		httpttransport,
-		httpclient,
-	)
-	binanceServie := bntrade.NewBinanceFutureExternalService(
-		&config.BinanceFutureUrl,
-		&config.Secrets,
-		config.ServiceName.BinanceFuture,
-		httpttransport,
-		httpclient,
-	)
 	service := service.NewBinanceFutureService(
 		config.ServiceName.BinanceFuture,
-		binanceServie,
-		marketData,
+		bnTradeService,
+		bnMarketService,
 		svcRepository,
 		orderType,
 		positionSide,
@@ -82,6 +72,34 @@ func RouteRestApiConposing(
 		service,
 	)
 	binanceGroup.POST("/set-position", setPositionHandler.Handler)
+}
+
+func RouteBotRestApiComposing(
+	app *echo.Echo,
+	config *config.AppConfig,
+	orderType positionconst.IOrderType,
+	positionSide positionconst.IPositionSide,
+	side positionconst.ISide,
+	svcRepository bndynamodb.IRepository,
+	httpttransport bntransport.IBinanceServiceHttpTransport,
+	httpclient bnclient.IBinanceSerivceHttpClient,
+	bnTradeService bntrade.IBinanceFutureExternalService,
+	bnMarketService bnmarket.IBnMarketDataService,
+) {
+	botGroup := app.Group("/" + config.ServiceName.BinanceFuture + "/bot")
+	botService := botservice.NewBotService(
+		bnTradeService,
+		svcRepository,
+		orderType,
+		positionSide,
+		side,
+	)
+
+	botTimeframeExeIntervalHandler := bothandler.NewBotTimeframeExeIntervalHandler(
+		botService,
+	)
+	botGroup.POST("/timeframe-exe-interval", botTimeframeExeIntervalHandler.Handler)
+
 }
 
 func RouteLambda(

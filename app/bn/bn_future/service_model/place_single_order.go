@@ -155,8 +155,8 @@ func (p *PlaceSignleOrderServiceRequest) ToBinanceServiceModel() *bntradereq.Pla
 	return &m
 }
 
-func (p *PlaceSignleOrderServiceRequest) ToBinanceFutureOpeningPositionRepositoryModel() *dynamodbmodel.BinanceFutureOpeningPosition {
-	m := dynamodbmodel.BinanceFutureOpeningPosition{
+func (p *PlaceSignleOrderServiceRequest) ToBinanceFutureOpeningPositionRepositoryModel() *dynamodbmodel.BnFtOpeningPosition {
+	m := dynamodbmodel.BnFtOpeningPosition{
 		Symbol:             p.symbol,
 		PositionSide:       p.positionSide,
 		AmountQ:            p.entryQuantity,
@@ -189,8 +189,8 @@ func (p *PlaceSignleOrderServiceRequest) ToBnCandleStickModel(starttime int64, e
 	return &m
 }
 
-func (p *PlaceSignleOrderServiceRequest) ToBnPositionHistoryRepositoryModel() *dynamodbmodel.BinanceFutureHistory {
-	m := dynamodbmodel.BinanceFutureHistory{
+func (p *PlaceSignleOrderServiceRequest) ToBnPositionHistoryRepositoryModel() *dynamodbmodel.BnFtHistory {
+	m := dynamodbmodel.BnFtHistory{
 		Symbol:       p.symbol,
 		PositionSide: p.positionSide,
 		ClientId:     p.clientOrderId,

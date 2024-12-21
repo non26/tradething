@@ -51,7 +51,7 @@ func (b *binanceFutureService) SetPosition(
 		}
 	}
 
-	err = b.repository.NewOpenOrder(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
+	err = b.repository.InsertNewOpenOrder(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
 	if err != nil {
 		log.Println("error new open order", err.Error())
 		return nil, err

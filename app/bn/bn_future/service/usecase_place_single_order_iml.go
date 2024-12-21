@@ -33,7 +33,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 	}
 
 	openingPositionTable := request.ToBinanceFutureOpeningPositionRepositoryModel()
-	dbOpeningOrder, err := bfs.repository.GetOpenOrderByKey(ctx, openingPositionTable.GetKeyByPositionSideAndSymbol())
+	dbOpeningOrder, err := bfs.repository.GetOpenOrderBySymbolAndPositionSide(ctx, openingPositionTable)
 	if err != nil {
 		log.Println("error get open order by key", err.Error())
 		return nil, err
@@ -48,7 +48,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 			log.Println("error place sell order", err.Error())
 			return nil, err
 		}
-		err = bfs.repository.DeleteOpenOrderByKey(ctx, openingPositionTable.GetKeyByPositionSideAndSymbol())
+		err = bfs.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, openingPositionTable)
 		if err != nil {
 			log.Println("error delete open order by key", err.Error())
 		}
@@ -109,7 +109,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 		if err != nil {
 			log.Println("error update qoute usdt", err.Error())
 		}
-		err = bfs.repository.NewOpenOrder(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
+		err = bfs.repository.InsertNewOpenOrder(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
 		if err != nil {
 			log.Println("error new open order", err.Error())
 		}
@@ -198,7 +198,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 							log.Println("error place sell order for watching order", err.Error())
 							return nil, err
 						}
-						bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
+						bfs.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, dbOpeningOrder)
 						bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
 						return placeSellOrderRes.ToBnHandlerResponse(), nil
 					}
@@ -210,7 +210,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 							log.Println("error place buy order for watching order", err.Error())
 							return nil, err
 						}
-						bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
+						bfs.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, dbOpeningOrder)
 						bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
 						return placeBuyOrderRes.ToBnHandlerResponse(), nil
 					}
@@ -226,7 +226,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 							log.Println("error place sell order for watching order", err.Error())
 							return nil, err
 						}
-						bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
+						bfs.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, dbOpeningOrder)
 						bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
 						return placeSellOrderRes.ToBnHandlerResponse(), nil
 					}
@@ -238,7 +238,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 							log.Println("error place buy order for watching order", err.Error())
 							return nil, err
 						}
-						bfs.repository.DeleteOpenOrderByKey(ctx, dbOpeningOrder.GetKeyByPositionSideAndSymbol())
+						bfs.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, dbOpeningOrder)
 						bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
 						return placeBuyOrderRes.ToBnHandlerResponse(), nil
 					}

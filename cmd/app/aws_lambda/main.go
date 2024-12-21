@@ -12,6 +12,9 @@ import (
 	echoadapter "github.com/awslabs/aws-lambda-go-api-proxy/echo"
 	"github.com/labstack/echo/v4"
 
+	bnmarket "tradething/app/bn/bn_future/bnservice/market_data"
+	bntrade "tradething/app/bn/bn_future/bnservice/trade"
+
 	bnclient "github.com/non26/tradepkg/pkg/bn/binance_client"
 	bntransport "github.com/non26/tradepkg/pkg/bn/binance_transport"
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_repository"
@@ -45,11 +48,26 @@ func init() {
 	httptransport := bntransport.NewBinanceTransport(&http.Transport{})
 	httpclient := bnclient.NewBinanceSerivceHttpClient()
 
+	marketData := bnmarket.NewBnMarketDataService(
+		&_config.BinanceFutureUrl,
+		&_config.Secrets,
+		_config.ServiceName.BinanceFuture,
+		httptransport,
+		httpclient,
+	)
+	binanceServie := bntrade.NewBinanceFutureExternalService(
+		&_config.BinanceFutureUrl,
+		&_config.Secrets,
+		_config.ServiceName.BinanceFuture,
+		httptransport,
+		httpclient,
+	)
+
 	app_echo := echo.New()
 	app.MiddlerwareComposing(app_echo)
 	app.HealthCheck(app_echo)
-	app.RouteRestApiConposing(app_echo, _config, ordertype, positionSide, side, svcrepository, httptransport, httpclient)
-	// app.RouteSemiBotComposing(app_echo, _config, ordertype, positionSide, side, svcrepository, httptransport, httpclient)
+	app.RouteRestApiComposing(app_echo, _config, ordertype, positionSide, side, svcrepository, httptransport, httpclient, binanceServie, marketData)
+	app.RouteBotRestApiComposing(app_echo, _config, ordertype, positionSide, side, svcrepository, httptransport, httpclient, binanceServie, marketData)
 	app.RouteLambda(app_echo, _config)
 
 	echoLambda = echoadapter.New(app_echo)
