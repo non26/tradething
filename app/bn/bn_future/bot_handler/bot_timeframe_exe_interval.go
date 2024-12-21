@@ -2,7 +2,8 @@ package bnfuture
 
 import (
 	"net/http"
-	bnfuturereq "tradething/app/bn/bn_future/bot_handler_request_model"
+	bnftbotereq "tradething/app/bn/bn_future/bot_handler_request_model"
+	bnftboteres "tradething/app/bn/bn_future/bot_handler_response_model"
 	bot_service "tradething/app/bn/bn_future/bot_service"
 	"tradething/common"
 
@@ -11,7 +12,7 @@ import (
 
 type IBotTimeframeExeIntervalHandler interface {
 	Handler(c echo.Context) error
-	GetRequestBody(c echo.Context) (*bnfuturereq.BotTimeframeExeIntervalHandlerRequest, error)
+	GetRequestBody(c echo.Context) (*bnftbotereq.BotTimeframeExeIntervalHandlerRequest, error)
 }
 
 type botTimeframeExeIntervalHandler struct {
@@ -26,8 +27,8 @@ func NewBotTimeframeExeIntervalHandler(
 	}
 }
 
-func (h *botTimeframeExeIntervalHandler) GetRequestBody(c echo.Context) (*bnfuturereq.BotTimeframeExeIntervalHandlerRequest, error) {
-	req := new(bnfuturereq.BotTimeframeExeIntervalHandlerRequest)
+func (h *botTimeframeExeIntervalHandler) GetRequestBody(c echo.Context) (*bnftbotereq.BotTimeframeExeIntervalHandlerRequest, error) {
+	req := new(bnftbotereq.BotTimeframeExeIntervalHandlerRequest)
 	if err := c.Bind(req); err != nil {
 		return nil, err
 	}
@@ -52,10 +53,13 @@ func (h *botTimeframeExeIntervalHandler) Handler(c echo.Context) error {
 	}
 	response, err := h.botService.BotTimeframeExeInterval(c.Request().Context(), svcReq)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, common.CommonResponse{
-			Code:    common.FailCode,
-			Message: err.Error(),
-		})
+		res := &bnftboteres.BotTimeframeExeIntervalResponse{
+			BotOrderID: req.BotOrderID,
+			Message:    err.Error(),
+			Status:     "failed",
+			Code:       common.FailCode,
+		}
+		return c.JSON(http.StatusInternalServerError, res)
 	}
 	return c.JSON(http.StatusOK, response)
 }

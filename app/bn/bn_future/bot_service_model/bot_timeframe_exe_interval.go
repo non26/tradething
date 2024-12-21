@@ -1,4 +1,4 @@
-package request
+package bnfuture
 
 import (
 	"strconv"

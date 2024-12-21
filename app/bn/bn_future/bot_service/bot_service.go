@@ -3,7 +3,7 @@ package bnfuture
 import (
 	"context"
 	handlerres "tradething/app/bn/bn_future/bot_handler_response_model"
-	bnsvcreq "tradething/app/bn/bn_future/bot_service_model"
+	bnbotsvcreq "tradething/app/bn/bn_future/bot_service_model"
 
 	bntrade "tradething/app/bn/bn_future/bnservice/trade"
 
@@ -12,7 +12,8 @@ import (
 )
 
 type IBotService interface {
-	BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.BotTimeframeExeIntervalRequest) (*handlerres.BotTimeframeExeIntervalResponse, error)
+	InvalidateBot(ctx context.Context, req *bnbotsvcreq.InvalidateBot) (*handlerres.InvalidateBotHandlerResponse, error)
+	BotTimeframeExeInterval(ctx context.Context, req *bnbotsvcreq.BotTimeframeExeIntervalRequest) (*handlerres.BotTimeframeExeIntervalResponse, error)
 }
 
 type botService struct {

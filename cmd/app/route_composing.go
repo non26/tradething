@@ -100,6 +100,10 @@ func RouteBotRestApiComposing(
 	)
 	botGroup.POST("/timeframe-exe-interval", botTimeframeExeIntervalHandler.Handler)
 
+	invalidateBotHandler := bothandler.NewInvalidateBotHandler(
+		botService,
+	)
+	botGroup.POST("/invalidate", invalidateBotHandler.Handler)
 }
 
 func RouteLambda(
