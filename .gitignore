@@ -11,3 +11,4 @@ config.json
 config/config.json
 config/config.yaml
 config.yaml
+docker-compose.yml

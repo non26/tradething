@@ -23,8 +23,8 @@ func (b *botService) InvalidateBot(ctx context.Context, req *bnbotsvcreq.Invalid
 	}
 
 	currentPosition, err := b.repository.GetOpenOrderBySymbolAndPositionSide(ctx, &bndynamodbmodel.BnFtOpeningPosition{
-		Symbol:       history.Symbol,
-		PositionSide: history.PositionSide,
+		Symbol:       req.Symbol,
+		PositionSide: req.PositionSide,
 	})
 	if err != nil {
 		return nil, err
@@ -39,9 +39,11 @@ func (b *botService) InvalidateBot(ctx context.Context, req *bnbotsvcreq.Invalid
 
 	if currentPosition.IsFound() {
 		_, err = b.binanceService.PlaceSingleOrder(ctx, &bntrademodel.PlaceSignleOrderBinanceServiceRequest{
-			Symbol:       currentPosition.Symbol,
-			PositionSide: currentPosition.PositionSide,
-			Side:         side,
+			Symbol:        currentPosition.Symbol,
+			PositionSide:  currentPosition.PositionSide,
+			Side:          side,
+			Type:          b.orderType.Market(),
+			EntryQuantity: currentPosition.AmountQ,
 		})
 		if err != nil {
 			return nil, err

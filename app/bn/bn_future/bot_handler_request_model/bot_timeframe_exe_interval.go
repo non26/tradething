@@ -11,8 +11,9 @@ type BotTimeframeExeIntervalHandlerRequest struct {
 	Symbol       string `json:"symbol"`
 	PositionSide string `json:"position_side"`
 	// Config       BotTimeframeExeIntervalConfig `json:"config"`
-	StartDate string `json:"start_date"`
-	EndDate   string `json:"end_date"`
+	StartDate string  `json:"start_date"`
+	EndDate   string  `json:"end_date"`
+	AmountQ   float64 `json:"amount_q"`
 }
 
 // type BotTimeframeExeIntervalConfig struct {
@@ -36,7 +37,7 @@ func transformToRFC3339(_time string) string {
 	date_time := strings.Split(_time, " ")
 	date := date_time[0]
 	time := date_time[1]
-	date_time_utc := date + "T" + time + "Z+07:00"
+	date_time_utc := date + "T" + time + "+07:00"
 	return date_time_utc
 }
 
@@ -48,5 +49,6 @@ func (b *BotTimeframeExeIntervalHandlerRequest) ToBotServiceRequest() (*bnsvcreq
 	svcmodel.SetPositionSide(b.PositionSide)
 	svcmodel.SetStartDate(b.StartDate)
 	svcmodel.SetEndDate(b.EndDate)
+	svcmodel.SetAmountQ(b.AmountQ)
 	return svcmodel, nil
 }

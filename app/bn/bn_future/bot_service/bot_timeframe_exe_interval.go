@@ -1,19 +1,18 @@
 package bnfuture
 
 import (
-	"log"
-	handlerres "tradething/app/bn/bn_future/bot_handler_response_model"
-	bnsvcreq "tradething/app/bn/bn_future/bot_service_model"
-
 	"context"
 	"errors"
+	"log"
 	"time"
+	handlerres "tradething/app/bn/bn_future/bot_handler_response_model"
+	bnsvcreq "tradething/app/bn/bn_future/bot_service_model"
 
 	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
 )
 
 func isBetweenTime(startDate, endDate time.Time, presentTime time.Time) bool {
-	if startDate.Unix() <= presentTime.Unix() && endDate.Unix() >= presentTime.Unix() {
+	if startDate.Unix() <= presentTime.Unix() && presentTime.Unix() <= endDate.Unix() {
 		return true
 	}
 	return false
@@ -23,13 +22,18 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 	presentTime := time.Now().UTC()
 	inTime := isBetweenTime(req.GetStartDate(), req.GetEndDate(), presentTime)
 
-	posHistory, err := b.repository.GetHistoryByClientID(context.Background(), req.GetBotOrderID())
+	bot, err := b.repository.GetBotByBotID(ctx, req.GetBotId())
 	if err != nil {
 		return nil, err
 	}
 
-	if posHistory.IsFound() {
-		return nil, errors.New("bot order already exists")
+	if !bot.IsFound() {
+		return nil, errors.New("bot not found")
+	}
+
+	posHistory, err := b.repository.GetHistoryByClientID(context.Background(), req.GetBotOrderID())
+	if err != nil {
+		return nil, err
 	}
 
 	current_position := req.ToBnFtOpeningPosition()
@@ -52,6 +56,34 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 		} else {
 			closeSide = b.sideType.Buy()
 		}
+	}
+
+	if posHistory.IsFound() {
+		if current_position.IsFound() {
+			// close position
+			_, err := b.binanceService.PlaceSingleOrder(ctx, req.ToBnFtPlaceSingleOrderServiceRequest(closeSide, b.orderType.Market()))
+			if err != nil {
+				return nil, errors.New("place order error")
+			}
+			err = b.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, current_position)
+			if err != nil {
+				log.Println("delete current position error", err)
+			}
+			err = b.repository.DeleteBotOnRun(ctx, req.ToBnFtDeleteBotOnRun())
+			if err != nil {
+				log.Println("delete bot on run error", err)
+			}
+			err = b.repository.InsertHistory(ctx, req.ToBnFtHistory())
+			if err != nil {
+				log.Println("insert history error", err)
+			}
+			return &handlerres.BotTimeframeExeIntervalResponse{
+				BotOrderID: req.GetBotOrderID(),
+				Status:     "success",
+				Message:    "no bot open",
+			}, nil
+		}
+		return nil, errors.New("bot order already exists")
 	}
 
 	var openSide string
@@ -85,6 +117,7 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 		_, err = b.binanceService.PlaceSingleOrder(ctx, req.ToBnFtPlaceSingleOrderServiceRequest(openSide, b.orderType.Market()))
 		if err != nil {
 			log.Println("place order error", err)
+			return nil, errors.New("place order error")
 		}
 		err = b.repository.InsertNewOpenOrder(ctx, req.ToBnFtOpeningPosition())
 		if err != nil {
@@ -94,19 +127,37 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 		if err != nil {
 			log.Println("insert bot on run error", err)
 		}
-		qouteUSDT := dynamodbmodel.NewBnFtQouteUSDT()
-		qouteUSDT.Symbol = req.GetSymbol()
-		if current_position.PositionSide == req.GetPositionSide() {
-			if current_position.PositionSide == b.positionSideType.Long() {
-				qouteUSDT.GetNextCountingLong()
+
+		qouteUSDT, err := b.repository.GetQouteUSDT(ctx, req.GetSymbol())
+		if err != nil {
+			log.Println("get qoute usdt error", err)
+		}
+
+		if !qouteUSDT.IsFound() {
+			qouteUSDT = dynamodbmodel.NewBnFtQouteUSDT()
+			qouteUSDT.Symbol = req.GetSymbol()
+			if req.GetPositionSide() == b.positionSideType.Long() {
+				qouteUSDT.SetCountingLong(qouteUSDT.GetNextCountingLong().Int())
 			} else {
-				qouteUSDT.GetNextCountingShort()
+				qouteUSDT.SetCountingShort(qouteUSDT.GetNextCountingShort().Int())
+			}
+			err = b.repository.InsertNewSymbolQouteUSDT(ctx, qouteUSDT)
+			if err != nil {
+				log.Println("insert qoute usdt error", err)
+			}
+		} else {
+			qouteUSDT.Symbol = req.GetSymbol()
+			if req.GetPositionSide() == b.positionSideType.Long() {
+				qouteUSDT.SetCountingLong(qouteUSDT.GetNextCountingLong().Int())
+			} else {
+				qouteUSDT.SetCountingShort(qouteUSDT.GetNextCountingShort().Int())
+			}
+			err = b.repository.UpdateQouteUSDT(ctx, qouteUSDT)
+			if err != nil {
+				log.Println("update qoute usdt error", err)
 			}
 		}
-		err = b.repository.UpdateQouteUSDT(ctx, qouteUSDT)
-		if err != nil {
-			log.Println("update qoute usdt error", err)
-		}
+
 	} else { // off time
 		if current_position.IsFound() {
 			// close position
@@ -127,6 +178,11 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 				log.Println("insert history error", err)
 			}
 		}
+		return &handlerres.BotTimeframeExeIntervalResponse{
+			BotOrderID: req.GetBotOrderID(),
+			Status:     "success",
+			Message:    "no bot open",
+		}, nil
 	}
 
 	return &handlerres.BotTimeframeExeIntervalResponse{
