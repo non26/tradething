@@ -11,24 +11,12 @@ dynamodb:
 service-name:
   binance-future: BNF
   binance-spot: BNS
-  okx-future: OKXF
-  okx-spot: OKXS
-  kucoin-future: KCF
-  kucoin-spot: KCS
-  kub-spot: BKS
 
 secrets:
   binance-apikey: 79c5d0858edfd09a166f5a1c69ad876518174fa72af071a16c2ca21bd50e4c1d
   binance-secretKey: c921a243ffa6b57dca1db29959d8e2cc0d1828cf3f3848d94a5533de45c2ce1d
-  okx-apiKey: 
-  okx-secretKey: 
-  okx-passPhase: 
-  bitkub-apikey: 
-  bitkub-secretKey: 
-  kucoin-apiKey: 
-  kucoin-apiKey-Version: 
-  kucoin-secretKey: 
-  kucoin-passphase: 
+  binance-subAccount-apikey: 
+  binance-subAccount-secretKey: 
   
 
 binance-future-url:
@@ -41,28 +29,3 @@ binance-future-url:
     candle-stick: /fapi/v1/klines
   binance-future-baseUrl:
     binance1: https://testnet.binancefuture.com
-
-okx-future-url:
-  set-leverage: /api/v5/account/set-leverage
-  place-position: /api/v5/trade/order
-  multi-position: /api/v5/trade/batch-orders
-  query-order:
-  okx-future-baseUrl:
-    okx1: https://www.okx.com
-
-kucoin-spot-url:
-  base-url: https://api.kucoin.com
-  place-order-url: /api/v1/orders/test
-
-kucoin-future-url:
-  base-url: https://api-futures.kucoin.com
-  place-position: /api/v1/orders/test
-  get-position-detail-url:
-
-
-kub-spot-url:
-  base-url: https://api.bitkub.com
-  sell-order-url: /api/v3/market/place-ask/test
-  buy-order-url: /api/v3/market/place-bid/test
-  server-time-url: /api/v3/servertime
-  balance-url: /api/market/balances

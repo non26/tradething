@@ -57,17 +57,26 @@ func init() {
 	)
 	binanceServie := bntrade.NewBinanceFutureExternalService(
 		&_config.BinanceFutureUrl,
-		&_config.Secrets,
+		_config.Secrets.BinanceApiKey,
+		_config.Secrets.BinanceSecretKey,
 		_config.ServiceName.BinanceFuture,
 		httptransport,
 		httpclient,
 	)
 
+	bot_binanceServie := bntrade.NewBinanceFutureExternalService(
+		&_config.BinanceFutureUrl,
+		_config.Secrets.BinanceSubAccountApikey,
+		_config.Secrets.BinanceSubAccountSecretKey,
+		_config.ServiceName.BinanceFuture,
+		httptransport,
+		httpclient,
+	)
 	app_echo := echo.New()
 	app.MiddlerwareComposing(app_echo)
 	app.HealthCheck(app_echo)
 	app.RouteRestApiComposing(app_echo, _config, ordertype, positionSide, side, svcrepository, httptransport, httpclient, binanceServie, marketData)
-	app.RouteBotRestApiComposing(app_echo, _config, ordertype, positionSide, side, svcrepository, httptransport, httpclient, binanceServie, marketData)
+	app.RouteBotRestApiComposing(app_echo, _config, ordertype, positionSide, side, svcrepository, httptransport, httpclient, bot_binanceServie, marketData)
 	app.RouteLambda(app_echo, _config)
 
 	echoLambda = echoadapter.New(app_echo)

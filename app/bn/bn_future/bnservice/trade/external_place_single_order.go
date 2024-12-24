@@ -29,8 +29,8 @@ func (bfes *binanceFutureExternalService) PlaceSingleOrder(
 		bfes.binanceFutureUrl.BinanceFutureBaseUrl.BianceUrl1,
 		bfes.binanceFutureUrl.SingleOrder,
 		http.MethodPost,
-		bfes.secrets.BinanceSecretKey,
-		bfes.secrets.BinanceApiKey,
+		bfes.secretkey,
+		bfes.apikey,
 		bfes.binanceFutureServiceName,
 	)
 	if err != nil {

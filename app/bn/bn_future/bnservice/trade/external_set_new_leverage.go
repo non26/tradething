@@ -27,8 +27,8 @@ func (bfes *binanceFutureExternalService) SetNewLeverage(
 		bfes.binanceFutureUrl.BinanceFutureBaseUrl.BianceUrl1,
 		bfes.binanceFutureUrl.SetLeverage,
 		http.MethodPost,
-		bfes.secrets.BinanceSecretKey,
-		bfes.secrets.BinanceApiKey,
+		bfes.secretkey,
+		bfes.apikey,
 		bfes.binanceFutureServiceName,
 	)
 	if err != nil {

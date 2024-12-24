@@ -42,7 +42,17 @@ func main() {
 	)
 	binanceServie := bntrade.NewBinanceFutureExternalService(
 		&config.BinanceFutureUrl,
-		&config.Secrets,
+		config.Secrets.BinanceApiKey,
+		config.Secrets.BinanceSecretKey,
+		config.ServiceName.BinanceFuture,
+		httptransport,
+		httpclient,
+	)
+
+	bot_binanceServie := bntrade.NewBinanceFutureExternalService(
+		&config.BinanceFutureUrl,
+		config.Secrets.BinanceSubAccountApikey,
+		config.Secrets.BinanceSubAccountSecretKey,
 		config.ServiceName.BinanceFuture,
 		httptransport,
 		httpclient,
@@ -51,6 +61,6 @@ func main() {
 	app_echo := echo.New()
 	app.HealthCheck(app_echo)
 	app.RouteRestApiComposing(app_echo, config, ordertype, positionSide, side, svcrepository, httptransport, httpclient, binanceServie, marketData)
-	app.RouteBotRestApiComposing(app_echo, config, ordertype, positionSide, side, svcrepository, httptransport, httpclient, binanceServie, marketData)
+	app.RouteBotRestApiComposing(app_echo, config, ordertype, positionSide, side, svcrepository, httptransport, httpclient, bot_binanceServie, marketData)
 	app_echo.Start(fmt.Sprintf(":%v", config.Port))
 }

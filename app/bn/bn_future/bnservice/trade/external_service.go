@@ -30,7 +30,8 @@ type IBinanceFutureExternalService interface {
 
 type binanceFutureExternalService struct {
 	binanceFutureUrl         *config.BinanceFutureUrl
-	secrets                  *config.Secrets
+	apikey                   string
+	secretkey                string
 	binanceFutureServiceName string
 	httpttransport           bntransport.IBinanceServiceHttpTransport
 	httpclient               bnclient.IBinanceSerivceHttpClient
@@ -38,14 +39,16 @@ type binanceFutureExternalService struct {
 
 func NewBinanceFutureExternalService(
 	binanceFutureUrl *config.BinanceFutureUrl,
-	secrets *config.Secrets,
+	apikey string,
+	secretkey string,
 	binanceFutureServiceName string,
 	httpttransport bntransport.IBinanceServiceHttpTransport,
 	httpclient bnclient.IBinanceSerivceHttpClient,
 ) IBinanceFutureExternalService {
 	return &binanceFutureExternalService{
 		binanceFutureUrl,
-		secrets,
+		apikey,
+		secretkey,
 		binanceFutureServiceName,
 		httpttransport,
 		httpclient,

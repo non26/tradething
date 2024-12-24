@@ -27,8 +27,8 @@ func (bfes *binanceFutureExternalService) QueryOrder(
 		bfes.binanceFutureUrl.BinanceFutureBaseUrl.BianceUrl1,
 		bfes.binanceFutureUrl.QueryOrder,
 		http.MethodGet,
-		bfes.secrets.BinanceSecretKey,
-		bfes.secrets.BinanceApiKey,
+		bfes.secretkey,
+		bfes.apikey,
 		bfes.binanceFutureServiceName,
 	)
 	if err != nil {
