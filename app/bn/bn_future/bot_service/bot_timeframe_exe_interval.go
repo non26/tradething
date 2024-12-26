@@ -75,7 +75,9 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 	if inTime {
 		if current_position.IsFound() {
 			// close current position
-			_, err := b.binanceService.PlaceSingleOrder(ctx, req.ToBnFtPlaceSingleOrderServiceRequest(closeSide, b.orderType.Market()))
+			closeOrder := req.ToBnFtPlaceSingleOrderServiceRequest(closeSide, b.orderType.Market())
+			closeOrder.EntryQuantity = current_position.AmountQoute
+			_, err := b.binanceService.PlaceSingleOrder(ctx, closeOrder)
 			if err != nil {
 				return nil, errors.New("place order error")
 			}
@@ -90,10 +92,21 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 			log.Println("place order error", err)
 			return nil, errors.New("place order error")
 		}
-		err = b.repository.InsertBotOnRun(ctx, req.ToBnFtBotOnRun())
-		if err != nil {
-			log.Println("insert bot on run error", err)
+
+		isFirstTime := !current_position.IsFound()
+		if isFirstTime {
+			err = b.repository.InsertBotOnRun(ctx, req.ToBnFtBotOnRun())
+			if err != nil {
+				log.Println("insert bot on run error", err)
+			}
+		} else {
+			err = b.repository.UpdateBotOnRun(ctx, req.ToBnFtBotOnRun())
+			if err != nil {
+				log.Println("update bot on run error", err)
+			}
 		}
+
+		b.repository.UpdateBotOnRun(ctx, req.ToBnFtBotOnRun())
 
 		qouteUSDT, err := b.repository.GetQouteUSDT(ctx, req.GetSymbol())
 		if err != nil {
@@ -128,7 +141,9 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 	} else { // off time
 		if current_position.IsFound() {
 			// close position
-			_, err := b.binanceService.PlaceSingleOrder(ctx, req.ToBnFtPlaceSingleOrderServiceRequest(closeSide, b.orderType.Market()))
+			closeOrder := req.ToBnFtPlaceSingleOrderServiceRequest(closeSide, b.orderType.Market())
+			closeOrder.EntryQuantity = current_position.AmountQoute
+			_, err := b.binanceService.PlaceSingleOrder(ctx, closeOrder)
 			if err != nil {
 				return nil, errors.New("place order error")
 			}
