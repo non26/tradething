@@ -49,14 +49,6 @@ func (b *botService) InvalidateBot(ctx context.Context, req *bnbotsvcreq.Invalid
 			return nil, err
 		}
 
-		err = b.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, &bndynamodbmodel.BnFtOpeningPosition{
-			Symbol:       currentPosition.Symbol,
-			PositionSide: currentPosition.PositionSide,
-		})
-		if err != nil {
-			return nil, err
-		}
-
 		err = b.repository.DeleteBotOnRun(ctx, &bndynamodbmodel.BnFtBotOnRun{
 			BotID:      req.BotId,
 			BotOrderID: req.BotOrderId,

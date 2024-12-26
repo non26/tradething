@@ -45,6 +45,10 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 		return nil, errors.New("get current position error")
 	}
 
+	if !current_position.IsActive {
+		return nil, errors.New("bot order already not active")
+	}
+
 	var closeSide string
 	if current_position.IsFound() {
 		if req.GetBotOrderID() != current_position.BotOrderID {
@@ -78,10 +82,6 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 			err = b.repository.DeleteBotOnRun(ctx, req.ToBnFtDeleteBotOnRun())
 			if err != nil {
 				log.Println("delete bot on run error", err)
-			}
-			err = b.repository.InsertHistory(ctx, req.ToBnFtHistory())
-			if err != nil {
-				log.Println("insert history error", err)
 			}
 		}
 		// open new position
