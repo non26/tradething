@@ -45,10 +45,6 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 		return nil, errors.New("get current position error")
 	}
 
-	if !current_position.IsActive {
-		return nil, errors.New("bot order already not active")
-	}
-
 	var closeSide string
 	if current_position.IsFound() {
 		if req.GetBotOrderID() != current_position.BotOrderID {
@@ -74,6 +70,9 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 
 	if inTime {
 		if current_position.IsFound() {
+			if !current_position.IsActive {
+				return nil, errors.New("bot order already not active")
+			}
 			// close current position
 			closeOrder := req.ToBnFtPlaceSingleOrderServiceRequest(closeSide, b.orderType.Market())
 			closeOrder.EntryQuantity = current_position.AmountQoute
@@ -81,10 +80,10 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 			if err != nil {
 				return nil, errors.New("place order error")
 			}
-			err = b.repository.DeleteBotOnRun(ctx, req.ToBnFtDeleteBotOnRun())
-			if err != nil {
-				log.Println("delete bot on run error", err)
-			}
+			// err = b.repository.DeleteBotOnRun(ctx, req.ToBnFtDeleteBotOnRun())
+			// if err != nil {
+			// 	log.Println("delete bot on run error", err)
+			// }
 		}
 		// open new position
 		_, err = b.binanceService.PlaceSingleOrder(ctx, req.ToBnFtPlaceSingleOrderServiceRequest(openSide, b.orderType.Market()))
@@ -105,8 +104,6 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 				log.Println("update bot on run error", err)
 			}
 		}
-
-		b.repository.UpdateBotOnRun(ctx, req.ToBnFtBotOnRun())
 
 		qouteUSDT, err := b.repository.GetQouteUSDT(ctx, req.GetSymbol())
 		if err != nil {
