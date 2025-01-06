@@ -72,6 +72,11 @@ func RouteRestApiComposing(
 		service,
 	)
 	binanceGroup.POST("/set-position", setPositionHandler.Handler)
+
+	invalidatePositionHandler := handler.NewInvalidatePositionHandler(
+		service,
+	)
+	binanceGroup.POST("/invalidate-position", invalidatePositionHandler.Handler)
 }
 
 func RouteBotRestApiComposing(

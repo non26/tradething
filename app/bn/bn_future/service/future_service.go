@@ -40,6 +40,10 @@ type IBinanceFutureService interface {
 		ctx context.Context,
 		request *svcfuture.PlaceSignleOrderServiceRequest,
 	) (*svchandlerres.PlaceSignleOrderHandlerResponse, error)
+	InvalidatePosition(
+		ctx context.Context,
+		request *svcfuture.InvalidatePositionServiceRequest,
+	) (*svchandlerres.InvalidatePositionHandlerResponse, error)
 }
 
 type binanceFutureService struct {
