@@ -44,6 +44,10 @@ type IBinanceFutureService interface {
 		ctx context.Context,
 		request *svcfuture.InvalidatePositionServiceRequest,
 	) (*svchandlerres.InvalidatePositionHandlerResponse, error)
+	SetAdvancedPosition(
+		ctx context.Context,
+		request *svcfuture.SetAdvancedPositionServiceRequest,
+	) (*svchandlerres.SetAdvancedPositionHandlerResponse, error)
 }
 
 type binanceFutureService struct {

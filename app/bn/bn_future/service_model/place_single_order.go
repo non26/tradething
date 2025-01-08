@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"time"
 	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
 	valueobject "tradething/app/bn/bn_future/value_object"
 
@@ -157,15 +156,13 @@ func (p *PlaceSignleOrderServiceRequest) ToBinanceServiceModel() *bntradereq.Pla
 
 func (p *PlaceSignleOrderServiceRequest) ToBinanceFutureOpeningPositionRepositoryModel() *dynamodbmodel.BnFtOpeningPosition {
 	m := dynamodbmodel.BnFtOpeningPosition{
-		Symbol:             p.symbol,
-		PositionSide:       p.positionSide,
-		AmountQ:            p.entryQuantity,
-		Leverage:           fmt.Sprintf("%v", p.leverageLevel),
-		ClientId:           p.clientOrderId,
-		Side:               p.side,
-		AmountB:            "",
-		BuyOrderCreatedAt:  time.Now().Format(time.DateTime),
-		SellOrderCreatedAt: time.Now().Format(time.DateTime),
+		Symbol:       p.symbol,
+		PositionSide: p.positionSide,
+		AmountQ:      p.entryQuantity,
+		Leverage:     fmt.Sprintf("%v", p.leverageLevel),
+		ClientId:     p.clientOrderId,
+		Side:         p.side,
+		AmountB:      "",
 	}
 	watchingConfig := valueobject.Watching{
 		StopLoss:   p.stopLoss,
