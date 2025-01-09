@@ -18,12 +18,12 @@ import (
 //3. for accumulate order, client are resposible for calculating the amount of qty to be placed in each bar
 //4. for watching order, it'll be triggered when the bar closed
 
-func (bfs *binanceFutureService) PlaceSingleOrder(
+func (b *binanceFutureService) PlaceSingleOrder(
 	ctx context.Context,
 	request *svcFuture.PlaceSignleOrderServiceRequest,
 ) (*bnfutureres.PlaceSignleOrderHandlerResponse, error) {
 
-	positionHistory, err := bfs.repository.GetHistoryByClientID(ctx, request.GetClientOrderId())
+	positionHistory, err := b.repository.GetHistoryByClientID(ctx, request.GetClientOrderId())
 	if err != nil {
 		log.Println("error get history by client id", err.Error())
 		return nil, err
@@ -33,28 +33,17 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 	}
 
 	openingPositionTable := request.ToBinanceFutureOpeningPositionRepositoryModel()
-	dbOpeningOrder, err := bfs.repository.GetOpenOrderBySymbolAndPositionSide(ctx, openingPositionTable)
+	dbOpeningOrder, err := b.repository.GetOpenOrderBySymbolAndPositionSide(ctx, openingPositionTable)
 	if err != nil {
 		log.Println("error get open order by key", err.Error())
 		return nil, err
 	}
 
 	if utils.IsSellCrypto(request.GetSide(), request.GetPositionSide()) {
-		placeSellOrderRes, err := bfs.binanceService.PlaceSingleOrder(
-			ctx,
-			request.ToBinanceServiceModel(),
-		)
+		placeSellOrderRes, err := b.closePosition(ctx, request)
 		if err != nil {
-			log.Println("error place sell order", err.Error())
+			log.Println("error close position", err.Error())
 			return nil, err
-		}
-		err = bfs.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, openingPositionTable)
-		if err != nil {
-			log.Println("error delete open order by key", err.Error())
-		}
-		err = bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
-		if err != nil {
-			log.Println("error insert history", err.Error())
 		}
 		return placeSellOrderRes.ToBnHandlerResponse(), nil
 	}
@@ -64,7 +53,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 	}
 
 	if !dbOpeningOrder.IsFound() { // meaing this is new order, no existing order is found
-		dbQUsdt, err := bfs.repository.GetQouteUSDT(ctx, request.GetSymbol())
+		dbQUsdt, err := b.repository.GetQouteUSDT(ctx, request.GetSymbol())
 		if err != nil {
 			log.Println("error get qoute usdt", err.Error())
 			return nil, err
@@ -74,7 +63,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 			dbQUsdt.SetSymbol(request.GetSymbol())
 			dbQUsdt.SetCountingLong(0)
 			dbQUsdt.SetCountingShort(0)
-			err = bfs.repository.InsertNewSymbolQouteUSDT(ctx, dbQUsdt)
+			err = b.repository.InsertNewSymbolQouteUSDT(ctx, dbQUsdt)
 			if err != nil {
 				log.Println("error insert new symbol qoute usdt", err.Error())
 				return nil, err
@@ -83,7 +72,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 
 		if request.GetClientOrderId() == "" {
 			var counting int
-			if request.GetPositionSide() == bfs.positionSideType.Short() {
+			if request.GetPositionSide() == b.positionSideType.Short() {
 				counting = dbQUsdt.GetCountingShort()
 			} else {
 				counting = dbQUsdt.GetCountingLong()
@@ -91,7 +80,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 			request.SetClientOrderId(utils.BinanceDefaultClientID(request.GetSymbol(), request.GetPositionSide(), counting))
 		}
 
-		placeOrderRes, err := bfs.binanceService.PlaceSingleOrder(
+		placeOrderRes, err := b.binanceService.PlaceSingleOrder(
 			ctx,
 			request.ToBinanceServiceModel(),
 		)
@@ -100,16 +89,16 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 			return nil, err
 		}
 
-		if request.GetPositionSide() == bfs.positionSideType.Short() {
+		if request.GetPositionSide() == b.positionSideType.Short() {
 			dbQUsdt.SetCountingShort(dbQUsdt.GetCountingShort() + 1)
 		} else {
 			dbQUsdt.SetCountingLong(dbQUsdt.GetCountingLong() + 1)
 		}
-		err = bfs.repository.UpdateQouteUSDT(ctx, dbQUsdt)
+		err = b.repository.UpdateQouteUSDT(ctx, dbQUsdt)
 		if err != nil {
 			log.Println("error update qoute usdt", err.Error())
 		}
-		err = bfs.repository.InsertNewOpenOrder(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
+		err = b.repository.InsertNewOpenOrder(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
 		if err != nil {
 			log.Println("error new open order", err.Error())
 		}
@@ -128,7 +117,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 
 		if request.GetClientOrderId() != dbOpeningOrder.ClientId {
 			// for accumulate order
-			placeOrderRes, err := bfs.binanceService.PlaceSingleOrder(
+			placeOrderRes, err := b.binanceService.PlaceSingleOrder(
 				ctx,
 				request.ToBinanceServiceModel(),
 			)
@@ -137,7 +126,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 				return nil, err
 			}
 			dbOpeningOrder.AddMoreAmountQ(request.GetAmountQ())
-			err = bfs.repository.UpdateOpenOrder(ctx, dbOpeningOrder)
+			err = b.repository.UpdateOpenOrder(ctx, dbOpeningOrder)
 			if err != nil {
 				log.Println("error update open order for accumulate order", err.Error())
 				return nil, err
@@ -180,7 +169,7 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 				return nil, errors.New("invalid interval")
 			}
 
-			dbMarketData, err := bfs.bnMarketDataService.GetCandleStickData(ctx, request.ToBnCandleStickModel(
+			dbMarketData, err := b.bnMarketDataService.GetCandleStickData(ctx, request.ToBnCandleStickModel(
 				utils.GetSpecificBnTimestamp(&prv_start),
 				utils.GetSpecificBnTimestamp(&prv_end),
 			))
@@ -190,56 +179,56 @@ func (bfs *binanceFutureService) PlaceSingleOrder(
 			}
 			closePrice := dbMarketData.GetClosePrice().GetFloat64()
 			if !request.IsStopLossNil() {
-				if request.GetPositionSide() == bfs.positionSideType.Long() {
+				if request.GetPositionSide() == b.positionSideType.Long() {
 					if closePrice < request.GetStopLoss().Price {
-						request.SetSide(bfs.sideType.Sell())
-						placeSellOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
+						request.SetSide(b.sideType.Sell())
+						placeSellOrderRes, err := b.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
 						if err != nil {
 							log.Println("error place sell order for watching order", err.Error())
 							return nil, err
 						}
-						bfs.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, dbOpeningOrder)
-						bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
+						b.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, dbOpeningOrder)
+						b.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
 						return placeSellOrderRes.ToBnHandlerResponse(), nil
 					}
-				} else if request.GetPositionSide() == bfs.positionSideType.Short() {
+				} else if request.GetPositionSide() == b.positionSideType.Short() {
 					if closePrice > request.GetStopLoss().Price {
-						request.SetSide(bfs.sideType.Buy())
-						placeBuyOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
+						request.SetSide(b.sideType.Buy())
+						placeBuyOrderRes, err := b.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
 						if err != nil {
 							log.Println("error place buy order for watching order", err.Error())
 							return nil, err
 						}
-						bfs.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, dbOpeningOrder)
-						bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
+						b.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, dbOpeningOrder)
+						b.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
 						return placeBuyOrderRes.ToBnHandlerResponse(), nil
 					}
 				}
 			}
 
 			if !request.IsTakeProfitNil() {
-				if request.GetPositionSide() == bfs.positionSideType.Long() {
+				if request.GetPositionSide() == b.positionSideType.Long() {
 					if dbMarketData.GetClosePrice().GetFloat64() > request.GetTakeProfit().Price {
-						request.SetSide(bfs.sideType.Sell())
-						placeSellOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
+						request.SetSide(b.sideType.Sell())
+						placeSellOrderRes, err := b.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
 						if err != nil {
 							log.Println("error place sell order for watching order", err.Error())
 							return nil, err
 						}
-						bfs.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, dbOpeningOrder)
-						bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
+						b.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, dbOpeningOrder)
+						b.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
 						return placeSellOrderRes.ToBnHandlerResponse(), nil
 					}
-				} else if request.GetPositionSide() == bfs.positionSideType.Short() {
+				} else if request.GetPositionSide() == b.positionSideType.Short() {
 					if dbMarketData.GetClosePrice().GetFloat64() < request.GetTakeProfit().Price {
-						request.SetSide(bfs.sideType.Buy())
-						placeBuyOrderRes, err := bfs.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
+						request.SetSide(b.sideType.Buy())
+						placeBuyOrderRes, err := b.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
 						if err != nil {
 							log.Println("error place buy order for watching order", err.Error())
 							return nil, err
 						}
-						bfs.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, dbOpeningOrder)
-						bfs.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
+						b.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, dbOpeningOrder)
+						b.repository.InsertHistory(ctx, request.ToBnPositionHistoryRepositoryModel())
 						return placeBuyOrderRes.ToBnHandlerResponse(), nil
 					}
 				}
