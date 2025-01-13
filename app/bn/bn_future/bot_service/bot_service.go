@@ -12,30 +12,39 @@ import (
 )
 
 type IBotService interface {
-	InvalidateBot(ctx context.Context, req *bnbotsvcreq.InvalidateBot) (*handlerres.InvalidateBotHandlerResponse, error)
+	// InvalidateBot(ctx context.Context, req *bnbotsvcreq.InvalidateBot) (*handlerres.InvalidateBotHandlerResponse, error)
 	BotTimeframeExeInterval(ctx context.Context, req *bnbotsvcreq.BotTimeframeExeIntervalRequest) (*handlerres.BotTimeframeExeIntervalResponse, error)
 }
 
 type botService struct {
-	binanceService   bntrade.IBinanceFutureExternalService
-	repository       bndynamodb.IRepository
-	orderType        positionconstant.IOrderType
-	positionSideType positionconstant.IPositionSide
-	sideType         positionconstant.ISide
+	binanceService     bntrade.IBinanceFutureExternalService
+	bnFtBotTable       bndynamodb.IBnFtBotRepository
+	bnFtBotOnRunTable  bndynamodb.IBnFtBotOnRunRepository
+	bnFtHistoryTable   bndynamodb.IBnFtHistoryRepository
+	bnFtQouteUsdtTable bndynamodb.IBnFtQouteUSDTRepository
+	orderType          positionconstant.IOrderType
+	positionSideType   positionconstant.IPositionSide
+	sideType           positionconstant.ISide
 }
 
 func NewBotService(
 	binanceService bntrade.IBinanceFutureExternalService,
-	repository bndynamodb.IRepository,
+	bnFtBotTable bndynamodb.IBnFtBotRepository,
+	bnFtBotOnRunTable bndynamodb.IBnFtBotOnRunRepository,
+	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
+	bnFtQouteUsdtTable bndynamodb.IBnFtQouteUSDTRepository,
 	orderType positionconstant.IOrderType,
 	positionSideType positionconstant.IPositionSide,
 	sideType positionconstant.ISide,
 ) IBotService {
 	return &botService{
-		binanceService:   binanceService,
-		repository:       repository,
-		orderType:        orderType,
-		positionSideType: positionSideType,
-		sideType:         sideType,
+		binanceService:     binanceService,
+		bnFtBotTable:       bnFtBotTable,
+		bnFtBotOnRunTable:  bnFtBotOnRunTable,
+		bnFtHistoryTable:   bnFtHistoryTable,
+		bnFtQouteUsdtTable: bnFtQouteUsdtTable,
+		orderType:          orderType,
+		positionSideType:   positionSideType,
+		sideType:           sideType,
 	}
 }

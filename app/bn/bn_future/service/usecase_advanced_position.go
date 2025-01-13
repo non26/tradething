@@ -14,7 +14,7 @@ func (b *binanceFutureService) SetAdvancedPosition(
 	request *svcfuture.SetAdvancedPositionServiceRequest,
 ) (*svchandlerres.SetAdvancedPositionHandlerResponse, error) {
 
-	dbHistory, err := b.repository.GetHistoryByClientID(ctx, request.GetClientOrderId())
+	dbHistory, err := b.bnFtHistoryTable.Get(ctx, request.GetClientOrderId())
 	if err != nil {
 		return nil, err
 	}
@@ -22,7 +22,7 @@ func (b *binanceFutureService) SetAdvancedPosition(
 		return nil, errors.New("history not found")
 	}
 
-	dbOpenOrder, err := b.repository.GetOpenOrderBySymbolAndPositionSide(ctx, &dynamodbrepository.BnFtOpeningPosition{
+	dbOpenOrder, err := b.bnFtOpeningPositionTable.Get(ctx, &dynamodbrepository.BnFtOpeningPosition{
 		Symbol:       request.GetSymbol(),
 		PositionSide: request.GetPositionSide(),
 	})
@@ -33,7 +33,7 @@ func (b *binanceFutureService) SetAdvancedPosition(
 		return nil, errors.New("open order already exists")
 	}
 
-	dbAdvancedPosition, err := b.repository.GetAdvancedPositionBySymbolAndPositionSide(ctx, &dynamodbrepository.BnFtAdvancedPositionModel{
+	dbAdvancedPosition, err := b.bnFtAdvancedPositionTable.Get(ctx, &dynamodbrepository.BnFtAdvancedPositionModel{
 		Symbol:       request.GetSymbol(),
 		PositionSide: request.GetPositionSide(),
 	})
@@ -44,7 +44,7 @@ func (b *binanceFutureService) SetAdvancedPosition(
 		return nil, errors.New("advanced position already exists")
 	}
 
-	err = b.repository.InsertAdvancedPosition(ctx, &dynamodbrepository.BnFtAdvancedPositionModel{
+	err = b.bnFtAdvancedPositionTable.Insert(ctx, &dynamodbrepository.BnFtAdvancedPositionModel{
 		Symbol:       request.GetSymbol(),
 		PositionSide: request.GetPositionSide(),
 		Side:         request.GetSide(),

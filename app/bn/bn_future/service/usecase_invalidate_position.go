@@ -16,7 +16,7 @@ func (b *binanceFutureService) InvalidatePosition(
 		Result: []svchandlerres.InvalidatePositionHandlerResponseData{},
 	}
 	for _, orderId := range request.OrderIds {
-		dbHistory, err := b.repository.GetHistoryByClientID(ctx, orderId)
+		dbHistory, err := b.bnFtHistoryTable.Get(ctx, orderId)
 		if err != nil {
 			return nil, err
 		}
@@ -28,7 +28,7 @@ func (b *binanceFutureService) InvalidatePosition(
 			})
 			continue
 		}
-		dbOpeningPosition, err := b.repository.GetOpenOrderByClientID(ctx, orderId)
+		dbOpeningPosition, err := b.bnFtOpeningPositionTable.ScanWith(ctx, orderId)
 		if err != nil {
 			return nil, err
 		}
@@ -55,13 +55,13 @@ func (b *binanceFutureService) InvalidatePosition(
 				continue
 			}
 
-			err = b.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, dbOpeningPosition)
+			err = b.bnFtOpeningPositionTable.Delete(ctx, dbOpeningPosition)
 			if err != nil {
 				// return nil, err
 				continue
 			}
 
-			err = b.repository.InsertHistory(ctx, &dynamodbrepository.BnFtHistory{
+			err = b.bnFtHistoryTable.Insert(ctx, &dynamodbrepository.BnFtHistory{
 				ClientId:     orderId,
 				Symbol:       dbOpeningPosition.Symbol,
 				PositionSide: dbOpeningPosition.PositionSide,
@@ -78,7 +78,7 @@ func (b *binanceFutureService) InvalidatePosition(
 			})
 			continue
 		} else {
-			err := b.repository.InsertHistory(ctx, &dynamodbrepository.BnFtHistory{
+			err := b.bnFtHistoryTable.Insert(ctx, &dynamodbrepository.BnFtHistory{
 				ClientId: orderId,
 			})
 			if err != nil {

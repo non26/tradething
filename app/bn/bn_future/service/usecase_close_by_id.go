@@ -19,7 +19,7 @@ func (b *binanceFutureService) CloseByClientIds(
 	}
 	for _, clientId := range request.GetClientIds() {
 		closeOrder := svchandlerres.CloseByClientIdsHandlerResponseData{}
-		positionHistory, err := b.repository.GetHistoryByClientID(ctx, clientId)
+		positionHistory, err := b.bnFtHistoryTable.Get(ctx, clientId)
 		if err != nil {
 			return nil, err
 		}
@@ -27,7 +27,7 @@ func (b *binanceFutureService) CloseByClientIds(
 			addCloseOrderData(&closeOrders, closeOrder, clientId, "fail", "no position history found")
 			continue
 		}
-		openOrders, err := b.repository.GetOpenOrderByClientID(ctx, clientId)
+		openOrders, err := b.bnFtOpeningPositionTable.ScanWith(ctx, clientId)
 		if err != nil {
 			addCloseOrderData(&closeOrders, closeOrder, clientId, "fail", err.Error())
 			continue
@@ -56,11 +56,11 @@ func (b *binanceFutureService) CloseByClientIds(
 			continue
 		}
 
-		err = b.repository.DeleteOpenOrderBySymbolAndPositionSide(ctx, openOrders)
+		err = b.bnFtOpeningPositionTable.Delete(ctx, openOrders)
 		if err != nil {
 			log.Println("delete open order error", err)
 		}
-		err = b.repository.InsertHistory(ctx, &dynamodbrepository.BnFtHistory{
+		err = b.bnFtHistoryTable.Insert(ctx, &dynamodbrepository.BnFtHistory{
 			ClientId:     clientId,
 			Symbol:       openOrders.Symbol,
 			PositionSide: openOrders.PositionSide,

@@ -25,7 +25,10 @@ func RouteRestApiComposing(
 	orderType positionconst.IOrderType,
 	positionSide positionconst.IPositionSide,
 	side positionconst.ISide,
-	svcRepository bndynamodb.IRepository,
+	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
+	bnFtQouteUsdtTable bndynamodb.IBnFtQouteUSDTRepository,
+	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
+	bnFtAdvancedPositionTable bndynamodb.IBnFtAdvancedPositionRepository,
 	httpttransport bntransport.IBinanceServiceHttpTransport,
 	httpclient bnclient.IBinanceSerivceHttpClient,
 	bnTradeService bntrade.IBinanceFutureExternalService,
@@ -36,7 +39,10 @@ func RouteRestApiComposing(
 		config.ServiceName.BinanceFuture,
 		bnTradeService,
 		bnMarketService,
-		svcRepository,
+		bnFtOpeningPositionTable,
+		bnFtQouteUsdtTable,
+		bnFtHistoryTable,
+		bnFtAdvancedPositionTable,
 		orderType,
 		positionSide,
 		side,
@@ -87,7 +93,10 @@ func RouteBotRestApiComposing(
 	orderType positionconst.IOrderType,
 	positionSide positionconst.IPositionSide,
 	side positionconst.ISide,
-	svcRepository bndynamodb.IRepository,
+	bnFtBotTable bndynamodb.IBnFtBotRepository,
+	bnFtBotOnRunTable bndynamodb.IBnFtBotOnRunRepository,
+	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
+	bnFtQouteUsdtTable bndynamodb.IBnFtQouteUSDTRepository,
 	httpttransport bntransport.IBinanceServiceHttpTransport,
 	httpclient bnclient.IBinanceSerivceHttpClient,
 	bnTradeService bntrade.IBinanceFutureExternalService,
@@ -96,7 +105,10 @@ func RouteBotRestApiComposing(
 	botGroup := app.Group("/" + config.ServiceName.BinanceFuture + "/bot")
 	botService := botservice.NewBotService(
 		bnTradeService,
-		svcRepository,
+		bnFtBotTable,
+		bnFtBotOnRunTable,
+		bnFtHistoryTable,
+		bnFtQouteUsdtTable,
 		orderType,
 		positionSide,
 		side,
@@ -107,10 +119,10 @@ func RouteBotRestApiComposing(
 	)
 	botGroup.POST("/timeframe-exe-interval", botTimeframeExeIntervalHandler.Handler)
 
-	invalidateBotHandler := bothandler.NewInvalidateBotHandler(
-		botService,
-	)
-	botGroup.POST("/invalidate", invalidateBotHandler.Handler)
+	// invalidateBotHandler := bothandler.NewInvalidateBotHandler(
+	// 	botService,
+	// )
+	// botGroup.POST("/invalidate", invalidateBotHandler.Handler)
 }
 
 func RouteLambda(

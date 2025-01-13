@@ -51,20 +51,26 @@ type IBinanceFutureService interface {
 }
 
 type binanceFutureService struct {
-	binanceFutureServiceName string
-	binanceService           bntrade.IBinanceFutureExternalService
-	bnMarketDataService      bnmarket.IBnMarketDataService
-	repository               bndynamodb.IRepository
-	orderType                positionconstant.IOrderType
-	positionSideType         positionconstant.IPositionSide
-	sideType                 positionconstant.ISide
+	binanceFutureServiceName  string
+	binanceService            bntrade.IBinanceFutureExternalService
+	bnMarketDataService       bnmarket.IBnMarketDataService
+	bnFtOpeningPositionTable  bndynamodb.IBnFtOpeningPositionRepository
+	bnFtQouteUsdtTable        bndynamodb.IBnFtQouteUSDTRepository
+	bnFtHistoryTable          bndynamodb.IBnFtHistoryRepository
+	bnFtAdvancedPositionTable bndynamodb.IBnFtAdvancedPositionRepository
+	orderType                 positionconstant.IOrderType
+	positionSideType          positionconstant.IPositionSide
+	sideType                  positionconstant.ISide
 }
 
 func NewBinanceFutureService(
 	binanceFutureServiceName string,
 	binanceService bntrade.IBinanceFutureExternalService,
 	bnMarketDataService bnmarket.IBnMarketDataService,
-	repository bndynamodb.IRepository,
+	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
+	bnFtQouteUsdtTable bndynamodb.IBnFtQouteUSDTRepository,
+	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
+	bnFtAdvancedPositionTable bndynamodb.IBnFtAdvancedPositionRepository,
 	orderType positionconstant.IOrderType,
 	positionSideType positionconstant.IPositionSide,
 	sideType positionconstant.ISide,
@@ -73,7 +79,10 @@ func NewBinanceFutureService(
 		binanceFutureServiceName,
 		binanceService,
 		bnMarketDataService,
-		repository,
+		bnFtOpeningPositionTable,
+		bnFtQouteUsdtTable,
+		bnFtHistoryTable,
+		bnFtAdvancedPositionTable,
 		orderType,
 		positionSideType,
 		sideType,

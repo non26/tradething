@@ -28,7 +28,12 @@ func main() {
 	dynamodbendpoint := bndynamodb.NewEndPointResolver(config.Dynamodb.Region, config.Dynamodb.Endpoint)
 	dynamodbcredential := bndynamodb.NewCredential(config.Dynamodb.Ak, config.Dynamodb.Sk)
 	dynamodbclient := bndynamodb.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewLocal()
-	svcrepository := bndynamodb.NewDynamoDBRepository(dynamodbclient)
+	bnFtOpeningPositionTable := bndynamodb.NewConnectionBnFtOpeningPositionRepository(dynamodbclient)
+	bnFtQouteUsdtTable := bndynamodb.NewConnectionBnFtQouteUSDTRepository(dynamodbclient)
+	bnFtHistoryTable := bndynamodb.NewConnectionBnFtHistoryRepository(dynamodbclient)
+	bnFtAdvancedPositionTable := bndynamodb.NewConnectionBnFtAdvancedPositionRepository(dynamodbclient)
+	bnFtBotTable := bndynamodb.NewConnectionBnFtBotRepository(dynamodbclient)
+	bnFtBotOnRunTable := bndynamodb.NewConnectionBnFtBotOnRunRepository(dynamodbclient)
 
 	httptransport := bntransport.NewBinanceTransport(&http.Transport{})
 	httpclient := bnclient.NewBinanceSerivceHttpClient()
@@ -60,7 +65,35 @@ func main() {
 
 	app_echo := echo.New()
 	app.HealthCheck(app_echo)
-	app.RouteRestApiComposing(app_echo, config, ordertype, positionSide, side, svcrepository, httptransport, httpclient, binanceServie, marketData)
-	app.RouteBotRestApiComposing(app_echo, config, ordertype, positionSide, side, svcrepository, httptransport, httpclient, bot_binanceServie, marketData)
+	app.RouteRestApiComposing(
+		app_echo,
+		config,
+		ordertype,
+		positionSide,
+		side,
+		bnFtOpeningPositionTable,
+		bnFtQouteUsdtTable,
+		bnFtHistoryTable,
+		bnFtAdvancedPositionTable,
+		httptransport,
+		httpclient,
+		binanceServie,
+		marketData,
+	)
+	app.RouteBotRestApiComposing(
+		app_echo,
+		config,
+		ordertype,
+		positionSide,
+		side,
+		bnFtBotTable,
+		bnFtBotOnRunTable,
+		bnFtHistoryTable,
+		bnFtQouteUsdtTable,
+		httptransport,
+		httpclient,
+		bot_binanceServie,
+		marketData,
+	)
 	app_echo.Start(fmt.Sprintf(":%v", config.Port))
 }

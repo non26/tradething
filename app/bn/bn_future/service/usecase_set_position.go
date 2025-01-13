@@ -12,7 +12,7 @@ func (b *binanceFutureService) SetPosition(
 	request *svcfuture.PlaceSignleOrderServiceRequest,
 ) (*svchandlerres.PlaceSignleOrderHandlerResponse, error) {
 
-	quote, err := b.repository.GetQouteUSDT(ctx, request.GetSymbol())
+	quote, err := b.bnFtQouteUsdtTable.Get(ctx, request.GetSymbol())
 	if err != nil {
 		log.Println("error get qoute usdt", err.Error())
 		return nil, err
@@ -34,7 +34,7 @@ func (b *binanceFutureService) SetPosition(
 			quote.SetCountingLong(0)
 		}
 
-		err = b.repository.InsertNewSymbolQouteUSDT(ctx, quote)
+		err = b.bnFtQouteUsdtTable.Insert(ctx, quote)
 		if err != nil {
 			return nil, err
 		}
@@ -45,13 +45,13 @@ func (b *binanceFutureService) SetPosition(
 			quote.SetCountingShort(quote.GetCountingShort() + 1)
 		}
 
-		err = b.repository.UpdateQouteUSDT(ctx, quote)
+		err = b.bnFtQouteUsdtTable.Update(ctx, quote)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	err = b.repository.InsertNewOpenOrder(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
+	err = b.bnFtOpeningPositionTable.Insert(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
 	if err != nil {
 		log.Println("error new open order", err.Error())
 		return nil, err

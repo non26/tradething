@@ -22,7 +22,7 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 	presentTime := time.Now().UTC()
 	inTime := isBetweenTime(req.GetStartDate(), req.GetEndDate(), presentTime)
 
-	bot, err := b.repository.GetBotByBotID(ctx, req.GetBotId())
+	bot, err := b.bnFtBotTable.Get(ctx, req.GetBotId())
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 		return nil, errors.New("bot not found")
 	}
 
-	posHistory, err := b.repository.GetHistoryByClientID(context.Background(), req.GetBotOrderID())
+	posHistory, err := b.bnFtHistoryTable.Get(ctx, req.GetBotOrderID())
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 		return nil, errors.New("bot order already closed")
 	}
 
-	current_position, err := b.repository.GetBotOnRunByBotIDAndOrderID(ctx, req.ToBnFtBotOnRun())
+	current_position, err := b.bnFtBotOnRunTable.Get(ctx, req.ToBnFtBotOnRun())
 	if err != nil {
 		return nil, errors.New("get current position error")
 	}
@@ -94,18 +94,18 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 
 		isFirstTime := !current_position.IsFound()
 		if isFirstTime {
-			err = b.repository.InsertBotOnRun(ctx, req.ToBnFtBotOnRun())
+			err = b.bnFtBotOnRunTable.Insert(ctx, req.ToBnFtBotOnRun())
 			if err != nil {
 				log.Println("insert bot on run error", err)
 			}
 		} else {
-			err = b.repository.UpdateBotOnRun(ctx, req.ToBnFtBotOnRun())
+			err = b.bnFtBotOnRunTable.Update(ctx, req.ToBnFtBotOnRun())
 			if err != nil {
 				log.Println("update bot on run error", err)
 			}
 		}
 
-		qouteUSDT, err := b.repository.GetQouteUSDT(ctx, req.GetSymbol())
+		qouteUSDT, err := b.bnFtQouteUsdtTable.Get(ctx, req.GetSymbol())
 		if err != nil {
 			log.Println("get qoute usdt error", err)
 		}
@@ -118,7 +118,7 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 			} else {
 				qouteUSDT.SetCountingShort(qouteUSDT.GetNextCountingShort().Int())
 			}
-			err = b.repository.InsertNewSymbolQouteUSDT(ctx, qouteUSDT)
+			err = b.bnFtQouteUsdtTable.Insert(ctx, qouteUSDT)
 			if err != nil {
 				log.Println("insert qoute usdt error", err)
 			}
@@ -129,7 +129,7 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 			} else {
 				qouteUSDT.SetCountingShort(qouteUSDT.GetNextCountingShort().Int())
 			}
-			err = b.repository.UpdateQouteUSDT(ctx, qouteUSDT)
+			err = b.bnFtQouteUsdtTable.Update(ctx, qouteUSDT)
 			if err != nil {
 				log.Println("update qoute usdt error", err)
 			}
@@ -144,11 +144,11 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 			if err != nil {
 				return nil, errors.New("place order error")
 			}
-			err = b.repository.DeleteBotOnRun(ctx, req.ToBnFtDeleteBotOnRun())
+			err = b.bnFtBotOnRunTable.Delete(ctx, req.ToBnFtDeleteBotOnRun())
 			if err != nil {
 				log.Println("delete bot on run error", err)
 			}
-			err = b.repository.InsertHistory(ctx, req.ToBnFtHistory())
+			err = b.bnFtHistoryTable.Insert(ctx, req.ToBnFtHistory())
 			if err != nil {
 				log.Println("insert history error", err)
 			}

@@ -11,6 +11,7 @@ import (
 	mkreq "tradething/app/bn/bn_future/bnservice_request_model/market_data"
 
 	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
+	positionconstant "github.com/non26/tradepkg/pkg/bn/position_constant"
 )
 
 type PlaceSignleOrderServiceRequest struct {
@@ -127,6 +128,34 @@ func (p *PlaceSignleOrderServiceRequest) IsStopLossNil() bool {
 
 func (p *PlaceSignleOrderServiceRequest) IsTakeProfitNil() bool {
 	return p.takeProfit == nil
+}
+
+func (p *PlaceSignleOrderServiceRequest) IsLongPosition() bool {
+	return p.positionSide == positionconstant.LONG
+}
+
+func (p *PlaceSignleOrderServiceRequest) IsShortPosition() bool {
+	return p.positionSide == positionconstant.SHORT
+}
+
+func (p *PlaceSignleOrderServiceRequest) IsBuyOrder() bool {
+	if p.IsLongPosition() && p.side == positionconstant.BUY {
+		return true
+	}
+	if p.IsShortPosition() && p.side == positionconstant.SELL {
+		return true
+	}
+	return false
+}
+
+func (p *PlaceSignleOrderServiceRequest) IsSellOrder() bool {
+	if p.IsLongPosition() && p.side == positionconstant.SELL {
+		return true
+	}
+	if p.IsShortPosition() && p.side == positionconstant.BUY {
+		return true
+	}
+	return false
 }
 
 func (p *PlaceSignleOrderServiceRequest) AddEntryQuantity(entryQuantity string) {

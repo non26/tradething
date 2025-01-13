@@ -44,7 +44,12 @@ func init() {
 	} else {
 		dynamodbclient = bndynamodb.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewPrd()
 	}
-	svcrepository := bndynamodb.NewDynamoDBRepository(dynamodbclient)
+	bnFtOpeningPositionTable := bndynamodb.NewConnectionBnFtOpeningPositionRepository(dynamodbclient)
+	bnFtQouteUsdtTable := bndynamodb.NewConnectionBnFtQouteUSDTRepository(dynamodbclient)
+	bnFtHistoryTable := bndynamodb.NewConnectionBnFtHistoryRepository(dynamodbclient)
+	bnFtAdvancedPositionTable := bndynamodb.NewConnectionBnFtAdvancedPositionRepository(dynamodbclient)
+	bnFtBotTable := bndynamodb.NewConnectionBnFtBotRepository(dynamodbclient)
+	bnFtBotOnRunTable := bndynamodb.NewConnectionBnFtBotOnRunRepository(dynamodbclient)
 	httptransport := bntransport.NewBinanceTransport(&http.Transport{})
 	httpclient := bnclient.NewBinanceSerivceHttpClient()
 
@@ -75,8 +80,36 @@ func init() {
 	app_echo := echo.New()
 	app.MiddlerwareComposing(app_echo)
 	app.HealthCheck(app_echo)
-	app.RouteRestApiComposing(app_echo, _config, ordertype, positionSide, side, svcrepository, httptransport, httpclient, binanceServie, marketData)
-	app.RouteBotRestApiComposing(app_echo, _config, ordertype, positionSide, side, svcrepository, httptransport, httpclient, bot_binanceServie, marketData)
+	app.RouteRestApiComposing(
+		app_echo,
+		_config,
+		ordertype,
+		positionSide,
+		side,
+		bnFtOpeningPositionTable,
+		bnFtQouteUsdtTable,
+		bnFtHistoryTable,
+		bnFtAdvancedPositionTable,
+		httptransport,
+		httpclient,
+		binanceServie,
+		marketData,
+	)
+	app.RouteBotRestApiComposing(
+		app_echo,
+		_config,
+		ordertype,
+		positionSide,
+		side,
+		bnFtBotTable,
+		bnFtBotOnRunTable,
+		bnFtHistoryTable,
+		bnFtQouteUsdtTable,
+		httptransport,
+		httpclient,
+		bot_binanceServie,
+		marketData,
+	)
 	app.RouteLambda(app_echo, _config)
 
 	echoLambda = echoadapter.New(app_echo)
