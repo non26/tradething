@@ -33,7 +33,7 @@ func (b *binanceFutureService) InvalidatePosition(
 			return nil, err
 		}
 		if dbOpeningPosition.IsFound() {
-			bnreq := svcfuture.PlaceSignleOrderServiceRequest{}
+			bnreq := svcfuture.Position{}
 			bnreq.SetClientOrderId(orderId)
 			bnreq.SetPositionSide(dbOpeningPosition.PositionSide)
 			bnreq.SetSide(dbOpeningPosition.Side)

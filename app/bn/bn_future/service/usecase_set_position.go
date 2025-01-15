@@ -9,7 +9,7 @@ import (
 
 func (b *binanceFutureService) SetPosition(
 	ctx context.Context,
-	request *svcfuture.PlaceSignleOrderServiceRequest,
+	request *svcfuture.Position,
 ) (*svchandlerres.PlaceSignleOrderHandlerResponse, error) {
 
 	quote, err := b.bnFtQouteUsdtTable.Get(ctx, request.GetSymbol())

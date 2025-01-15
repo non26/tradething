@@ -11,7 +11,7 @@ func (b *binanceFutureService) PlaceMultiOrder(
 	request *svcfuture.PlaceMultiOrderServiceRequest,
 ) (*svchandlerres.PlaceMultipleOrderHandlerResponse, error) {
 	response := svchandlerres.PlaceMultipleOrderHandlerResponse{}
-	for _, order := range request.Orders {
+	for _, order := range request.Positions {
 		signleOrderResponse, err := b.PlaceSingleOrder(ctx, &order)
 		if err != nil {
 			errSignleOrderResponse := svchandlerres.PlaceSignleOrderHandlerResponse{

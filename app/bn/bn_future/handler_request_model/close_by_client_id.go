@@ -8,6 +8,6 @@ type CloseByClientIdHandlerRequest struct {
 
 func (c *CloseByClientIdHandlerRequest) ToServiceModel() *svcfuture.CloseByClientIdServiceRequest {
 	serviceModel := &svcfuture.CloseByClientIdServiceRequest{}
-	serviceModel.SetClientIds(c.ClientIds)
+	serviceModel.SetOrderIds(c.ClientIds)
 	return serviceModel
 }

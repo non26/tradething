@@ -14,7 +14,7 @@ import (
 	positionconstant "github.com/non26/tradepkg/pkg/bn/position_constant"
 )
 
-type PlaceSignleOrderServiceRequest struct {
+type Position struct {
 	positionSide  string
 	side          string
 	entryQuantity string // amountQ
@@ -26,119 +26,119 @@ type PlaceSignleOrderServiceRequest struct {
 	takeProfit *valueobject.TakeProfit
 }
 
-func (p *PlaceSignleOrderServiceRequest) GetPositionSide() string {
+func (p *Position) GetPositionSide() string {
 	return p.positionSide
 }
 
-func (p *PlaceSignleOrderServiceRequest) SetPositionSide(positionSide string) {
+func (p *Position) SetPositionSide(positionSide string) {
 	p.positionSide = strings.ToUpper(positionSide)
 }
 
-func (p *PlaceSignleOrderServiceRequest) GetSide() string {
+func (p *Position) GetSide() string {
 	return p.side
 }
 
-func (p *PlaceSignleOrderServiceRequest) SetSide(side string) {
+func (p *Position) SetSide(side string) {
 	p.side = strings.ToUpper(side)
 }
 
-func (p *PlaceSignleOrderServiceRequest) GetEntryQuantity() string {
+func (p *Position) GetEntryQuantity() string {
 	return p.entryQuantity
 }
 
-func (p *PlaceSignleOrderServiceRequest) SetEntryQuantity(entryQuantity string) {
+func (p *Position) SetEntryQuantity(entryQuantity string) {
 	p.entryQuantity = entryQuantity
 }
 
-func (p *PlaceSignleOrderServiceRequest) GetSymbol() string {
+func (p *Position) GetSymbol() string {
 	return p.symbol
 }
 
-func (p *PlaceSignleOrderServiceRequest) SetSymbol(symbol string) {
+func (p *Position) SetSymbol(symbol string) {
 	p.symbol = symbol
 }
 
-func (p *PlaceSignleOrderServiceRequest) GetLeverageLevel() int {
+func (p *Position) GetLeverageLevel() int {
 	return p.leverageLevel
 }
 
-func (p *PlaceSignleOrderServiceRequest) SetLeverageLevel(leverageLevel int) {
+func (p *Position) SetLeverageLevel(leverageLevel int) {
 	p.leverageLevel = leverageLevel
 }
 
-func (p *PlaceSignleOrderServiceRequest) GetClientOrderId() string {
+func (p *Position) GetClientOrderId() string {
 	return p.clientOrderId
 }
 
-func (p *PlaceSignleOrderServiceRequest) SetClientOrderId(clientOrderId string) {
+func (p *Position) SetClientOrderId(clientOrderId string) {
 	p.clientOrderId = clientOrderId
 }
 
-// func (p *PlaceSignleOrderServiceRequest) GetWatching() *valueobject.Watching {
+// func (p *Position) GetWatching() *valueobject.Watching {
 // 	return p.watching
 // }
 
-// func (p *PlaceSignleOrderServiceRequest) SetWatching(watching *valueobject.Watching) {
+// func (p *Position) SetWatching(watching *valueobject.Watching) {
 // 	p.watching = watching
 // }
 
-// func (p *PlaceSignleOrderServiceRequest) IsWatchingNil() bool {
+// func (p *Position) IsWatchingNil() bool {
 // 	return p.watching == nil
 // }
 
-// func (p *PlaceSignleOrderServiceRequest) IsWatchingStopLossNil() bool {
+// func (p *Position) IsWatchingStopLossNil() bool {
 // 	return p.watching.StopLoss == nil
 // }
 
-// func (p *PlaceSignleOrderServiceRequest) IsWatchingTakeProfitNil() bool {
+// func (p *Position) IsWatchingTakeProfitNil() bool {
 // 	return p.watching.TakeProfit == nil
 // }
 
-// func (p *PlaceSignleOrderServiceRequest) GetWatchingStopLoss() *valueobject.StopLoss {
+// func (p *Position) GetWatchingStopLoss() *valueobject.StopLoss {
 // 	return p.watching.StopLoss
 // }
 
-// func (p *PlaceSignleOrderServiceRequest) GetWatchingTakeProfit() *valueobject.TakeProfit {
+// func (p *Position) GetWatchingTakeProfit() *valueobject.TakeProfit {
 // 	return p.watching.TakeProfit
 // }
 
-func (p *PlaceSignleOrderServiceRequest) SetStopLoss(stopLoss *valueobject.StopLoss) {
+func (p *Position) SetStopLoss(stopLoss *valueobject.StopLoss) {
 	p.stopLoss = stopLoss
 }
 
-func (p *PlaceSignleOrderServiceRequest) GetStopLoss() *valueobject.StopLoss {
+func (p *Position) GetStopLoss() *valueobject.StopLoss {
 	return p.stopLoss
 }
 
-func (p *PlaceSignleOrderServiceRequest) SetTakeProfit(takeProfit *valueobject.TakeProfit) {
+func (p *Position) SetTakeProfit(takeProfit *valueobject.TakeProfit) {
 	p.takeProfit = takeProfit
 }
 
-func (p *PlaceSignleOrderServiceRequest) GetTakeProfit() *valueobject.TakeProfit {
+func (p *Position) GetTakeProfit() *valueobject.TakeProfit {
 	return p.takeProfit
 }
 
-func (p *PlaceSignleOrderServiceRequest) GetAmountQ() string {
+func (p *Position) GetAmountQ() string {
 	return p.entryQuantity
 }
 
-func (p *PlaceSignleOrderServiceRequest) IsStopLossNil() bool {
+func (p *Position) IsStopLossNil() bool {
 	return p.stopLoss == nil
 }
 
-func (p *PlaceSignleOrderServiceRequest) IsTakeProfitNil() bool {
+func (p *Position) IsTakeProfitNil() bool {
 	return p.takeProfit == nil
 }
 
-func (p *PlaceSignleOrderServiceRequest) IsLongPosition() bool {
+func (p *Position) IsLongPosition() bool {
 	return p.positionSide == positionconstant.LONG
 }
 
-func (p *PlaceSignleOrderServiceRequest) IsShortPosition() bool {
+func (p *Position) IsShortPosition() bool {
 	return p.positionSide == positionconstant.SHORT
 }
 
-func (p *PlaceSignleOrderServiceRequest) IsBuyOrder() bool {
+func (p *Position) IsBuyOrder() bool {
 	if p.IsLongPosition() && p.side == positionconstant.BUY {
 		return true
 	}
@@ -148,7 +148,7 @@ func (p *PlaceSignleOrderServiceRequest) IsBuyOrder() bool {
 	return false
 }
 
-func (p *PlaceSignleOrderServiceRequest) IsSellOrder() bool {
+func (p *Position) IsSellOrder() bool {
 	if p.IsLongPosition() && p.side == positionconstant.SELL {
 		return true
 	}
@@ -158,7 +158,7 @@ func (p *PlaceSignleOrderServiceRequest) IsSellOrder() bool {
 	return false
 }
 
-func (p *PlaceSignleOrderServiceRequest) AddEntryQuantity(entryQuantity string) {
+func (p *Position) AddEntryQuantity(entryQuantity string) {
 	var currentQuantity float64
 	currentQuantity, err := strconv.ParseFloat(p.entryQuantity, 64)
 	if err != nil {
@@ -172,7 +172,7 @@ func (p *PlaceSignleOrderServiceRequest) AddEntryQuantity(entryQuantity string) 
 	p.entryQuantity = fmt.Sprintf("%v", currentQuantity+additionalQuantity)
 }
 
-func (p *PlaceSignleOrderServiceRequest) ToBinanceServiceModel() *bntradereq.PlaceSignleOrderBinanceServiceRequest {
+func (p *Position) ToBinanceServiceModel() *bntradereq.PlaceSignleOrderBinanceServiceRequest {
 	m := bntradereq.PlaceSignleOrderBinanceServiceRequest{
 		PositionSide:  p.positionSide,
 		Side:          p.side,
@@ -183,7 +183,7 @@ func (p *PlaceSignleOrderServiceRequest) ToBinanceServiceModel() *bntradereq.Pla
 	return &m
 }
 
-func (p *PlaceSignleOrderServiceRequest) ToBinanceFutureOpeningPositionRepositoryModel() *dynamodbmodel.BnFtOpeningPosition {
+func (p *Position) ToBinanceFutureOpeningPositionRepositoryModel() *dynamodbmodel.BnFtOpeningPosition {
 	m := dynamodbmodel.BnFtOpeningPosition{
 		Symbol:       p.symbol,
 		PositionSide: p.positionSide,
@@ -205,7 +205,7 @@ func (p *PlaceSignleOrderServiceRequest) ToBinanceFutureOpeningPositionRepositor
 	return &m
 }
 
-func (p *PlaceSignleOrderServiceRequest) ToBnCandleStickModel(starttime int64, endtime int64) *mkreq.CandleStickRequest {
+func (p *Position) ToBnCandleStickModel(starttime int64, endtime int64) *mkreq.CandleStickRequest {
 	m := mkreq.CandleStickRequest{
 		Symbol:    p.symbol,
 		Interval:  p.stopLoss.Interval,
@@ -215,7 +215,7 @@ func (p *PlaceSignleOrderServiceRequest) ToBnCandleStickModel(starttime int64, e
 	return &m
 }
 
-func (p *PlaceSignleOrderServiceRequest) ToBnPositionHistoryRepositoryModel() *dynamodbmodel.BnFtHistory {
+func (p *Position) ToBnPositionHistoryRepositoryModel() *dynamodbmodel.BnFtHistory {
 	m := dynamodbmodel.BnFtHistory{
 		Symbol:       p.symbol,
 		PositionSide: p.positionSide,

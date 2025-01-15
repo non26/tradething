@@ -13,11 +13,11 @@ func (p *PlaceMultiOrderHandlerRequest) Transform() {
 }
 
 func (p *PlaceMultiOrderHandlerRequest) ToServiceModel() *svcfuture.PlaceMultiOrderServiceRequest {
-	orders := make([]svcfuture.PlaceSignleOrderServiceRequest, 0, len(p.Orders))
+	orders := make([]svcfuture.Position, 0, len(p.Orders))
 	for _, order := range p.Orders {
 		orders = append(orders, *order.ToServiceModel())
 	}
 	return &svcfuture.PlaceMultiOrderServiceRequest{
-		Orders: orders,
+		Positions: orders,
 	}
 }

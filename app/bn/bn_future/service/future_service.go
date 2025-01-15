@@ -18,7 +18,7 @@ type IBinanceFutureService interface {
 	) (*svchandlerres.SetLeverageBinanceHandlerResponse, error)
 	PlaceSingleOrder(
 		ctx context.Context,
-		request *svcfuture.PlaceSignleOrderServiceRequest,
+		request *svcfuture.Position,
 	) (*svchandlerres.PlaceSignleOrderHandlerResponse, error)
 	QueryOrder(
 		ctx context.Context,
@@ -38,7 +38,7 @@ type IBinanceFutureService interface {
 	) (*svchandlerres.CloseBySymbolsHandlerResponse, error)
 	SetPosition(
 		ctx context.Context,
-		request *svcfuture.PlaceSignleOrderServiceRequest,
+		request *svcfuture.Position,
 	) (*svchandlerres.PlaceSignleOrderHandlerResponse, error)
 	InvalidatePosition(
 		ctx context.Context,

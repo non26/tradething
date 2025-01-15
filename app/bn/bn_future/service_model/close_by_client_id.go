@@ -1,13 +1,13 @@
 package bnfuture
 
 type CloseByClientIdServiceRequest struct {
-	clientIds []string
+	OrderIds []string `json:"order_ids"`
 }
 
-func (m *CloseByClientIdServiceRequest) GetClientIds() []string {
-	return m.clientIds
+func (m *CloseByClientIdServiceRequest) GetOrderIds() []string {
+	return m.OrderIds
 }
 
-func (m *CloseByClientIdServiceRequest) SetClientIds(clientIds []string) {
-	m.clientIds = clientIds
+func (m *CloseByClientIdServiceRequest) SetOrderIds(orderIds []string) {
+	m.OrderIds = orderIds
 }

@@ -57,8 +57,8 @@ func (p *PlaceSignleOrderHandlerRequest) Transform() {
 
 }
 
-func (p *PlaceSignleOrderHandlerRequest) ToServiceModel() *svcfuture.PlaceSignleOrderServiceRequest {
-	m := svcfuture.PlaceSignleOrderServiceRequest{}
+func (p *PlaceSignleOrderHandlerRequest) ToServiceModel() *svcfuture.Position {
+	m := svcfuture.Position{}
 	m.SetPositionSide(p.PositionSide)
 	m.SetSide(p.Side)
 	m.SetEntryQuantity(fmt.Sprintf("%f", p.EntryQuantity))

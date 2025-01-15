@@ -21,7 +21,7 @@ import (
 
 func (b *binanceFutureService) PlaceSingleOrder(
 	ctx context.Context,
-	request *svcFuture.PlaceSignleOrderServiceRequest,
+	request *svcFuture.Position,
 ) (*bnfutureres.PlaceSignleOrderHandlerResponse, error) {
 
 	positionHistory, err := b.bnFtHistoryTable.Get(ctx, request.GetClientOrderId())

@@ -17,7 +17,7 @@ func (b *binanceFutureService) CloseByClientIds(
 	closeOrders := svchandlerres.CloseByClientIdsHandlerResponse{
 		Data: []svchandlerres.CloseByClientIdsHandlerResponseData{},
 	}
-	for _, clientId := range request.GetClientIds() {
+	for _, clientId := range request.GetOrderIds() {
 		closeOrder := svchandlerres.CloseByClientIdsHandlerResponseData{}
 		positionHistory, err := b.bnFtHistoryTable.Get(ctx, clientId)
 		if err != nil {
