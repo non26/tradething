@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"errors"
-	handlerres "tradething/app/bn/bn_future/handler_response_model"
+	handlerres "tradething/app/bn/bn_future/handler_response"
 	model "tradething/app/bn/bn_future/service_model"
 )
 

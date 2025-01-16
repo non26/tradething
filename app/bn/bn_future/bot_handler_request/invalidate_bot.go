@@ -1,6 +1,6 @@
 package bnfuture
 
-import bnbotsvcreq "tradething/app/bn/bn_future/bot_service_model"
+import bnbotsvcreq "tradething/app/bn/bn_future/bot_model"
 
 type InvalidateBotHandlerRequest struct {
 	BotId        string `json:"bot_id"`

@@ -3,8 +3,8 @@ package app
 import (
 	bnmarket "tradething/app/bn/bn_future/bnservice/market_data"
 	bntrade "tradething/app/bn/bn_future/bnservice/trade"
+	botservice "tradething/app/bn/bn_future/bot"
 	bothandler "tradething/app/bn/bn_future/bot_handler"
-	botservice "tradething/app/bn/bn_future/bot_service"
 	handler "tradething/app/bn/bn_future/handler"
 	service "tradething/app/bn/bn_future/service"
 	lambdaroute "tradething/cmd/app/route/lambda"

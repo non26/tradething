@@ -2,7 +2,7 @@ package bnfuture
 
 import (
 	"net/http"
-	handlerreq "tradething/app/bn/bn_future/handler_request_model"
+	handlerreq "tradething/app/bn/bn_future/handler_request"
 	bnfuture "tradething/app/bn/bn_future/service"
 	"tradething/common"
 

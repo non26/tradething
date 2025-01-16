@@ -2,9 +2,9 @@ package bnfuture
 
 import (
 	"net/http"
-	bnftbotereq "tradething/app/bn/bn_future/bot_handler_request_model"
-	bnftboteres "tradething/app/bn/bn_future/bot_handler_response_model"
-	bot_service "tradething/app/bn/bn_future/bot_service"
+	bot_service "tradething/app/bn/bn_future/bot"
+	bnftbotereq "tradething/app/bn/bn_future/bot_handler_request"
+	bnftboteres "tradething/app/bn/bn_future/bot_handler_response"
 	"tradething/common"
 
 	"github.com/labstack/echo/v4"

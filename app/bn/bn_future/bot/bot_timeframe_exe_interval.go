@@ -5,8 +5,8 @@ import (
 	"errors"
 	"log"
 	"time"
-	handlerres "tradething/app/bn/bn_future/bot_handler_response_model"
-	bnsvcreq "tradething/app/bn/bn_future/bot_service_model"
+	handlerres "tradething/app/bn/bn_future/bot_handler_response"
+	bnsvcreq "tradething/app/bn/bn_future/bot_model"
 
 	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
 )

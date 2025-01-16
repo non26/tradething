@@ -1,7 +1,7 @@
 package bnfuture
 
 import (
-	bnfuture "tradething/app/bn/bn_future/handler_response_model"
+	bnfuture "tradething/app/bn/bn_future/handler_response"
 )
 
 type SetLeverageData struct {

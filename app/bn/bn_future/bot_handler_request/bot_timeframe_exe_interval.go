@@ -2,7 +2,7 @@ package bnfuture
 
 import (
 	"strings"
-	bnsvcreq "tradething/app/bn/bn_future/bot_service_model"
+	bnsvcreq "tradething/app/bn/bn_future/bot_model"
 )
 
 type BotTimeframeExeIntervalHandlerRequest struct {

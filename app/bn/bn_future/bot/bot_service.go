@@ -2,8 +2,8 @@ package bnfuture
 
 import (
 	"context"
-	handlerres "tradething/app/bn/bn_future/bot_handler_response_model"
-	bnbotsvcreq "tradething/app/bn/bn_future/bot_service_model"
+	handlerres "tradething/app/bn/bn_future/bot_handler_response"
+	bnbotsvcreq "tradething/app/bn/bn_future/bot_model"
 
 	bntrade "tradething/app/bn/bn_future/bnservice/trade"
 

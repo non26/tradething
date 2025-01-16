@@ -4,7 +4,7 @@ import (
 	"context"
 	bnmarket "tradething/app/bn/bn_future/bnservice/market_data"
 	bntrade "tradething/app/bn/bn_future/bnservice/trade"
-	handlerres "tradething/app/bn/bn_future/handler_response_model"
+	handlerres "tradething/app/bn/bn_future/handler_response"
 	model "tradething/app/bn/bn_future/service_model"
 
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_repository"
