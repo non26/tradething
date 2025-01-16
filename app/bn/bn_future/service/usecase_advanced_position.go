@@ -3,16 +3,16 @@ package service
 import (
 	"context"
 	"errors"
-	svchandlerres "tradething/app/bn/bn_future/handler_response_model"
-	svcfuture "tradething/app/bn/bn_future/service_model"
+	handlerres "tradething/app/bn/bn_future/handler_response_model"
+	model "tradething/app/bn/bn_future/service_model"
 
 	dynamodbrepository "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
 )
 
 func (b *binanceFutureService) SetAdvancedPosition(
 	ctx context.Context,
-	request *svcfuture.SetAdvancedPositionServiceRequest,
-) (*svchandlerres.SetAdvancedPositionHandlerResponse, error) {
+	request *model.Position,
+) (*handlerres.SetAdvancedPosition, error) {
 
 	dbHistory, err := b.bnFtHistoryTable.Get(ctx, request.GetClientOrderId())
 	if err != nil {
@@ -55,8 +55,8 @@ func (b *binanceFutureService) SetAdvancedPosition(
 		return nil, err
 	}
 
-	return &svchandlerres.SetAdvancedPositionHandlerResponse{
-		PlaceSignleOrderHandlerResponse: svchandlerres.PlaceSignleOrderHandlerResponse{
+	return &handlerres.SetAdvancedPosition{
+		PlacePosition: handlerres.PlacePosition{
 			Symbol:   request.GetSymbol(),
 			Quantity: request.GetEntryQuantity(),
 		},

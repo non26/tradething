@@ -3,14 +3,14 @@ package service
 import (
 	"context"
 	"log"
-	svchandlerres "tradething/app/bn/bn_future/handler_response_model"
-	svcfuture "tradething/app/bn/bn_future/service_model"
+	handlerres "tradething/app/bn/bn_future/handler_response_model"
+	model "tradething/app/bn/bn_future/service_model"
 )
 
 func (b *binanceFutureService) SetPosition(
 	ctx context.Context,
-	request *svcfuture.Position,
-) (*svchandlerres.PlaceSignleOrderHandlerResponse, error) {
+	request *model.Position,
+) (*handlerres.PlacePosition, error) {
 
 	quote, err := b.bnFtQouteUsdtTable.Get(ctx, request.GetSymbol())
 	if err != nil {
@@ -57,7 +57,7 @@ func (b *binanceFutureService) SetPosition(
 		return nil, err
 	}
 
-	return &svchandlerres.PlaceSignleOrderHandlerResponse{
+	return &handlerres.PlacePosition{
 		Symbol:   request.GetSymbol(),
 		Quantity: request.GetEntryQuantity(),
 	}, nil

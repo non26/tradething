@@ -1,6 +1,6 @@
 package bnfuture
 
-type PlaceSignleOrderHandlerResponse struct {
+type PlacePosition struct {
 	Symbol   string `json:"symbol"`
 	Quantity string `json:"quantity"`
 }

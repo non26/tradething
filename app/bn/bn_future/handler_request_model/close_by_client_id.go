@@ -1,13 +1,13 @@
 package bnfuture
 
-import svcfuture "tradething/app/bn/bn_future/service_model"
+import model "tradething/app/bn/bn_future/service_model"
 
-type CloseByClientIdHandlerRequest struct {
+type ClosePositionByClientIds struct {
 	ClientIds []string `json:"client_ids"`
 }
 
-func (c *CloseByClientIdHandlerRequest) ToServiceModel() *svcfuture.CloseByClientIdServiceRequest {
-	serviceModel := &svcfuture.CloseByClientIdServiceRequest{}
-	serviceModel.SetOrderIds(c.ClientIds)
+func (c *ClosePositionByClientIds) ToServiceModel() *model.ClientIds {
+	serviceModel := &model.ClientIds{}
+	serviceModel.SetClientIds(c.ClientIds)
 	return serviceModel
 }

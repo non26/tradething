@@ -1,10 +1,10 @@
 package bnfuture
 
-type CloseBySymbolsHandlerResponse struct {
-	Data []CloseBySymbolsHandlerResponseData `json:"data"`
+type CloseBySymbols struct {
+	Data []CloseBySymbolsData `json:"data"`
 }
 
-type CloseBySymbolsHandlerResponseData struct {
+type CloseBySymbolsData struct {
 	Symbol  string `json:"symbol"`
 	Message string `json:"message"`
 	Status  string `json:"status"`

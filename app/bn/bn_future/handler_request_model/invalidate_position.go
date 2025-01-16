@@ -1,13 +1,13 @@
 package bnfuture
 
-import svcfuture "tradething/app/bn/bn_future/service_model"
+import model "tradething/app/bn/bn_future/service_model"
 
-type InvalidatePositionHandlerRequest struct {
-	OrderIds []string `json:"order_ids"`
+type InvalidatePosition struct {
+	ClientIds []string `json:"client_ids"`
 }
 
-func (r *InvalidatePositionHandlerRequest) ToServiceRequest() *svcfuture.InvalidatePositionServiceRequest {
-	return &svcfuture.InvalidatePositionServiceRequest{
-		OrderIds: r.OrderIds,
-	}
+func (c *InvalidatePosition) ToServiceModel() *model.ClientIds {
+	serviceModel := &model.ClientIds{}
+	serviceModel.SetClientIds(c.ClientIds)
+	return serviceModel
 }

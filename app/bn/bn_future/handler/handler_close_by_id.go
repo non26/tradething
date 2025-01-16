@@ -2,7 +2,7 @@ package bnfuture
 
 import (
 	"net/http"
-	bnfuturereq "tradething/app/bn/bn_future/handler_request_model"
+	handlerreq "tradething/app/bn/bn_future/handler_request_model"
 	bnfuture "tradething/app/bn/bn_future/service"
 	"tradething/common"
 
@@ -10,7 +10,7 @@ import (
 )
 
 type ICloseByClientIdsHandler interface {
-	GetRequestBody(c echo.Context) (*bnfuturereq.CloseByClientIdHandlerRequest, error)
+	GetRequestBody(c echo.Context) (*handlerreq.ClosePositionByClientIds, error)
 	Handler(c echo.Context) error
 }
 
@@ -26,8 +26,8 @@ func NewCloseByClientIdsHandler(
 	}
 }
 
-func (h *closeByClientIdsHandler) GetRequestBody(c echo.Context) (*bnfuturereq.CloseByClientIdHandlerRequest, error) {
-	req := new(bnfuturereq.CloseByClientIdHandlerRequest)
+func (h *closeByClientIdsHandler) GetRequestBody(c echo.Context) (*handlerreq.ClosePositionByClientIds, error) {
+	req := new(handlerreq.ClosePositionByClientIds)
 	if err := c.Bind(req); err != nil {
 		return nil, err
 	}

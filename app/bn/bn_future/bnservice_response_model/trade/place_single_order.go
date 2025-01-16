@@ -9,8 +9,8 @@ type PlaceSignleOrderBinanceServiceResponse struct {
 	Quantity string `json:"origQty"`
 }
 
-func (p *PlaceSignleOrderBinanceServiceResponse) ToBnHandlerResponse() *bnfuture.PlaceSignleOrderHandlerResponse {
-	m := bnfuture.PlaceSignleOrderHandlerResponse{
+func (p *PlaceSignleOrderBinanceServiceResponse) ToBnHandlerResponse() *bnfuture.PlacePosition {
+	m := bnfuture.PlacePosition{
 		Symbol:   p.Symbol,
 		Quantity: p.Quantity,
 	}

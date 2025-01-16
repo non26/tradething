@@ -1,5 +1,5 @@
 package bnfuture
 
-type PlaceMultipleOrderHandlerResponse struct {
-	Result []PlaceSignleOrderHandlerResponse `json:"result"`
+type PlaceMultiplePosition struct {
+	Result []PlacePosition `json:"result"`
 }

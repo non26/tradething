@@ -1,10 +1,10 @@
 package bnfuture
 
-type CloseByClientIdsHandlerResponse struct {
-	Data []CloseByClientIdsHandlerResponseData `json:"data"`
+type CloseByClientIds struct {
+	Data []CloseByClientIdsData `json:"data"`
 }
 
-type CloseByClientIdsHandlerResponseData struct {
+type CloseByClientIdsData struct {
 	ClientId string `json:"client_id"`
 	Status   string `json:"status"` // success or fail
 	Message  string `json:"message"`

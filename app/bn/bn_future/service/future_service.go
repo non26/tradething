@@ -4,8 +4,8 @@ import (
 	"context"
 	bnmarket "tradething/app/bn/bn_future/bnservice/market_data"
 	bntrade "tradething/app/bn/bn_future/bnservice/trade"
-	svchandlerres "tradething/app/bn/bn_future/handler_response_model"
-	svcfuture "tradething/app/bn/bn_future/service_model"
+	handlerres "tradething/app/bn/bn_future/handler_response_model"
+	model "tradething/app/bn/bn_future/service_model"
 
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_repository"
 	positionconstant "github.com/non26/tradepkg/pkg/bn/position_constant"
@@ -14,40 +14,40 @@ import (
 type IBinanceFutureService interface {
 	SetNewLeverage(
 		ctx context.Context,
-		request *svcfuture.SetLeverageServiceRequest,
-	) (*svchandlerres.SetLeverageBinanceHandlerResponse, error)
+		request *model.Leverage,
+	) (*handlerres.SetLeverage, error)
 	PlaceSingleOrder(
 		ctx context.Context,
-		request *svcfuture.Position,
-	) (*svchandlerres.PlaceSignleOrderHandlerResponse, error)
+		request *model.Position,
+	) (*handlerres.PlacePosition, error)
 	QueryOrder(
 		ctx context.Context,
-		request *svcfuture.QueryOrderServiceRequest,
-	) (*svchandlerres.QueryOrderBinanceHandlerResponse, error)
+		request *model.Order,
+	) (*handlerres.QueryOrder, error)
 	PlaceMultiOrder(
 		ctx context.Context,
-		request *svcfuture.PlaceMultiOrderServiceRequest,
-	) (*svchandlerres.PlaceMultipleOrderHandlerResponse, error)
+		request *model.Positions,
+	) (*handlerres.PlaceMultiplePosition, error)
 	CloseByClientIds(
 		ctx context.Context,
-		request *svcfuture.CloseByClientIdServiceRequest,
-	) (*svchandlerres.CloseByClientIdsHandlerResponse, error)
+		request *model.ClientIds,
+	) (*handlerres.CloseByClientIds, error)
 	CloseBySymbols(
 		ctx context.Context,
-		request *svcfuture.CloseBySymbolsServiceRequest,
-	) (*svchandlerres.CloseBySymbolsHandlerResponse, error)
+		request *model.PositionSide,
+	) (*handlerres.CloseBySymbols, error)
 	SetPosition(
 		ctx context.Context,
-		request *svcfuture.Position,
-	) (*svchandlerres.PlaceSignleOrderHandlerResponse, error)
+		request *model.Position,
+	) (*handlerres.PlacePosition, error)
 	InvalidatePosition(
 		ctx context.Context,
-		request *svcfuture.InvalidatePositionServiceRequest,
-	) (*svchandlerres.InvalidatePositionHandlerResponse, error)
+		request *model.ClientIds,
+	) (*handlerres.InvalidatePosition, error)
 	SetAdvancedPosition(
 		ctx context.Context,
-		request *svcfuture.SetAdvancedPositionServiceRequest,
-	) (*svchandlerres.SetAdvancedPositionHandlerResponse, error)
+		request *model.Position,
+	) (*handlerres.SetAdvancedPosition, error)
 }
 
 type binanceFutureService struct {

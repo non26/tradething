@@ -6,14 +6,14 @@ import (
 	"slices"
 	"strconv"
 	"strings"
-	svcfuture "tradething/app/bn/bn_future/service_model"
+	model "tradething/app/bn/bn_future/service_model"
 	valueobject "tradething/app/bn/bn_future/value_object"
 )
 
 var minute_interval = []string{"30m", "45m"}
 var hour_interval = []string{"1h", "2h", "3h", "4h", "6h", "8h", "12h"}
 
-type PlaceSignleOrderHandlerRequest struct {
+type PlacePosition struct {
 	PositionSide  string                `json:"positionSide"`
 	Side          string                `json:"side"`
 	EntryQuantity float64               `json:"entryQuantity"`
@@ -24,7 +24,7 @@ type PlaceSignleOrderHandlerRequest struct {
 	Watching      *valueobject.Watching `json:"watching"`
 }
 
-func (p *PlaceSignleOrderHandlerRequest) Validate() error {
+func (p *PlacePosition) Validate() error {
 	if p.Watching.StopLoss == nil {
 		return errors.New("stopLoss is required")
 	}
@@ -50,15 +50,15 @@ func (p *PlaceSignleOrderHandlerRequest) Validate() error {
 	return nil
 }
 
-func (p *PlaceSignleOrderHandlerRequest) Transform() {
+func (p *PlacePosition) Transform() {
 	p.PositionSide = strings.ToUpper(p.PositionSide)
 	p.Side = strings.ToUpper(p.Side)
 	p.Watching.StopLoss.Interval = strings.ToLower(p.Watching.StopLoss.Interval)
 
 }
 
-func (p *PlaceSignleOrderHandlerRequest) ToServiceModel() *svcfuture.Position {
-	m := svcfuture.Position{}
+func (p *PlacePosition) ToServiceModel() *model.Position {
+	m := model.Position{}
 	m.SetPositionSide(p.PositionSide)
 	m.SetSide(p.Side)
 	m.SetEntryQuantity(fmt.Sprintf("%f", p.EntryQuantity))

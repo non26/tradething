@@ -1,5 +1,5 @@
 package bnfuture
 
-type SetAdvancedPositionHandlerRequest struct {
-	PlaceSignleOrderHandlerRequest
-}
+// type SetAdvancedPositionHandlerRequest struct {
+// 	PlaceSignleOrderHandlerRequest
+// }

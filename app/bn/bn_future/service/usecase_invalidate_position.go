@@ -2,26 +2,26 @@ package service
 
 import (
 	"context"
-	svchandlerres "tradething/app/bn/bn_future/handler_response_model"
-	svcfuture "tradething/app/bn/bn_future/service_model"
+	handlerres "tradething/app/bn/bn_future/handler_response_model"
+	model "tradething/app/bn/bn_future/service_model"
 
 	dynamodbrepository "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
 )
 
 func (b *binanceFutureService) InvalidatePosition(
 	ctx context.Context,
-	request *svcfuture.InvalidatePositionServiceRequest,
-) (*svchandlerres.InvalidatePositionHandlerResponse, error) {
-	response := svchandlerres.InvalidatePositionHandlerResponse{
-		Result: []svchandlerres.InvalidatePositionHandlerResponseData{},
+	request *model.ClientIds,
+) (*handlerres.InvalidatePosition, error) {
+	response := handlerres.InvalidatePosition{
+		Result: []handlerres.InvalidatePositionData{},
 	}
-	for _, orderId := range request.OrderIds {
+	for _, orderId := range request.GetCleintIds() {
 		dbHistory, err := b.bnFtHistoryTable.Get(ctx, orderId)
 		if err != nil {
 			return nil, err
 		}
 		if dbHistory.IsFound() {
-			response.Result = append(response.Result, svchandlerres.InvalidatePositionHandlerResponseData{
+			response.Result = append(response.Result, handlerres.InvalidatePositionData{
 				OrderId: orderId,
 				Message: "position history found",
 				Status:  "success",
@@ -33,7 +33,7 @@ func (b *binanceFutureService) InvalidatePosition(
 			return nil, err
 		}
 		if dbOpeningPosition.IsFound() {
-			bnreq := svcfuture.Position{}
+			bnreq := model.Position{}
 			bnreq.SetClientOrderId(orderId)
 			bnreq.SetPositionSide(dbOpeningPosition.PositionSide)
 			bnreq.SetSide(dbOpeningPosition.Side)
@@ -47,7 +47,7 @@ func (b *binanceFutureService) InvalidatePosition(
 
 			_, err := b.PlaceSingleOrder(ctx, &bnreq)
 			if err != nil {
-				response.Result = append(response.Result, svchandlerres.InvalidatePositionHandlerResponseData{
+				response.Result = append(response.Result, handlerres.InvalidatePositionData{
 					OrderId: orderId,
 					Message: err.Error(),
 					Status:  "fail",
@@ -71,7 +71,7 @@ func (b *binanceFutureService) InvalidatePosition(
 				continue
 			}
 
-			response.Result = append(response.Result, svchandlerres.InvalidatePositionHandlerResponseData{
+			response.Result = append(response.Result, handlerres.InvalidatePositionData{
 				OrderId: orderId,
 				Message: "success",
 				Status:  "success",
@@ -82,7 +82,7 @@ func (b *binanceFutureService) InvalidatePosition(
 				ClientId: orderId,
 			})
 			if err != nil {
-				response.Result = append(response.Result, svchandlerres.InvalidatePositionHandlerResponseData{
+				response.Result = append(response.Result, handlerres.InvalidatePositionData{
 					OrderId: orderId,
 					Message: err.Error(),
 					Status:  "fail",

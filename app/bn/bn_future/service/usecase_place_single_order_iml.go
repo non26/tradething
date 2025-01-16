@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"log"
-	bnfutureres "tradething/app/bn/bn_future/handler_response_model"
-	svcFuture "tradething/app/bn/bn_future/service_model"
+	handlerres "tradething/app/bn/bn_future/handler_response_model"
+	model "tradething/app/bn/bn_future/service_model"
 
 	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
 
@@ -21,8 +21,8 @@ import (
 
 func (b *binanceFutureService) PlaceSingleOrder(
 	ctx context.Context,
-	request *svcFuture.Position,
-) (*bnfutureres.PlaceSignleOrderHandlerResponse, error) {
+	request *model.Position,
+) (*handlerres.PlacePosition, error) {
 
 	positionHistory, err := b.bnFtHistoryTable.Get(ctx, request.GetClientOrderId())
 	if err != nil {

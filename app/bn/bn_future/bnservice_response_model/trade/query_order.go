@@ -33,8 +33,8 @@ type QueryOrderBinanceServiceResponse struct {
 	GoodTillDate            int    `json:"goodTillDate"`
 }
 
-func (q *QueryOrderBinanceServiceResponse) ToHandlerResponse() *bnfuture.QueryOrderBinanceHandlerResponse {
-	h := &bnfuture.QueryOrderBinanceHandlerResponse{
+func (q *QueryOrderBinanceServiceResponse) ToHandlerResponse() *bnfuture.QueryOrder {
+	h := &bnfuture.QueryOrder{
 		AvgPrice:                q.AvgPrice,
 		ClientOrderID:           q.ClientOrderID,
 		CumQuote:                q.CumQuote,

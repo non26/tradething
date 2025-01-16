@@ -4,19 +4,19 @@ import (
 	"strconv"
 	"strings"
 	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
-	svcfuture "tradething/app/bn/bn_future/service_model"
+	model "tradething/app/bn/bn_future/service_model"
 )
 
-type SetLeverageHandlerRequest struct {
+type SetLeverage struct {
 	Leverage int    `json:"leverage"`
 	Symbol   string `json:"symbol"`
 }
 
-func (s *SetLeverageHandlerRequest) Transform() {
+func (s *SetLeverage) Transform() {
 	s.Symbol = strings.ToUpper(s.Symbol)
 }
 
-func (s *SetLeverageHandlerRequest) ToBinanceServiceSetLeverage() *bntradereq.SetLeverageBinanceServiceRequest {
+func (s *SetLeverage) ToBinanceServiceSetLeverage() *bntradereq.SetLeverageBinanceServiceRequest {
 	m := bntradereq.SetLeverageBinanceServiceRequest{
 		Symbol:   s.Symbol,
 		Leverage: strconv.Itoa(s.Leverage),
@@ -24,8 +24,8 @@ func (s *SetLeverageHandlerRequest) ToBinanceServiceSetLeverage() *bntradereq.Se
 	return &m
 }
 
-func (s *SetLeverageHandlerRequest) ToServiceModel() *svcfuture.SetLeverageServiceRequest {
-	m := svcfuture.SetLeverageServiceRequest{}
+func (s *SetLeverage) ToServiceModel() *model.Leverage {
+	m := model.Leverage{}
 	m.SetSymbol(s.Symbol)
 	m.SetLeverage(s.Leverage)
 	return &m

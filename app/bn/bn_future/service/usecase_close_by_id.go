@@ -4,21 +4,21 @@ import (
 	"context"
 	"log"
 	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
-	svchandlerres "tradething/app/bn/bn_future/handler_response_model"
-	svcfuture "tradething/app/bn/bn_future/service_model"
+	handlerres "tradething/app/bn/bn_future/handler_response_model"
+	model "tradething/app/bn/bn_future/service_model"
 
 	dynamodbrepository "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
 )
 
 func (b *binanceFutureService) CloseByClientIds(
 	ctx context.Context,
-	request *svcfuture.CloseByClientIdServiceRequest,
-) (*svchandlerres.CloseByClientIdsHandlerResponse, error) {
-	closeOrders := svchandlerres.CloseByClientIdsHandlerResponse{
-		Data: []svchandlerres.CloseByClientIdsHandlerResponseData{},
+	request *model.ClientIds,
+) (*handlerres.CloseByClientIds, error) {
+	closeOrders := handlerres.CloseByClientIds{
+		Data: []handlerres.CloseByClientIdsData{},
 	}
-	for _, clientId := range request.GetOrderIds() {
-		closeOrder := svchandlerres.CloseByClientIdsHandlerResponseData{}
+	for _, clientId := range request.GetCleintIds() {
+		closeOrder := handlerres.CloseByClientIdsData{}
 		positionHistory, err := b.bnFtHistoryTable.Get(ctx, clientId)
 		if err != nil {
 			return nil, err
@@ -73,7 +73,7 @@ func (b *binanceFutureService) CloseByClientIds(
 	return &closeOrders, nil
 }
 
-func addCloseOrderData(clsoeOrders *svchandlerres.CloseByClientIdsHandlerResponse, closeOrder svchandlerres.CloseByClientIdsHandlerResponseData, clientId string, status string, message string) {
+func addCloseOrderData(clsoeOrders *handlerres.CloseByClientIds, closeOrder handlerres.CloseByClientIdsData, clientId string, status string, message string) {
 	closeOrder.ClientId = clientId
 	closeOrder.Status = status
 	closeOrder.Message = message

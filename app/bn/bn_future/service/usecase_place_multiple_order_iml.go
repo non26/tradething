@@ -2,19 +2,19 @@ package service
 
 import (
 	"context"
-	svchandlerres "tradething/app/bn/bn_future/handler_response_model"
-	svcfuture "tradething/app/bn/bn_future/service_model"
+	handleres "tradething/app/bn/bn_future/handler_response_model"
+	model "tradething/app/bn/bn_future/service_model"
 )
 
 func (b *binanceFutureService) PlaceMultiOrder(
 	ctx context.Context,
-	request *svcfuture.PlaceMultiOrderServiceRequest,
-) (*svchandlerres.PlaceMultipleOrderHandlerResponse, error) {
-	response := svchandlerres.PlaceMultipleOrderHandlerResponse{}
+	request *model.Positions,
+) (*handleres.PlaceMultiplePosition, error) {
+	response := handleres.PlaceMultiplePosition{}
 	for _, order := range request.Positions {
 		signleOrderResponse, err := b.PlaceSingleOrder(ctx, &order)
 		if err != nil {
-			errSignleOrderResponse := svchandlerres.PlaceSignleOrderHandlerResponse{
+			errSignleOrderResponse := handleres.PlacePosition{
 				Symbol: order.GetSymbol(),
 			}
 			response.Result = append(response.Result, errSignleOrderResponse)

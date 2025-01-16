@@ -1,5 +1,5 @@
 package bnfuture
 
-type PlaceMultiOrderServiceRequest struct {
+type Positions struct {
 	Positions []Position `json:"positions"`
 }

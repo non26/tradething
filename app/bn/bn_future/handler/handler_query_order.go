@@ -2,7 +2,7 @@ package bnfuture
 
 import (
 	"net/http"
-	bnfuturereq "tradething/app/bn/bn_future/handler_request_model"
+	handlerreq "tradething/app/bn/bn_future/handler_request_model"
 	bnfuture "tradething/app/bn/bn_future/service"
 	"tradething/common"
 
@@ -10,7 +10,7 @@ import (
 )
 
 type IqueryOrderHandler interface {
-	GetRequestBody(c echo.Context) (*bnfuturereq.QueryOrderBinanceHandlerRequest, error)
+	GetRequestBody(c echo.Context) (*handlerreq.QueryOrder, error)
 	Handler(c echo.Context) error
 }
 
@@ -28,8 +28,8 @@ func NewqueryOrderHandler(
 
 func (h *queryOrderHandler) GetRequestBody(
 	c echo.Context,
-) (*bnfuturereq.QueryOrderBinanceHandlerRequest, error) {
-	req := new(bnfuturereq.QueryOrderBinanceHandlerRequest)
+) (*handlerreq.QueryOrder, error) {
+	req := new(handlerreq.QueryOrder)
 	if err := c.Bind(req); err != nil {
 		return nil, err
 	}

@@ -1,6 +1,6 @@
 package bnfuture
 
-type QueryOrderBinanceHandlerResponse struct {
+type QueryOrder struct {
 	AvgPrice                string `json:"avgPrice"`
 	ClientOrderID           string `json:"clientOrderId"`
 	CumQuote                string `json:"cumQuote"`

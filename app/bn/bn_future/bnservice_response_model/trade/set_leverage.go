@@ -9,8 +9,8 @@ type SetLeverageBinanceServiceResponse struct {
 	Symbol   string `json:"symbol"`
 }
 
-func (s *SetLeverageBinanceServiceResponse) ToHandlerResponse() *bnfuture.SetLeverageBinanceHandlerResponse {
-	m := bnfuture.SetLeverageBinanceHandlerResponse{
+func (s *SetLeverageBinanceServiceResponse) ToHandlerResponse() *bnfuture.SetLeverage {
+	m := bnfuture.SetLeverage{
 		Leverage: s.Leverage,
 		Symbol:   s.Symbol,
 	}

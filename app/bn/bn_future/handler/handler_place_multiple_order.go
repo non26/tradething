@@ -2,7 +2,7 @@ package bnfuture
 
 import (
 	"net/http"
-	bnfuturereq "tradething/app/bn/bn_future/handler_request_model"
+	handlerreq "tradething/app/bn/bn_future/handler_request_model"
 	bnfuture "tradething/app/bn/bn_future/service"
 	"tradething/common"
 
@@ -10,7 +10,7 @@ import (
 )
 
 type IPlaceMultipleOrderHandler interface {
-	GetRequestBody(c echo.Context) (*bnfuturereq.PlaceMultiOrderHandlerRequest, error)
+	GetRequestBody(c echo.Context) (*handlerreq.PlaceMultiplePositions, error)
 	Handler(c echo.Context) error
 }
 
@@ -26,8 +26,8 @@ func NewPlaceMultipleOrderHandler(
 	}
 }
 
-func (h *placeMultipleOrderHandler) GetRequestBody(c echo.Context) (*bnfuturereq.PlaceMultiOrderHandlerRequest, error) {
-	req := new(bnfuturereq.PlaceMultiOrderHandlerRequest)
+func (h *placeMultipleOrderHandler) GetRequestBody(c echo.Context) (*handlerreq.PlaceMultiplePositions, error) {
+	req := new(handlerreq.PlaceMultiplePositions)
 	if err := c.Bind(req); err != nil {
 		return nil, err
 	}
