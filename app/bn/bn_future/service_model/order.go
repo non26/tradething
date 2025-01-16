@@ -1,6 +1,6 @@
 package bnfuture
 
-import bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
+import bntradereq "tradething/app/bn/bn_future/bnservice_request/trade"
 
 type Order struct {
 	symbol            string

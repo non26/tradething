@@ -1,6 +1,6 @@
 package bnfuture
 
-import ireqmodel "tradething/app/bn/bn_future/bnservice_request_model"
+import ireqmodel "tradething/app/bn/bn_future/bnservice_request"
 
 type CandleStickRequest struct {
 	Symbol    string `json:"symbol"`

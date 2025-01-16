@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	ireqmodel "tradething/app/bn/bn_future/bnservice_request_model"
+	ireqmodel "tradething/app/bn/bn_future/bnservice_request"
 
 	bnutils "github.com/non26/tradepkg/pkg/bn/utils"
 )

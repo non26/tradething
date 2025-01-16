@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
-	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
+	bntradereq "tradething/app/bn/bn_future/bnservice_request/trade"
 	handlerres "tradething/app/bn/bn_future/handler_response_model"
 	model "tradething/app/bn/bn_future/service_model"
 

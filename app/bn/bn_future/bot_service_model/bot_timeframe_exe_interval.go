@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"time"
 
-	bnsvcreq "tradething/app/bn/bn_future/bnservice_request_model/trade"
+	bnsvcreq "tradething/app/bn/bn_future/bnservice_request/trade"
 
 	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
 )

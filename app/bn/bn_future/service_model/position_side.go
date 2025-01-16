@@ -2,7 +2,7 @@ package bnfuture
 
 import (
 	"time"
-	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
+	bntradereq "tradething/app/bn/bn_future/bnservice_request/trade"
 )
 
 type PositionSide struct {

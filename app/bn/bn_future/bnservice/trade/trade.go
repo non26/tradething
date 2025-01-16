@@ -3,8 +3,8 @@ package bnfuture
 import (
 	"context"
 
-	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
-	bntraderes "tradething/app/bn/bn_future/bnservice_response_model/trade"
+	bntradereq "tradething/app/bn/bn_future/bnservice_request/trade"
+	bntraderes "tradething/app/bn/bn_future/bnservice_response/trade"
 	"tradething/config"
 
 	bnclient "github.com/non26/tradepkg/pkg/bn/binance_client"

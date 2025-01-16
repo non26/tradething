@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
+	bntradereq "tradething/app/bn/bn_future/bnservice_request/trade"
 	valueobject "tradething/app/bn/bn_future/value_object"
 
-	mkreq "tradething/app/bn/bn_future/bnservice_request_model/market_data"
+	mkreq "tradething/app/bn/bn_future/bnservice_request/market_data"
 
 	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
 	positionconstant "github.com/non26/tradepkg/pkg/bn/position_constant"

@@ -7,7 +7,7 @@ import (
 	"time"
 	svcFuture "tradething/app/bn/bn_future/service_model"
 
-	bntradereq "tradething/app/bn/bn_future/bnservice_response_model/trade"
+	bntradereq "tradething/app/bn/bn_future/bnservice_response/trade"
 
 	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
 	utils "github.com/non26/tradepkg/pkg/bn/utils"

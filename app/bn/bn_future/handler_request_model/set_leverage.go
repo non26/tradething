@@ -3,7 +3,7 @@ package bnfuture
 import (
 	"strconv"
 	"strings"
-	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
+	bntradereq "tradething/app/bn/bn_future/bnservice_request/trade"
 	model "tradething/app/bn/bn_future/service_model"
 )
 
