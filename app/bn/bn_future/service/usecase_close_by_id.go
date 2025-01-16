@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"log"
 	bntradereq "tradething/app/bn/bn_future/bnservice_request_model/trade"
 	handlerres "tradething/app/bn/bn_future/handler_response_model"
@@ -21,7 +22,7 @@ func (b *binanceFutureService) CloseByClientIds(
 		closeOrder := handlerres.CloseByClientIdsData{}
 		positionHistory, err := b.bnFtHistoryTable.Get(ctx, clientId)
 		if err != nil {
-			return nil, err
+			return nil, errors.New("get history error " + err.Error())
 		}
 		if positionHistory.IsFound() {
 			addCloseOrderData(&closeOrders, closeOrder, clientId, "fail", "no position history found")

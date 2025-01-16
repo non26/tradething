@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	handlerres "tradething/app/bn/bn_future/handler_response_model"
 	model "tradething/app/bn/bn_future/service_model"
 
@@ -18,7 +19,7 @@ func (b *binanceFutureService) InvalidatePosition(
 	for _, orderId := range request.GetCleintIds() {
 		dbHistory, err := b.bnFtHistoryTable.Get(ctx, orderId)
 		if err != nil {
-			return nil, err
+			return nil, errors.New("get history error " + err.Error())
 		}
 		if dbHistory.IsFound() {
 			response.Result = append(response.Result, handlerres.InvalidatePositionData{
@@ -30,7 +31,7 @@ func (b *binanceFutureService) InvalidatePosition(
 		}
 		dbOpeningPosition, err := b.bnFtOpeningPositionTable.ScanWith(ctx, orderId)
 		if err != nil {
-			return nil, err
+			return nil, errors.New("get open order error " + err.Error())
 		}
 		if dbOpeningPosition.IsFound() {
 			bnreq := model.Position{}

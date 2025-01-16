@@ -16,7 +16,7 @@ func (b *binanceFutureService) SetAdvancedPosition(
 
 	dbHistory, err := b.bnFtHistoryTable.Get(ctx, request.GetClientOrderId())
 	if err != nil {
-		return nil, err
+		return nil, errors.New("get history error " + err.Error())
 	}
 	if dbHistory.IsFound() {
 		return nil, errors.New("history not found")
@@ -27,7 +27,7 @@ func (b *binanceFutureService) SetAdvancedPosition(
 		PositionSide: request.GetPositionSide(),
 	})
 	if err != nil {
-		return nil, err
+		return nil, errors.New("get open order error " + err.Error())
 	}
 	if dbOpenOrder.IsFound() {
 		return nil, errors.New("open order already exists")
@@ -38,7 +38,7 @@ func (b *binanceFutureService) SetAdvancedPosition(
 		PositionSide: request.GetPositionSide(),
 	})
 	if err != nil {
-		return nil, err
+		return nil, errors.New("get advanced position error " + err.Error())
 	}
 	if dbAdvancedPosition.IsFound() {
 		return nil, errors.New("advanced position already exists")
@@ -52,7 +52,7 @@ func (b *binanceFutureService) SetAdvancedPosition(
 		ClientId:     request.GetClientOrderId(),
 	})
 	if err != nil {
-		return nil, err
+		return nil, errors.New("insert advanced position error " + err.Error())
 	}
 
 	return &handlerres.SetAdvancedPosition{

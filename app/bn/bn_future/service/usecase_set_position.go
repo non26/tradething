@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"log"
 	handlerres "tradething/app/bn/bn_future/handler_response_model"
 	model "tradething/app/bn/bn_future/service_model"
@@ -14,8 +15,7 @@ func (b *binanceFutureService) SetPosition(
 
 	quote, err := b.bnFtQouteUsdtTable.Get(ctx, request.GetSymbol())
 	if err != nil {
-		log.Println("error get qoute usdt", err.Error())
-		return nil, err
+		return nil, errors.New("get qoute usdt error " + err.Error())
 	}
 
 	isLong := true
@@ -47,14 +47,13 @@ func (b *binanceFutureService) SetPosition(
 
 		err = b.bnFtQouteUsdtTable.Update(ctx, quote)
 		if err != nil {
-			return nil, err
+			return nil, errors.New("update quote error " + err.Error())
 		}
 	}
 
 	err = b.bnFtOpeningPositionTable.Insert(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
 	if err != nil {
-		log.Println("error new open order", err.Error())
-		return nil, err
+		return nil, errors.New("new open order error " + err.Error())
 	}
 
 	return &handlerres.PlacePosition{

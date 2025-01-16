@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	handlerres "tradething/app/bn/bn_future/handler_response_model"
 	model "tradething/app/bn/bn_future/service_model"
 )
@@ -16,7 +17,7 @@ func (bfs *binanceFutureService) QueryOrder(
 		request.ToBinanceServiceQueryOrder(),
 	)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("query order error " + err.Error())
 	}
 	return queryOrderRes.ToHandlerResponse(), nil
 }

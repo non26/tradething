@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"errors"
-	"log"
 	handlerres "tradething/app/bn/bn_future/handler_response_model"
 	model "tradething/app/bn/bn_future/service_model"
 
@@ -26,8 +25,7 @@ func (b *binanceFutureService) PlaceSingleOrder(
 
 	positionHistory, err := b.bnFtHistoryTable.Get(ctx, request.GetClientOrderId())
 	if err != nil {
-		log.Println("error get history by client id", err.Error())
-		return nil, err
+		return nil, errors.New("get history error " + err.Error())
 	}
 	if positionHistory.IsFound() {
 		return nil, errors.New("position client id is not valid")
@@ -36,15 +34,13 @@ func (b *binanceFutureService) PlaceSingleOrder(
 	openingPositionTable := request.ToBinanceFutureOpeningPositionRepositoryModel()
 	dbOpeningOrder, err := b.bnFtOpeningPositionTable.Get(ctx, openingPositionTable)
 	if err != nil {
-		log.Println("error get open order by key", err.Error())
-		return nil, err
+		return nil, errors.New("get open order error " + err.Error())
 	}
 
 	if request.IsSellOrder() {
 		placeSellOrderRes, err := b.closePosition(ctx, request)
 		if err != nil {
-			log.Println("error close position", err.Error())
-			return nil, err
+			return nil, errors.New("close position error " + err.Error())
 		}
 		return placeSellOrderRes.ToBnHandlerResponse(), nil
 	}
@@ -56,16 +52,14 @@ func (b *binanceFutureService) PlaceSingleOrder(
 	if !dbOpeningOrder.IsFound() { // meaing this is new order, no existing order is found
 		dbQUsdt, err := b.bnFtQouteUsdtTable.Get(ctx, request.GetSymbol())
 		if err != nil {
-			log.Println("error get qoute usdt", err.Error())
-			return nil, err
+			return nil, errors.New("get qoute usdt error " + err.Error())
 		}
 
 		if !dbQUsdt.IsFound() {
 			dbQUsdt = dynamodbmodel.NewBinanceFutureQouteUSTDTableRecord(request.GetSymbol(), request.IsLongPosition())
 			err = b.bnFtQouteUsdtTable.Insert(ctx, dbQUsdt)
 			if err != nil {
-				log.Println("error insert new symbol qoute usdt", err.Error())
-				return nil, err
+				return nil, errors.New("insert new symbol qoute usdt error " + err.Error())
 			}
 		}
 
@@ -76,8 +70,7 @@ func (b *binanceFutureService) PlaceSingleOrder(
 
 		placeOrderRes, err := b.openPosition(ctx, request, dbQUsdt)
 		if err != nil {
-			log.Println("error open position", err.Error())
-			return nil, err
+			return nil, errors.New("open position error " + err.Error())
 		}
 
 		return placeOrderRes.ToBnHandlerResponse(), nil
@@ -95,15 +88,13 @@ func (b *binanceFutureService) PlaceSingleOrder(
 		if request.GetClientOrderId() != dbOpeningOrder.ClientId {
 			placeOrderRes, err := b.accumulateOrder(ctx, request, dbOpeningOrder)
 			if err != nil {
-				log.Println("error accumulate order", err.Error())
-				return nil, err
+				return nil, errors.New("accumulate order error " + err.Error())
 			}
 			return placeOrderRes.ToBnHandlerResponse(), nil
 		} else {
 			prv_start, prv_end, err := b.getPreviousBnTimeStartAndEnd(request)
 			if err != nil {
-				log.Println("error get previous bn time start and end for watching order", err.Error())
-				return nil, err
+				return nil, errors.New("get previous bn time start and end for watching order error " + err.Error())
 			}
 
 			dbMarketData, err := b.bnMarketDataService.GetCandleStickData(ctx, request.ToBnCandleStickModel(
@@ -111,8 +102,7 @@ func (b *binanceFutureService) PlaceSingleOrder(
 				utils.GetSpecificBnTimestamp(prv_end),
 			))
 			if err != nil {
-				log.Println("error get candle stick data for watching order", err.Error())
-				return nil, err
+				return nil, errors.New("get candle stick data for watching order error " + err.Error())
 			}
 			closePrice := dbMarketData.GetClosePrice().GetFloat64()
 			if !request.IsStopLossNil() {
@@ -121,8 +111,7 @@ func (b *binanceFutureService) PlaceSingleOrder(
 						request.SetSide(b.sideType.Sell())
 						closePositionRes, err := b.closePosition(ctx, request)
 						if err != nil {
-							log.Println("error close position", err.Error())
-							return nil, err
+							return nil, errors.New("close position error " + err.Error())
 						}
 						return closePositionRes.ToBnHandlerResponse(), nil
 					}
@@ -131,8 +120,7 @@ func (b *binanceFutureService) PlaceSingleOrder(
 						request.SetSide(b.sideType.Buy())
 						closePositionRes, err := b.closePosition(ctx, request)
 						if err != nil {
-							log.Println("error close position", err.Error())
-							return nil, err
+							return nil, errors.New("close position error " + err.Error())
 						}
 						return closePositionRes.ToBnHandlerResponse(), nil
 					}
@@ -145,8 +133,7 @@ func (b *binanceFutureService) PlaceSingleOrder(
 						request.SetSide(b.sideType.Sell())
 						closePositionRes, err := b.closePosition(ctx, request)
 						if err != nil {
-							log.Println("error close position", err.Error())
-							return nil, err
+							return nil, errors.New("close position error " + err.Error())
 						}
 						return closePositionRes.ToBnHandlerResponse(), nil
 					}
@@ -155,8 +142,7 @@ func (b *binanceFutureService) PlaceSingleOrder(
 						request.SetSide(b.sideType.Buy())
 						closePositionRes, err := b.closePosition(ctx, request)
 						if err != nil {
-							log.Println("error close position", err.Error())
-							return nil, err
+							return nil, errors.New("close position error " + err.Error())
 						}
 						return closePositionRes.ToBnHandlerResponse(), nil
 					}
