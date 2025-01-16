@@ -45,7 +45,7 @@ func (b *binanceFutureService) CloseByClientIds(
 			side = b.sideType.Buy()
 		}
 
-		_, err = b.binanceService.PlaceSingleOrder(ctx, &bntradereq.PlaceSignleOrderBinanceServiceRequest{
+		_, err = b.binanceService.PlaceSingleOrder(ctx, &bntradereq.PlacePosition{
 			PositionSide:  openOrders.PositionSide,
 			Side:          side,
 			Symbol:        openOrders.Symbol,

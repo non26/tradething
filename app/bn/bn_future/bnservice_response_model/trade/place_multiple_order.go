@@ -1,5 +1,5 @@
 package bnfuture
 
-type PlaceMultiOrderBinanceServiceResponse struct {
+type PlaceMultiPositionData struct {
 	Symbols []string `json:"symbols"`
 }

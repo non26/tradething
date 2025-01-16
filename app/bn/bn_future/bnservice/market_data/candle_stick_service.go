@@ -12,10 +12,10 @@ import (
 	bnresponse "github.com/non26/tradepkg/pkg/bn/binance_response"
 )
 
-func (b *bnMarketDataService) GetCandleStickData(ctx context.Context, request *mkreq.CandleStickRequest) (*mkres.CandleStickResponse, error) {
+func (b *bnMarketDataService) GetCandleStickData(ctx context.Context, request *mkreq.CandleStickRequest) (*mkres.CandleStickData, error) {
 	c := bncaller.NewCallBinance(
 		bnrequest.NewBinanceServiceHttpRequest[mkreq.CandleStickRequest](),
-		bnresponse.NewBinanceServiceHttpResponse[mkres.CandleStickResponse](),
+		bnresponse.NewBinanceServiceHttpResponse[mkres.CandleStickData](),
 		b.httpttransport,
 		b.httpclient,
 	).NeedSignature(false)

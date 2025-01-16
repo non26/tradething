@@ -9,7 +9,7 @@ type CandleStickRequest struct {
 	EndTime   int64  `json:"endTime"`
 }
 
-func NewCandleStickRequest(c *CandleStickRequest) ireqmodel.IBnFutureServiceRequest {
+func NewCandleStickRequest(c *CandleStickRequest) ireqmodel.IBnFutureRequest {
 	return c
 }
 

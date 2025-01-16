@@ -13,7 +13,7 @@ import (
 	utils "github.com/non26/tradepkg/pkg/bn/utils"
 )
 
-func (b *binanceFutureService) closePosition(ctx context.Context, request *svcFuture.Position) (*bntradereq.PlaceSignleOrderBinanceServiceResponse, error) {
+func (b *binanceFutureService) closePosition(ctx context.Context, request *svcFuture.Position) (*bntradereq.PlacePositionData, error) {
 	closePosition, err := b.binanceService.PlaceSingleOrder(
 		ctx,
 		request.ToBinanceServiceModel(),
@@ -34,7 +34,7 @@ func (b *binanceFutureService) closePosition(ctx context.Context, request *svcFu
 
 }
 
-func (b *binanceFutureService) openPosition(ctx context.Context, request *svcFuture.Position, dbQUsdt *dynamodbmodel.BnFtQouteUSDT) (*bntradereq.PlaceSignleOrderBinanceServiceResponse, error) {
+func (b *binanceFutureService) openPosition(ctx context.Context, request *svcFuture.Position, dbQUsdt *dynamodbmodel.BnFtQouteUSDT) (*bntradereq.PlacePositionData, error) {
 	openPosition, err := b.binanceService.PlaceSingleOrder(
 		ctx,
 		request.ToBinanceServiceModel(),
@@ -70,7 +70,7 @@ func (b *binanceFutureService) setDefaultClientOrderId(request *svcFuture.Positi
 	request.SetClientOrderId(utils.BinanceDefaultClientID(request.GetSymbol(), request.GetPositionSide(), counting))
 }
 
-func (b *binanceFutureService) accumulateOrder(ctx context.Context, request *svcFuture.Position, dbOpeningOrder *dynamodbmodel.BnFtOpeningPosition) (*bntradereq.PlaceSignleOrderBinanceServiceResponse, error) {
+func (b *binanceFutureService) accumulateOrder(ctx context.Context, request *svcFuture.Position, dbOpeningOrder *dynamodbmodel.BnFtOpeningPosition) (*bntradereq.PlacePositionData, error) {
 	// for accumulate order
 	placeOrderRes, err := b.binanceService.PlaceSingleOrder(
 		ctx,

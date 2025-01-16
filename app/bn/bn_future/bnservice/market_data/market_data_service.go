@@ -12,7 +12,7 @@ import (
 )
 
 type IBnMarketDataService interface {
-	GetCandleStickData(ctx context.Context, request *mkreq.CandleStickRequest) (*mkres.CandleStickResponse, error)
+	GetCandleStickData(ctx context.Context, request *mkreq.CandleStickRequest) (*mkres.CandleStickData, error)
 }
 
 type bnMarketDataService struct {

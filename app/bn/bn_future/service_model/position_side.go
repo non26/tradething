@@ -53,8 +53,8 @@ func (c *PositionSideInfo) GetAmountQ() string {
 	return c.amountQ
 }
 
-func (p *PositionSideInfo) ToBinanceServiceModel(side string) *bntradereq.PlaceSignleOrderBinanceServiceRequest {
-	m := bntradereq.PlaceSignleOrderBinanceServiceRequest{
+func (p *PositionSideInfo) ToBinanceServiceModel(side string) *bntradereq.PlacePosition {
+	m := bntradereq.PlacePosition{
 		PositionSide:  p.positionSide,
 		Side:          side,
 		EntryQuantity: p.amountQ,

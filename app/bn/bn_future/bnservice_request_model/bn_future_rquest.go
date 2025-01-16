@@ -1,6 +1,6 @@
 package bnfuture
 
-type IBnFutureServiceRequest interface {
+type IBnFutureRequest interface {
 	PrepareRequest()
 	GetData() interface{}
 }

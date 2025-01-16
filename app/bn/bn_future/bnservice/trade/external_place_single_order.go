@@ -14,12 +14,12 @@ import (
 
 func (bfes *binanceFutureExternalService) PlaceSingleOrder(
 	ctx context.Context,
-	request *bntradereq.PlaceSignleOrderBinanceServiceRequest,
-) (*bntraderes.PlaceSignleOrderBinanceServiceResponse, error) {
+	request *bntradereq.PlacePosition,
+) (*bntraderes.PlacePositionData, error) {
 
 	c := bncaller.NewCallBinance(
-		bnrequest.NewBinanceServiceHttpRequest[bntradereq.PlaceSignleOrderBinanceServiceRequest](),
-		bnresponse.NewBinanceServiceHttpResponse[bntraderes.PlaceSignleOrderBinanceServiceResponse](),
+		bnrequest.NewBinanceServiceHttpRequest[bntradereq.PlacePosition](),
+		bnresponse.NewBinanceServiceHttpResponse[bntraderes.PlacePositionData](),
 		bfes.httpttransport,
 		bfes.httpclient,
 	)

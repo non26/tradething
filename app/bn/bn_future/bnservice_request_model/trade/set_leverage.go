@@ -9,27 +9,27 @@ import (
 	bnutils "github.com/non26/tradepkg/pkg/bn/utils"
 )
 
-type SetLeverageBinanceServiceRequest struct {
+type SetLeverage struct {
 	Leverage  string `json:"leverage"`
 	Symbol    string `json:"symbol"`
 	Timestamp string `json:"timestamp"`
 }
 
-func (s *SetLeverageBinanceServiceRequest) PrepareRequest() {
+func (s *SetLeverage) PrepareRequest() {
 	s.Symbol = strings.ToUpper(s.Symbol)
 	s.setTimeStamp()
 }
 
-func (s *SetLeverageBinanceServiceRequest) GetData() interface{} {
+func (s *SetLeverage) GetData() interface{} {
 	return s
 }
 
-func (s *SetLeverageBinanceServiceRequest) setTimeStamp() {
+func (s *SetLeverage) setTimeStamp() {
 	s.Timestamp = strconv.FormatInt(bnutils.GetBinanceTimestamp(), 10)
 }
 
 func NewSetLeverageBinanceServiceRequest(
-	s *SetLeverageBinanceServiceRequest,
-) ireqmodel.IBnFutureServiceRequest {
+	s *SetLeverage,
+) ireqmodel.IBnFutureRequest {
 	return s
 }

@@ -4,7 +4,7 @@ import (
 	bnfuture "tradething/app/bn/bn_future/handler_response_model"
 )
 
-type QueryOrderBinanceServiceResponse struct {
+type QueryOrderData struct {
 	AvgPrice                string `json:"avgPrice"`
 	ClientOrderID           string `json:"clientOrderId"`
 	CumQuote                string `json:"cumQuote"`
@@ -33,7 +33,7 @@ type QueryOrderBinanceServiceResponse struct {
 	GoodTillDate            int    `json:"goodTillDate"`
 }
 
-func (q *QueryOrderBinanceServiceResponse) ToHandlerResponse() *bnfuture.QueryOrder {
+func (q *QueryOrderData) ToHandlerResponse() *bnfuture.QueryOrder {
 	h := &bnfuture.QueryOrder{
 		AvgPrice:                q.AvgPrice,
 		ClientOrderID:           q.ClientOrderID,

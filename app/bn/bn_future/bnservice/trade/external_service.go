@@ -14,18 +14,18 @@ import (
 type IBinanceFutureExternalService interface {
 	SetNewLeverage(
 		ctx context.Context,
-		request *bntradereq.SetLeverageBinanceServiceRequest,
-	) (*bntraderes.SetLeverageBinanceServiceResponse, error)
+		request *bntradereq.SetLeverage,
+	) (*bntraderes.SetLeverageData, error)
 
 	PlaceSingleOrder(
 		ctx context.Context,
-		request *bntradereq.PlaceSignleOrderBinanceServiceRequest,
-	) (*bntraderes.PlaceSignleOrderBinanceServiceResponse, error)
+		request *bntradereq.PlacePosition,
+	) (*bntraderes.PlacePositionData, error)
 
 	QueryOrder(
 		ctx context.Context,
-		request *bntradereq.QueryOrderBinanceServiceRequest,
-	) (*bntraderes.QueryOrderBinanceServiceResponse, error)
+		request *bntradereq.QueryOrder,
+	) (*bntraderes.QueryOrderData, error)
 }
 
 type binanceFutureExternalService struct {

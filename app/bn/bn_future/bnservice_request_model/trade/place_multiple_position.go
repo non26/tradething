@@ -56,6 +56,6 @@ func (p *PlaceMultiOrderBinanceServiceRequest) GetData() interface{} {
 
 func NewPlaceMultiOrderBinanceServiceRequest(
 	request *PlaceMultiOrderBinanceServiceRequest,
-) ireqmodel.IBnFutureServiceRequest {
+) ireqmodel.IBnFutureRequest {
 	return request
 }

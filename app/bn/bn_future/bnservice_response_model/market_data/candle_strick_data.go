@@ -13,12 +13,12 @@ func (p price) Get() string {
 	return string(p)
 }
 
-type CandleStickResponse [][]interface{}
+type CandleStickData [][]interface{}
 
-func (c CandleStickResponse) GetOpenPrice() price {
+func (c CandleStickData) GetOpenPrice() price {
 	return price(c[0][1].(string))
 }
 
-func (c CandleStickResponse) GetClosePrice() price {
+func (c CandleStickData) GetClosePrice() price {
 	return price(c[0][4].(string))
 }

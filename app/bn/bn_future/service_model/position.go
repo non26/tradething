@@ -172,8 +172,8 @@ func (p *Position) AddEntryQuantity(entryQuantity string) {
 	p.entryQuantity = fmt.Sprintf("%v", currentQuantity+additionalQuantity)
 }
 
-func (p *Position) ToBinanceServiceModel() *bntradereq.PlaceSignleOrderBinanceServiceRequest {
-	m := bntradereq.PlaceSignleOrderBinanceServiceRequest{
+func (p *Position) ToBinanceServiceModel() *bntradereq.PlacePosition {
+	m := bntradereq.PlacePosition{
 		PositionSide:  p.positionSide,
 		Side:          p.side,
 		EntryQuantity: p.entryQuantity,

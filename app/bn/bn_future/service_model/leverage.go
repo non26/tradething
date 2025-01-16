@@ -26,8 +26,8 @@ func (s *Leverage) SetSymbol(symbol string) {
 	s.symbol = symbol
 }
 
-func (s *Leverage) ToBinanceServiceSetLeverage() *bntradereq.SetLeverageBinanceServiceRequest {
-	m := bntradereq.SetLeverageBinanceServiceRequest{
+func (s *Leverage) ToBinanceServiceSetLeverage() *bntradereq.SetLeverage {
+	m := bntradereq.SetLeverage{
 		Symbol:   s.symbol,
 		Leverage: strconv.Itoa(s.leverage),
 	}

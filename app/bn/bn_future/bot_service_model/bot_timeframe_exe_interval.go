@@ -122,8 +122,8 @@ func (b *BotTimeframeExeIntervalRequest) ToBnFtOpeningPosition() *dynamodbmodel.
 	return &m
 }
 
-func (b *BotTimeframeExeIntervalRequest) ToBnFtPlaceSingleOrderServiceRequest(side string, orderType string) *bnsvcreq.PlaceSignleOrderBinanceServiceRequest {
-	m := bnsvcreq.PlaceSignleOrderBinanceServiceRequest{
+func (b *BotTimeframeExeIntervalRequest) ToBnFtPlaceSingleOrderServiceRequest(side string, orderType string) *bnsvcreq.PlacePosition {
+	m := bnsvcreq.PlacePosition{
 		Symbol:        b.symbol,
 		PositionSide:  b.positionSide,
 		ClientOrderId: b.botOrderID,

@@ -16,8 +16,8 @@ func (s *SetLeverage) Transform() {
 	s.Symbol = strings.ToUpper(s.Symbol)
 }
 
-func (s *SetLeverage) ToBinanceServiceSetLeverage() *bntradereq.SetLeverageBinanceServiceRequest {
-	m := bntradereq.SetLeverageBinanceServiceRequest{
+func (s *SetLeverage) ToBinanceServiceSetLeverage() *bntradereq.SetLeverage {
+	m := bntradereq.SetLeverage{
 		Symbol:   s.Symbol,
 		Leverage: strconv.Itoa(s.Leverage),
 	}

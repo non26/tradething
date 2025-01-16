@@ -23,8 +23,8 @@ func (q *Order) SetOrigClientOrderId(origClientOrderId string) {
 	q.origClientOrderId = origClientOrderId
 }
 
-func (q *Order) ToBinanceServiceQueryOrder() *bntradereq.QueryOrderBinanceServiceRequest {
-	m := bntradereq.QueryOrderBinanceServiceRequest{
+func (q *Order) ToBinanceServiceQueryOrder() *bntradereq.QueryOrder {
+	m := bntradereq.QueryOrder{
 		Symbol:            q.symbol,
 		OrigClientOrderId: q.origClientOrderId,
 	}

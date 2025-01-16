@@ -9,7 +9,7 @@ import (
 	bnutils "github.com/non26/tradepkg/pkg/bn/utils"
 )
 
-type QueryOrderBinanceServiceRequest struct {
+type QueryOrder struct {
 	Symbol string `json:"symbol"`
 	// OrderId           float64 `json:"orderId"`
 	OrigClientOrderId string `json:"origClientOrderId"`
@@ -17,28 +17,28 @@ type QueryOrderBinanceServiceRequest struct {
 	Timestamp string `json:"timestamp"`
 }
 
-func (q *QueryOrderBinanceServiceRequest) PrepareRequest() {
+func (q *QueryOrder) PrepareRequest() {
 	q.Symbol = strings.ToUpper(q.Symbol)
 	q.setTimeStamp()
 	q.checkClientId()
 }
 
-func (q *QueryOrderBinanceServiceRequest) GetData() interface{} {
+func (q *QueryOrder) GetData() interface{} {
 	return q
 }
 
-func (q *QueryOrderBinanceServiceRequest) setTimeStamp() {
+func (q *QueryOrder) setTimeStamp() {
 	q.Timestamp = strconv.FormatInt(bnutils.GetBinanceTimestamp(), 10)
 }
 
-func (q *QueryOrderBinanceServiceRequest) checkClientId() {
+func (q *QueryOrder) checkClientId() {
 	if q.OrigClientOrderId == "" {
 		q.OrigClientOrderId = q.Symbol
 	}
 }
 
 func NewQueryOrderBinanceServiceRequest(
-	q *QueryOrderBinanceServiceRequest,
-) ireqmodel.IBnFutureServiceRequest {
+	q *QueryOrder,
+) ireqmodel.IBnFutureRequest {
 	return q
 }

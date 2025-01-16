@@ -14,11 +14,11 @@ import (
 
 func (bfes *binanceFutureExternalService) SetNewLeverage(
 	ctx context.Context,
-	request *bntradereq.SetLeverageBinanceServiceRequest,
-) (*bntraderes.SetLeverageBinanceServiceResponse, error) {
+	request *bntradereq.SetLeverage,
+) (*bntraderes.SetLeverageData, error) {
 	c := bncaller.NewCallBinance(
-		bnrequest.NewBinanceServiceHttpRequest[bntradereq.SetLeverageBinanceServiceRequest](),
-		bnresponse.NewBinanceServiceHttpResponse[bntraderes.SetLeverageBinanceServiceResponse](),
+		bnrequest.NewBinanceServiceHttpRequest[bntradereq.SetLeverage](),
+		bnresponse.NewBinanceServiceHttpResponse[bntraderes.SetLeverageData](),
 		bfes.httpttransport,
 		bfes.httpclient,
 	)

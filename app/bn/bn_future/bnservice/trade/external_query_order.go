@@ -14,11 +14,11 @@ import (
 
 func (bfes *binanceFutureExternalService) QueryOrder(
 	ctx context.Context,
-	request *bntradereq.QueryOrderBinanceServiceRequest,
-) (*bntraderes.QueryOrderBinanceServiceResponse, error) {
+	request *bntradereq.QueryOrder,
+) (*bntraderes.QueryOrderData, error) {
 	c := bncaller.NewCallBinance(
-		bnrequest.NewBinanceServiceHttpRequest[bntradereq.QueryOrderBinanceServiceRequest](),
-		bnresponse.NewBinanceServiceHttpResponse[bntraderes.QueryOrderBinanceServiceResponse](),
+		bnrequest.NewBinanceServiceHttpRequest[bntradereq.QueryOrder](),
+		bnresponse.NewBinanceServiceHttpResponse[bntraderes.QueryOrderData](),
 		bfes.httpttransport,
 		bfes.httpclient,
 	)
