@@ -4,9 +4,9 @@ import (
 	"net/http"
 	handlerreq "tradething/app/bn/bn_future/handler_request"
 	bnfuture "tradething/app/bn/bn_future/service"
-	"tradething/common"
 
 	"github.com/labstack/echo/v4"
+	"github.com/non26/tradepkg/pkg/bn/utils"
 )
 
 type ISetNewLeveragehandler interface {
@@ -40,8 +40,8 @@ func (h *setNewLeveragehandler) Handler(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusBadRequest,
-			common.CommonResponse{
-				Code:    common.FailCode,
+			utils.CommonResponse{
+				Code:    utils.FailCode,
 				Message: err.Error(),
 				Data:    nil,
 			},
@@ -55,8 +55,8 @@ func (h *setNewLeveragehandler) Handler(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			common.CommonResponse{
-				Code:    common.FailCode,
+			utils.CommonResponse{
+				Code:    utils.FailCode,
 				Message: err.Error(),
 				Data:    nil,
 			},
@@ -66,8 +66,8 @@ func (h *setNewLeveragehandler) Handler(c echo.Context) error {
 
 	return c.JSON(
 		http.StatusOK,
-		common.CommonResponse{
-			Code:    common.SuccessCode,
+		utils.CommonResponse{
+			Code:    utils.SuccessCode,
 			Message: "success",
 			Data:    res,
 		},

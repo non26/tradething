@@ -40,7 +40,7 @@ func (b *binanceFutureService) InvalidatePosition(
 			bnreq.SetClientOrderId(orderId)
 			bnreq.SetPositionSide(dbOpeningPosition.PositionSide)
 			bnreq.SetSide(dbOpeningPosition.Side)
-			bnreq.SetEntryQuantity(dbOpeningPosition.AmountQ)
+			bnreq.SetEntryQuantity(dbOpeningPosition.AmountB)
 			bnreq.SetSymbol(dbOpeningPosition.Symbol)
 			if utils.IsLongPosition(dbOpeningPosition.PositionSide) {
 				bnreq.SetSide(bnconstant.SELL)

@@ -77,7 +77,7 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 			}
 			// close current position
 			closeOrder := req.ToBnFtPlaceSingleOrderServiceRequest(closeSide, bnconstant.MARKET)
-			closeOrder.EntryQuantity = current_position.AmountQoute
+			closeOrder.EntryQuantity = current_position.AmountB
 			_, err := b.binanceService.PlaceSingleOrder(ctx, closeOrder)
 			if err != nil {
 				return nil, errors.New("place order error")
@@ -141,7 +141,7 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 		if current_position.IsFound() {
 			// close position
 			closeOrder := req.ToBnFtPlaceSingleOrderServiceRequest(closeSide, bnconstant.MARKET)
-			closeOrder.EntryQuantity = current_position.AmountQoute
+			closeOrder.EntryQuantity = current_position.AmountB
 			_, err := b.binanceService.PlaceSingleOrder(ctx, closeOrder)
 			if err != nil {
 				return nil, errors.New("place order error")

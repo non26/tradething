@@ -52,7 +52,7 @@ func (b *binanceFutureService) CloseByClientIds(
 			Side:          side,
 			Symbol:        openOrders.Symbol,
 			ClientOrderId: openOrders.ClientId,
-			EntryQuantity: openOrders.AmountQ,
+			EntryQuantity: openOrders.AmountB,
 		})
 		if err != nil {
 			addCloseOrderData(&closeOrders, closeOrder, clientId, "fail", err.Error())

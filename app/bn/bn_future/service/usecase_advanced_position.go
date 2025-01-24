@@ -48,7 +48,7 @@ func (b *binanceFutureService) SetAdvancedPosition(
 		Symbol:       request.GetSymbol(),
 		PositionSide: request.GetPositionSide(),
 		Side:         request.GetSide(),
-		AmountQ:      request.GetEntryQuantity(),
+		AmountB:      request.GetEntryQuantity(),
 		ClientId:     request.GetClientOrderId(),
 	})
 	if err != nil {

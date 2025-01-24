@@ -5,9 +5,9 @@ import (
 	bot_service "tradething/app/bn/bn_future/bot"
 	bnftbotereq "tradething/app/bn/bn_future/bot_handler_request"
 	bnftboteres "tradething/app/bn/bn_future/bot_handler_response"
-	"tradething/common"
 
 	"github.com/labstack/echo/v4"
+	"github.com/non26/tradepkg/pkg/bn/utils"
 )
 
 type IBotTimeframeExeIntervalHandler interface {
@@ -38,16 +38,16 @@ func (h *botTimeframeExeIntervalHandler) GetRequestBody(c echo.Context) (*bnftbo
 func (h *botTimeframeExeIntervalHandler) Handler(c echo.Context) error {
 	req, err := h.GetRequestBody(c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, common.CommonResponse{
-			Code:    common.FailCode,
+		return c.JSON(http.StatusBadRequest, utils.CommonResponse{
+			Code:    utils.FailCode,
 			Message: err.Error(),
 		})
 	}
 	req.Transform()
 	svcReq, err := req.ToBotServiceRequest()
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, common.CommonResponse{
-			Code:    common.FailCode,
+		return c.JSON(http.StatusBadRequest, utils.CommonResponse{
+			Code:    utils.FailCode,
 			Message: err.Error(),
 		})
 	}
@@ -57,7 +57,7 @@ func (h *botTimeframeExeIntervalHandler) Handler(c echo.Context) error {
 			BotOrderID: req.BotOrderID,
 			Message:    err.Error(),
 			Status:     "failed",
-			Code:       common.FailCode,
+			Code:       utils.FailCode,
 		}
 		return c.JSON(http.StatusInternalServerError, res)
 	}

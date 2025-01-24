@@ -117,7 +117,7 @@ func (b *BotTimeframeExeIntervalRequest) ToBnFtOpeningPosition() *dynamodbmodel.
 		Symbol:       b.symbol,
 		PositionSide: b.positionSide,
 		ClientId:     b.botOrderID,
-		AmountQ:      strconv.FormatFloat(b.amountQ, 'f', -1, 64),
+		AmountB:      strconv.FormatFloat(b.amountQ, 'f', -1, 64),
 	}
 	return &m
 }
@@ -157,7 +157,7 @@ func (b *BotTimeframeExeIntervalRequest) ToBnFtBotOnRun() *dynamodbmodel.BnFtBot
 		BotOrderID:   b.botOrderID,
 		Symbol:       b.symbol,
 		PositionSide: b.positionSide,
-		AmountQoute:  strconv.FormatFloat(b.amountQ, 'f', -1, 64),
+		AmountB:      strconv.FormatFloat(b.amountQ, 'f', -1, 64),
 		IsActive:     true,
 	}
 	return &m

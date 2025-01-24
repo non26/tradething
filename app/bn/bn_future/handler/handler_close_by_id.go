@@ -4,9 +4,9 @@ import (
 	"net/http"
 	handlerreq "tradething/app/bn/bn_future/handler_request"
 	bnfuture "tradething/app/bn/bn_future/service"
-	"tradething/common"
 
 	"github.com/labstack/echo/v4"
+	"github.com/non26/tradepkg/pkg/bn/utils"
 )
 
 type ICloseByClientIdsHandler interface {
@@ -37,15 +37,15 @@ func (h *closeByClientIdsHandler) GetRequestBody(c echo.Context) (*handlerreq.Cl
 func (h *closeByClientIdsHandler) Handler(c echo.Context) error {
 	request, err := h.GetRequestBody(c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, common.CommonResponse{
-			Code:    common.FailCode,
+		return c.JSON(http.StatusBadRequest, utils.CommonResponse{
+			Code:    utils.FailCode,
 			Message: err.Error(),
 		})
 	}
 	response, err := h.service.CloseByClientIds(c.Request().Context(), request.ToServiceModel())
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, common.CommonResponse{
-			Code:    common.FailCode,
+		return c.JSON(http.StatusInternalServerError, utils.CommonResponse{
+			Code:    utils.FailCode,
 			Message: err.Error(),
 		})
 	}
