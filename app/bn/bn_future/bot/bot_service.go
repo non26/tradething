@@ -7,8 +7,7 @@ import (
 
 	bntrade "tradething/app/bn/bn_future/bnservice/trade"
 
-	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_repository"
-	positionconstant "github.com/non26/tradepkg/pkg/bn/position_constant"
+	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
 )
 
 type IBotService interface {
@@ -22,9 +21,6 @@ type botService struct {
 	bnFtBotOnRunTable  bndynamodb.IBnFtBotOnRunRepository
 	bnFtHistoryTable   bndynamodb.IBnFtHistoryRepository
 	bnFtQouteUsdtTable bndynamodb.IBnFtQouteUSDTRepository
-	orderType          positionconstant.IOrderType
-	positionSideType   positionconstant.IPositionSide
-	sideType           positionconstant.ISide
 }
 
 func NewBotService(
@@ -33,9 +29,6 @@ func NewBotService(
 	bnFtBotOnRunTable bndynamodb.IBnFtBotOnRunRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
 	bnFtQouteUsdtTable bndynamodb.IBnFtQouteUSDTRepository,
-	orderType positionconstant.IOrderType,
-	positionSideType positionconstant.IPositionSide,
-	sideType positionconstant.ISide,
 ) IBotService {
 	return &botService{
 		binanceService:     binanceService,
@@ -43,8 +36,5 @@ func NewBotService(
 		bnFtBotOnRunTable:  bnFtBotOnRunTable,
 		bnFtHistoryTable:   bnFtHistoryTable,
 		bnFtQouteUsdtTable: bnFtQouteUsdtTable,
-		orderType:          orderType,
-		positionSideType:   positionSideType,
-		sideType:           sideType,
 	}
 }

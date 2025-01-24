@@ -4,6 +4,8 @@ import (
 	"context"
 	handlerres "tradething/app/bn/bn_future/handler_response"
 	model "tradething/app/bn/bn_future/service_model"
+
+	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
 )
 
 func (b *binanceFutureService) CloseBySymbols(
@@ -14,7 +16,7 @@ func (b *binanceFutureService) CloseBySymbols(
 		Data: []handlerres.CloseBySymbolsData{},
 	}
 	for _, order := range request.GetData() {
-		_, err := b.binanceService.PlaceSingleOrder(ctx, order.ToBinanceServiceModel(b.sideType.Sell()))
+		_, err := b.binanceService.PlaceSingleOrder(ctx, order.ToBinanceServiceModel(bnconstant.SELL))
 		if err != nil {
 			response.Data = append(response.Data, handlerres.CloseBySymbolsData{
 				Symbol:  order.GetSymbol(),

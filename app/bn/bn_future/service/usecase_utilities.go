@@ -9,7 +9,7 @@ import (
 
 	bntradereq "tradething/app/bn/bn_future/bnservice_response/trade"
 
-	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
+	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
 	utils "github.com/non26/tradepkg/pkg/bn/utils"
 )
 
@@ -44,7 +44,7 @@ func (b *binanceFutureService) openPosition(ctx context.Context, request *svcFut
 		return nil, err
 	}
 
-	if request.GetPositionSide() == b.positionSideType.Short() {
+	if utils.IsShortPosition(request.GetPositionSide()) {
 		dbQUsdt.SetCountingShort(dbQUsdt.GetCountingShort() + 1)
 	} else {
 		dbQUsdt.SetCountingLong(dbQUsdt.GetCountingLong() + 1)
@@ -80,7 +80,7 @@ func (b *binanceFutureService) accumulateOrder(ctx context.Context, request *svc
 		log.Println("error place order for accumulate order", err.Error())
 		return nil, err
 	}
-	dbOpeningOrder.AddMoreAmountQ(request.GetAmountQ())
+	dbOpeningOrder.AddMoreAmountB(request.GetAmountB())
 	err = b.bnFtOpeningPositionTable.Update(ctx, dbOpeningOrder)
 	if err != nil {
 		log.Println("error update open order for accumulate order", err.Error())

@@ -7,9 +7,9 @@ import (
 	mkreq "tradething/app/bn/bn_future/bnservice_request/market_data"
 	mkres "tradething/app/bn/bn_future/bnservice_response/market_data"
 
-	bncaller "github.com/non26/tradepkg/pkg/bn/binance_caller"
-	bnrequest "github.com/non26/tradepkg/pkg/bn/binance_request"
-	bnresponse "github.com/non26/tradepkg/pkg/bn/binance_response"
+	bncaller "github.com/non26/tradepkg/pkg/bn/bn_caller"
+	bnrequest "github.com/non26/tradepkg/pkg/bn/bn_request"
+	bnresponse "github.com/non26/tradepkg/pkg/bn/bn_response"
 )
 
 func (b *bnMarketDataService) GetCandleStickData(ctx context.Context, request *mkreq.CandleStickRequest) (*mkres.CandleStickData, error) {

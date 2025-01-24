@@ -6,7 +6,8 @@ import (
 	handlerres "tradething/app/bn/bn_future/handler_response"
 	model "tradething/app/bn/bn_future/service_model"
 
-	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
+	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
+	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
 
 	utils "github.com/non26/tradepkg/pkg/bn/utils"
 )
@@ -108,7 +109,7 @@ func (b *binanceFutureService) PlaceSingleOrder(
 			if !request.IsStopLossNil() {
 				if request.IsLongPosition() {
 					if closePrice < request.GetStopLoss().Price {
-						request.SetSide(b.sideType.Sell())
+						request.SetSide(bnconstant.SELL)
 						closePositionRes, err := b.closePosition(ctx, request)
 						if err != nil {
 							return nil, errors.New("close position error " + err.Error())
@@ -117,7 +118,7 @@ func (b *binanceFutureService) PlaceSingleOrder(
 					}
 				} else if request.IsShortPosition() {
 					if closePrice > request.GetStopLoss().Price {
-						request.SetSide(b.sideType.Buy())
+						request.SetSide(bnconstant.BUY)
 						closePositionRes, err := b.closePosition(ctx, request)
 						if err != nil {
 							return nil, errors.New("close position error " + err.Error())
@@ -130,7 +131,7 @@ func (b *binanceFutureService) PlaceSingleOrder(
 			if !request.IsTakeProfitNil() {
 				if request.IsLongPosition() {
 					if dbMarketData.GetClosePrice().GetFloat64() > request.GetTakeProfit().Price {
-						request.SetSide(b.sideType.Sell())
+						request.SetSide(bnconstant.SELL)
 						closePositionRes, err := b.closePosition(ctx, request)
 						if err != nil {
 							return nil, errors.New("close position error " + err.Error())
@@ -139,7 +140,7 @@ func (b *binanceFutureService) PlaceSingleOrder(
 					}
 				} else if request.IsShortPosition() {
 					if dbMarketData.GetClosePrice().GetFloat64() < request.GetTakeProfit().Price {
-						request.SetSide(b.sideType.Buy())
+						request.SetSide(bnconstant.BUY)
 						closePositionRes, err := b.closePosition(ctx, request)
 						if err != nil {
 							return nil, errors.New("close position error " + err.Error())

@@ -7,9 +7,9 @@ import (
 	bntradereq "tradething/app/bn/bn_future/bnservice_request/trade"
 	bntraderes "tradething/app/bn/bn_future/bnservice_response/trade"
 
-	bncaller "github.com/non26/tradepkg/pkg/bn/binance_caller"
-	bnrequest "github.com/non26/tradepkg/pkg/bn/binance_request"
-	bnresponse "github.com/non26/tradepkg/pkg/bn/binance_response"
+	bncaller "github.com/non26/tradepkg/pkg/bn/bn_caller"
+	bnrequest "github.com/non26/tradepkg/pkg/bn/bn_request"
+	bnresponse "github.com/non26/tradepkg/pkg/bn/bn_response"
 )
 
 func (bfes *binanceFutureExternalService) PlaceSingleOrder(

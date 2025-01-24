@@ -6,7 +6,9 @@ import (
 	handlerres "tradething/app/bn/bn_future/handler_response"
 	model "tradething/app/bn/bn_future/service_model"
 
-	dynamodbrepository "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
+	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
+	dynamodbrepository "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
+	"github.com/non26/tradepkg/pkg/bn/utils"
 )
 
 func (b *binanceFutureService) InvalidatePosition(
@@ -40,10 +42,10 @@ func (b *binanceFutureService) InvalidatePosition(
 			bnreq.SetSide(dbOpeningPosition.Side)
 			bnreq.SetEntryQuantity(dbOpeningPosition.AmountQ)
 			bnreq.SetSymbol(dbOpeningPosition.Symbol)
-			if b.positionSideType.IsLong(dbOpeningPosition.PositionSide) {
-				bnreq.SetSide(b.sideType.Sell())
+			if utils.IsLongPosition(dbOpeningPosition.PositionSide) {
+				bnreq.SetSide(bnconstant.SELL)
 			} else {
-				bnreq.SetSide(b.sideType.Buy())
+				bnreq.SetSide(bnconstant.BUY)
 			}
 
 			_, err := b.PlaceSingleOrder(ctx, &bnreq)

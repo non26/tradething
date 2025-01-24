@@ -6,7 +6,7 @@ import (
 	handlerres "tradething/app/bn/bn_future/handler_response"
 	model "tradething/app/bn/bn_future/service_model"
 
-	dynamodbrepository "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
+	dynamodbrepository "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
 )
 
 func (b *binanceFutureService) SetAdvancedPosition(

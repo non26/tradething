@@ -8,7 +8,9 @@ import (
 	handlerres "tradething/app/bn/bn_future/bot_handler_response"
 	bnsvcreq "tradething/app/bn/bn_future/bot_model"
 
-	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
+	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
+	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
+	"github.com/non26/tradepkg/pkg/bn/utils"
 )
 
 func isBetweenTime(startDate, endDate time.Time, presentTime time.Time) bool {
@@ -54,18 +56,18 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 		if req.GetPositionSide() != current_position.PositionSide {
 			return nil, errors.New("position side not match")
 		}
-		if current_position.PositionSide == b.positionSideType.Long() {
-			closeSide = b.sideType.Sell()
+		if utils.IsLongPosition(current_position.PositionSide) {
+			closeSide = bnconstant.SELL
 		} else {
-			closeSide = b.sideType.Buy()
+			closeSide = bnconstant.BUY
 		}
 	}
 
 	var openSide string
-	if req.GetPositionSide() == b.positionSideType.Long() {
-		openSide = b.sideType.Buy()
+	if utils.IsLongPosition(req.GetPositionSide()) {
+		openSide = bnconstant.BUY
 	} else {
-		openSide = b.sideType.Sell()
+		openSide = bnconstant.SELL
 	}
 
 	if inTime {
@@ -74,7 +76,7 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 				return nil, errors.New("bot order already not active")
 			}
 			// close current position
-			closeOrder := req.ToBnFtPlaceSingleOrderServiceRequest(closeSide, b.orderType.Market())
+			closeOrder := req.ToBnFtPlaceSingleOrderServiceRequest(closeSide, bnconstant.MARKET)
 			closeOrder.EntryQuantity = current_position.AmountQoute
 			_, err := b.binanceService.PlaceSingleOrder(ctx, closeOrder)
 			if err != nil {
@@ -86,7 +88,7 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 			// }
 		}
 		// open new position
-		_, err = b.binanceService.PlaceSingleOrder(ctx, req.ToBnFtPlaceSingleOrderServiceRequest(openSide, b.orderType.Market()))
+		_, err = b.binanceService.PlaceSingleOrder(ctx, req.ToBnFtPlaceSingleOrderServiceRequest(openSide, bnconstant.MARKET))
 		if err != nil {
 			log.Println("place order error", err)
 			return nil, errors.New("place order error")
@@ -113,7 +115,7 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 		if !qouteUSDT.IsFound() {
 			qouteUSDT = dynamodbmodel.NewBnFtQouteUSDT()
 			qouteUSDT.Symbol = req.GetSymbol()
-			if req.GetPositionSide() == b.positionSideType.Long() {
+			if utils.IsLongPosition(req.GetPositionSide()) {
 				qouteUSDT.SetCountingLong(qouteUSDT.GetNextCountingLong().Int())
 			} else {
 				qouteUSDT.SetCountingShort(qouteUSDT.GetNextCountingShort().Int())
@@ -124,7 +126,7 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 			}
 		} else {
 			qouteUSDT.Symbol = req.GetSymbol()
-			if req.GetPositionSide() == b.positionSideType.Long() {
+			if utils.IsLongPosition(req.GetPositionSide()) {
 				qouteUSDT.SetCountingLong(qouteUSDT.GetNextCountingLong().Int())
 			} else {
 				qouteUSDT.SetCountingShort(qouteUSDT.GetNextCountingShort().Int())
@@ -138,7 +140,7 @@ func (b *botService) BotTimeframeExeInterval(ctx context.Context, req *bnsvcreq.
 	} else { // off time
 		if current_position.IsFound() {
 			// close position
-			closeOrder := req.ToBnFtPlaceSingleOrderServiceRequest(closeSide, b.orderType.Market())
+			closeOrder := req.ToBnFtPlaceSingleOrderServiceRequest(closeSide, bnconstant.MARKET)
 			closeOrder.EntryQuantity = current_position.AmountQoute
 			_, err := b.binanceService.PlaceSingleOrder(ctx, closeOrder)
 			if err != nil {

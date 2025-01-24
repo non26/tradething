@@ -6,6 +6,8 @@ import (
 	"log"
 	handlerres "tradething/app/bn/bn_future/handler_response"
 	model "tradething/app/bn/bn_future/service_model"
+
+	"github.com/non26/tradepkg/pkg/bn/utils"
 )
 
 func (b *binanceFutureService) SetPosition(
@@ -19,7 +21,7 @@ func (b *binanceFutureService) SetPosition(
 	}
 
 	isLong := true
-	if request.GetPositionSide() == b.positionSideType.Short() {
+	if utils.IsShortPosition(request.GetPositionSide()) {
 		isLong = false
 	}
 

@@ -8,7 +8,9 @@ import (
 	handlerres "tradething/app/bn/bn_future/handler_response"
 	model "tradething/app/bn/bn_future/service_model"
 
-	dynamodbrepository "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
+	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
+	dynamodbrepository "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
+	"github.com/non26/tradepkg/pkg/bn/utils"
 )
 
 func (b *binanceFutureService) CloseByClientIds(
@@ -39,10 +41,10 @@ func (b *binanceFutureService) CloseByClientIds(
 			continue
 		}
 		side := ""
-		if b.positionSideType.IsLong(openOrders.PositionSide) {
-			side = b.sideType.Sell()
+		if utils.IsLongPosition(openOrders.PositionSide) {
+			side = bnconstant.SELL
 		} else {
-			side = b.sideType.Buy()
+			side = bnconstant.BUY
 		}
 
 		_, err = b.binanceService.PlaceSingleOrder(ctx, &bntradereq.PlacePosition{

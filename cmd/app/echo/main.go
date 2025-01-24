@@ -9,10 +9,9 @@ import (
 	bntrade "tradething/app/bn/bn_future/bnservice/trade"
 
 	"github.com/labstack/echo/v4"
-	bnclient "github.com/non26/tradepkg/pkg/bn/binance_client"
-	bntransport "github.com/non26/tradepkg/pkg/bn/binance_transport"
-	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_repository"
-	positionconst "github.com/non26/tradepkg/pkg/bn/position_constant"
+	bnclient "github.com/non26/tradepkg/pkg/bn/bn_client"
+	bntransport "github.com/non26/tradepkg/pkg/bn/bn_transport"
+	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
 )
 
 func main() {
@@ -21,9 +20,6 @@ func main() {
 		panic(err.Error())
 	}
 
-	ordertype := positionconst.NewOrderType()
-	side := positionconst.NewSide()
-	positionSide := positionconst.NewPositionSide()
 	dynamodbconfig := bndynamodb.NewDynamodbConfig()
 	dynamodbendpoint := bndynamodb.NewEndPointResolver(config.Dynamodb.Region, config.Dynamodb.Endpoint)
 	dynamodbcredential := bndynamodb.NewCredential(config.Dynamodb.Ak, config.Dynamodb.Sk)
@@ -68,9 +64,6 @@ func main() {
 	app.RouteRestApiComposing(
 		app_echo,
 		config,
-		ordertype,
-		positionSide,
-		side,
 		bnFtOpeningPositionTable,
 		bnFtQouteUsdtTable,
 		bnFtHistoryTable,
@@ -83,9 +76,6 @@ func main() {
 	app.RouteBotRestApiComposing(
 		app_echo,
 		config,
-		ordertype,
-		positionSide,
-		side,
 		bnFtBotTable,
 		bnFtBotOnRunTable,
 		bnFtHistoryTable,

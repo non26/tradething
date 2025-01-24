@@ -7,8 +7,7 @@ import (
 	handlerres "tradething/app/bn/bn_future/handler_response"
 	model "tradething/app/bn/bn_future/service_model"
 
-	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_repository"
-	positionconstant "github.com/non26/tradepkg/pkg/bn/position_constant"
+	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
 )
 
 type IBinanceFutureService interface {
@@ -58,9 +57,6 @@ type binanceFutureService struct {
 	bnFtQouteUsdtTable        bndynamodb.IBnFtQouteUSDTRepository
 	bnFtHistoryTable          bndynamodb.IBnFtHistoryRepository
 	bnFtAdvancedPositionTable bndynamodb.IBnFtAdvancedPositionRepository
-	orderType                 positionconstant.IOrderType
-	positionSideType          positionconstant.IPositionSide
-	sideType                  positionconstant.ISide
 }
 
 func NewBinanceFutureService(
@@ -71,9 +67,6 @@ func NewBinanceFutureService(
 	bnFtQouteUsdtTable bndynamodb.IBnFtQouteUSDTRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
 	bnFtAdvancedPositionTable bndynamodb.IBnFtAdvancedPositionRepository,
-	orderType positionconstant.IOrderType,
-	positionSideType positionconstant.IPositionSide,
-	sideType positionconstant.ISide,
 ) IBinanceFutureService {
 	return &binanceFutureService{
 		binanceFutureServiceName,
@@ -83,8 +76,5 @@ func NewBinanceFutureService(
 		bnFtQouteUsdtTable,
 		bnFtHistoryTable,
 		bnFtAdvancedPositionTable,
-		orderType,
-		positionSideType,
-		sideType,
 	}
 }

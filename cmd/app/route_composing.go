@@ -9,10 +9,9 @@ import (
 	service "tradething/app/bn/bn_future/service"
 	lambdaroute "tradething/cmd/app/route/lambda"
 
-	bnclient "github.com/non26/tradepkg/pkg/bn/binance_client"
-	bntransport "github.com/non26/tradepkg/pkg/bn/binance_transport"
-	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_repository"
-	positionconst "github.com/non26/tradepkg/pkg/bn/position_constant"
+	bnclient "github.com/non26/tradepkg/pkg/bn/bn_client"
+	bntransport "github.com/non26/tradepkg/pkg/bn/bn_transport"
+	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
 
 	"tradething/config"
 
@@ -22,9 +21,6 @@ import (
 func RouteRestApiComposing(
 	app *echo.Echo,
 	config *config.AppConfig,
-	orderType positionconst.IOrderType,
-	positionSide positionconst.IPositionSide,
-	side positionconst.ISide,
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
 	bnFtQouteUsdtTable bndynamodb.IBnFtQouteUSDTRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
@@ -43,9 +39,6 @@ func RouteRestApiComposing(
 		bnFtQouteUsdtTable,
 		bnFtHistoryTable,
 		bnFtAdvancedPositionTable,
-		orderType,
-		positionSide,
-		side,
 	)
 
 	placeOrderHandler := handler.NewPlaceSinglerOrderHandler(
@@ -90,9 +83,6 @@ func RouteRestApiComposing(
 func RouteBotRestApiComposing(
 	app *echo.Echo,
 	config *config.AppConfig,
-	orderType positionconst.IOrderType,
-	positionSide positionconst.IPositionSide,
-	side positionconst.ISide,
 	bnFtBotTable bndynamodb.IBnFtBotRepository,
 	bnFtBotOnRunTable bndynamodb.IBnFtBotOnRunRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
@@ -109,9 +99,6 @@ func RouteBotRestApiComposing(
 		bnFtBotOnRunTable,
 		bnFtHistoryTable,
 		bnFtQouteUsdtTable,
-		orderType,
-		positionSide,
-		side,
 	)
 
 	botTimeframeExeIntervalHandler := bothandler.NewBotTimeframeExeIntervalHandler(

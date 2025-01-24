@@ -10,8 +10,8 @@ import (
 
 	mkreq "tradething/app/bn/bn_future/bnservice_request/market_data"
 
-	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
-	positionconstant "github.com/non26/tradepkg/pkg/bn/position_constant"
+	positionconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
+	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
 )
 
 type Position struct {
@@ -118,7 +118,7 @@ func (p *Position) GetTakeProfit() *valueobject.TakeProfit {
 	return p.takeProfit
 }
 
-func (p *Position) GetAmountQ() string {
+func (p *Position) GetAmountB() string {
 	return p.entryQuantity
 }
 
@@ -187,11 +187,10 @@ func (p *Position) ToBinanceFutureOpeningPositionRepositoryModel() *dynamodbmode
 	m := dynamodbmodel.BnFtOpeningPosition{
 		Symbol:       p.symbol,
 		PositionSide: p.positionSide,
-		AmountQ:      p.entryQuantity,
+		AmountB:      p.entryQuantity,
 		Leverage:     fmt.Sprintf("%v", p.leverageLevel),
 		ClientId:     p.clientOrderId,
 		Side:         p.side,
-		AmountB:      "",
 	}
 	watchingConfig := valueobject.Watching{
 		StopLoss:   p.stopLoss,

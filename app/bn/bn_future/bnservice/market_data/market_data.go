@@ -7,8 +7,8 @@ import (
 	mkres "tradething/app/bn/bn_future/bnservice_response/market_data"
 	"tradething/config"
 
-	bnclient "github.com/non26/tradepkg/pkg/bn/binance_client"
-	bntransport "github.com/non26/tradepkg/pkg/bn/binance_transport"
+	bnclient "github.com/non26/tradepkg/pkg/bn/bn_client"
+	bntransport "github.com/non26/tradepkg/pkg/bn/bn_transport"
 )
 
 type IBnMarketDataService interface {

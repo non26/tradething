@@ -6,7 +6,7 @@ import (
 
 	bnsvcreq "tradething/app/bn/bn_future/bnservice_request/trade"
 
-	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_repository/models"
+	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
 )
 
 func parseRFC3339ToUTC(_time string) (time.Time, error) {
