@@ -50,6 +50,8 @@ func (b *binanceFutureService) ValidateAdavancedPosition(ctx context.Context, cl
 				continue
 			}
 			addValidatePositionData(&response, clientId, "success", "opening position found")
+		} else {
+			addValidatePositionData(&response, clientId, "success", "advanced position not found")
 		}
 	}
 	return &response, nil

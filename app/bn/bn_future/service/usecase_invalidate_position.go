@@ -67,12 +67,11 @@ func (b *binanceFutureService) InvalidatePosition(
 			continue
 		}
 		if dbAdvancePosition.IsFound() {
-			err := b.bnFtHistoryTable.Insert(ctx, &dynamodbrepository.BnFtHistory{
+			b.bnFtHistoryTable.Insert(ctx, &dynamodbrepository.BnFtHistory{
 				ClientId: clientId,
 			})
-			if err != nil {
-				continue
-			}
+			b.bnFtAdvancedPositionTable.Delete(ctx, dbAdvancePosition)
+
 			addInValidatePositionData(&response, clientId, "success", "success")
 
 		} else {

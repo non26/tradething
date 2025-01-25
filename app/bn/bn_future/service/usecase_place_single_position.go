@@ -6,7 +6,6 @@ import (
 	handlerres "tradething/app/bn/bn_future/handler_response"
 	model "tradething/app/bn/bn_future/service_model"
 
-	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
 	serviceerror "github.com/non26/tradepkg/pkg/bn/service_error"
 
 	utils "github.com/non26/tradepkg/pkg/bn/utils"
@@ -72,64 +71,63 @@ func (b *binanceFutureService) PlaceSingleOrder(
 			}
 			return placeOrderRes.ToBnHandlerResponse(), nil
 		} else {
-			prv_start, prv_end, svcerr := b.getPreviousBnTimeStartAndEnd(request)
-			if svcerr != nil {
-				return nil, svcerr
-			}
+			// prv_start, prv_end, svcerr := b.getPreviousBnTimeStartAndEnd(request)
+			// if svcerr != nil {
+			// 	return nil, svcerr
+			// }
 
-			dbMarketData, err := b.bnMarketDataService.GetCandleStickData(ctx, request.ToBnCandleStickModel(
-				utils.GetSpecificBnTimestamp(prv_start),
-				utils.GetSpecificBnTimestamp(prv_end),
-			))
-			if err != nil {
-				return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_OPENING_POSITION_ERROR, err)
-			}
+			// dbMarketData, err := b.bnMarketDataService.GetCandleStickData(ctx, request.ToBnCandleStickModel(
+			// 	utils.GetSpecificBnTimestamp(prv_start),
+			// 	utils.GetSpecificBnTimestamp(prv_end),
+			// ))
+			// if err != nil {
+			// 	return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_OPENING_POSITION_ERROR, err)
+			// }
 
-			closePrice := dbMarketData.GetClosePrice().GetFloat64()
-			if !request.IsStopLossNil() {
-				if request.IsLongPosition() {
-					if closePrice < request.GetStopLoss().Price {
-						request.SetSide(bnconstant.SELL)
-						closePositionRes, svcerr := b.closePosition(ctx, request)
-						if svcerr != nil {
-							return nil, svcerr
-						}
-						return closePositionRes.ToBnHandlerResponse(), nil
-					}
-				} else if request.IsShortPosition() {
-					if closePrice > request.GetStopLoss().Price {
-						request.SetSide(bnconstant.BUY)
-						closePositionRes, svcerr := b.closePosition(ctx, request)
-						if svcerr != nil {
-							return nil, svcerr
-						}
-						return closePositionRes.ToBnHandlerResponse(), nil
-					}
-				}
-			}
+			// closePrice := dbMarketData.GetClosePrice().GetFloat64()
+			// if !request.IsStopLossNil() {
+			// 	if request.IsLongPosition() {
+			// 		if closePrice < request.GetStopLoss().Price {
+			// 			request.SetSide(bnconstant.SELL)
+			// 			closePositionRes, svcerr := b.closePosition(ctx, request)
+			// 			if svcerr != nil {
+			// 				return nil, svcerr
+			// 			}
+			// 			return closePositionRes.ToBnHandlerResponse(), nil
+			// 		}
+			// 	} else if request.IsShortPosition() {
+			// 		if closePrice > request.GetStopLoss().Price {
+			// 			request.SetSide(bnconstant.BUY)
+			// 			closePositionRes, svcerr := b.closePosition(ctx, request)
+			// 			if svcerr != nil {
+			// 				return nil, svcerr
+			// 			}
+			// 			return closePositionRes.ToBnHandlerResponse(), nil
+			// 		}
+			// 	}
+			// }
 
-			if !request.IsTakeProfitNil() {
-				if request.IsLongPosition() {
-					if dbMarketData.GetClosePrice().GetFloat64() > request.GetTakeProfit().Price {
-						request.SetSide(bnconstant.SELL)
-						closePositionRes, svcerr := b.closePosition(ctx, request)
-						if svcerr != nil {
-							return nil, svcerr
-						}
-						return closePositionRes.ToBnHandlerResponse(), nil
-					}
-				} else if request.IsShortPosition() {
-					if dbMarketData.GetClosePrice().GetFloat64() < request.GetTakeProfit().Price {
-						request.SetSide(bnconstant.BUY)
-						closePositionRes, svcerr := b.closePosition(ctx, request)
-						if svcerr != nil {
-							return nil, svcerr
-						}
-						return closePositionRes.ToBnHandlerResponse(), nil
-					}
-				}
-			}
-
+			// if !request.IsTakeProfitNil() {
+			// 	if request.IsLongPosition() {
+			// 		if dbMarketData.GetClosePrice().GetFloat64() > request.GetTakeProfit().Price {
+			// 			request.SetSide(bnconstant.SELL)
+			// 			closePositionRes, svcerr := b.closePosition(ctx, request)
+			// 			if svcerr != nil {
+			// 				return nil, svcerr
+			// 			}
+			// 			return closePositionRes.ToBnHandlerResponse(), nil
+			// 		}
+			// 	} else if request.IsShortPosition() {
+			// 		if dbMarketData.GetClosePrice().GetFloat64() < request.GetTakeProfit().Price {
+			// 			request.SetSide(bnconstant.BUY)
+			// 			closePositionRes, svcerr := b.closePosition(ctx, request)
+			// 			if svcerr != nil {
+			// 				return nil, svcerr
+			// 			}
+			// 			return closePositionRes.ToBnHandlerResponse(), nil
+			// 		}
+			// 	}
+			// }
 		}
 	}
 
