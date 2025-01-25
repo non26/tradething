@@ -6,12 +6,13 @@ import (
 	model "tradething/app/bn/bn_future/service_model"
 
 	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
+	serviceerror "github.com/non26/tradepkg/pkg/bn/service_error"
 )
 
 func (b *binanceFutureService) CloseBySymbols(
 	ctx context.Context,
 	request *model.PositionSide,
-) (*handlerres.CloseBySymbols, error) {
+) (*handlerres.CloseBySymbols, serviceerror.IError) {
 	response := handlerres.CloseBySymbols{
 		Data: []handlerres.CloseBySymbolsData{},
 	}

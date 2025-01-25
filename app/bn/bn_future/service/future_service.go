@@ -35,7 +35,7 @@ type IBinanceFutureService interface {
 	CloseBySymbols(
 		ctx context.Context,
 		request *model.PositionSide,
-	) (*handlerres.CloseBySymbols, error)
+	) (*handlerres.CloseBySymbols, serviceerror.IError)
 	SetPosition(
 		ctx context.Context,
 		request *model.Position,
