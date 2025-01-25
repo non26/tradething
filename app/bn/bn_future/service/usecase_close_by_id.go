@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"errors"
 	"log"
 	bntradereq "tradething/app/bn/bn_future/bnservice_request/trade"
 	handlerres "tradething/app/bn/bn_future/handler_response"
@@ -10,13 +9,14 @@ import (
 
 	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
 	dynamodbrepository "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
+	serviceerror "github.com/non26/tradepkg/pkg/bn/service_error"
 	"github.com/non26/tradepkg/pkg/bn/utils"
 )
 
 func (b *binanceFutureService) CloseByClientIds(
 	ctx context.Context,
 	request *model.ClientIds,
-) (*handlerres.CloseByClientIds, error) {
+) (*handlerres.CloseByClientIds, serviceerror.IError) {
 	closeOrders := handlerres.CloseByClientIds{
 		Data: []handlerres.CloseByClientIdsData{},
 	}
@@ -24,22 +24,24 @@ func (b *binanceFutureService) CloseByClientIds(
 		closeOrder := handlerres.CloseByClientIdsData{}
 		positionHistory, err := b.bnFtHistoryTable.Get(ctx, clientId)
 		if err != nil {
-			return nil, errors.New("get history error " + err.Error())
+			addCloseOrderData(&closeOrders, closeOrder, clientId, "fail", err.Error())
+			continue
 		}
 		if positionHistory.IsFound() {
 			addCloseOrderData(&closeOrders, closeOrder, clientId, "fail", "no position history found")
 			continue
 		}
+
 		openOrders, err := b.bnFtOpeningPositionTable.ScanWith(ctx, clientId)
 		if err != nil {
 			addCloseOrderData(&closeOrders, closeOrder, clientId, "fail", err.Error())
 			continue
 		}
-
 		if !openOrders.IsFound() {
 			addCloseOrderData(&closeOrders, closeOrder, clientId, "fail", "no open order found")
 			continue
 		}
+
 		side := ""
 		if utils.IsLongPosition(openOrders.PositionSide) {
 			side = bnconstant.SELL
@@ -63,6 +65,7 @@ func (b *binanceFutureService) CloseByClientIds(
 		if err != nil {
 			log.Println("delete open order error", err)
 		}
+
 		err = b.bnFtHistoryTable.Insert(ctx, &dynamodbrepository.BnFtHistory{
 			ClientId:     clientId,
 			Symbol:       openOrders.Symbol,

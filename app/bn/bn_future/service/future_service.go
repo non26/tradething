@@ -31,7 +31,7 @@ type IBinanceFutureService interface {
 	CloseByClientIds(
 		ctx context.Context,
 		request *model.ClientIds,
-	) (*handlerres.CloseByClientIds, error)
+	) (*handlerres.CloseByClientIds, serviceerror.IError)
 	CloseBySymbols(
 		ctx context.Context,
 		request *model.PositionSide,
