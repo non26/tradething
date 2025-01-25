@@ -27,7 +27,7 @@ type IBinanceFutureService interface {
 	PlaceMultiOrder(
 		ctx context.Context,
 		request *model.Positions,
-	) (*handlerres.PlaceMultiplePosition, error)
+	) (*handlerres.PlaceMultiplePosition, serviceerror.IError)
 	CloseByClientIds(
 		ctx context.Context,
 		request *model.ClientIds,

@@ -4,23 +4,25 @@ import (
 	"context"
 	handleres "tradething/app/bn/bn_future/handler_response"
 	model "tradething/app/bn/bn_future/service_model"
+
+	serviceerror "github.com/non26/tradepkg/pkg/bn/service_error"
 )
 
 func (b *binanceFutureService) PlaceMultiOrder(
 	ctx context.Context,
 	request *model.Positions,
-) (*handleres.PlaceMultiplePosition, error) {
+) (*handleres.PlaceMultiplePosition, serviceerror.IError) {
 	response := handleres.PlaceMultiplePosition{}
 	for _, order := range request.Positions {
-		signleOrderResponse, err := b.PlaceSingleOrder(ctx, &order)
-		if err != nil {
-			errSignleOrderResponse := handleres.PlacePosition{
+		signleOrderResponse, svcerr := b.PlaceSingleOrder(ctx, &order)
+		if svcerr != nil {
+			response.Result.Failed = append(response.Result.Failed, handleres.PlaceMultiplePositionFailed{
 				Symbol: order.GetSymbol(),
-			}
-			response.Result = append(response.Result, errSignleOrderResponse)
+				Error:  svcerr.Error(),
+			})
 			continue
 		}
-		response.Result = append(response.Result, *signleOrderResponse)
+		response.Result.Success = append(response.Result.Success, signleOrderResponse.Symbol)
 	}
 	return &response, nil
 }
