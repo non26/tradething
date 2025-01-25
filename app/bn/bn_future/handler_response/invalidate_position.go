@@ -1,7 +1,7 @@
 package bnfuture
 
 type InvalidatePosition struct {
-	Result []InvalidatePositionData `json:"result"`
+	Result []InvalidatePositionData
 }
 
 type InvalidatePositionData struct {

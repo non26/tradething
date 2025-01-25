@@ -40,7 +40,6 @@ func (h *placeMultipleOrderHandler) Handler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, utils.CommonResponse{
 			Code:    utils.FailCode,
 			Message: err.Error(),
-			Data:    nil,
 		})
 	}
 
@@ -50,7 +49,6 @@ func (h *placeMultipleOrderHandler) Handler(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, utils.CommonResponse{
 			Code:    utils.FailCode,
 			Message: err.Error(),
-			Data:    nil,
 		})
 	}
 

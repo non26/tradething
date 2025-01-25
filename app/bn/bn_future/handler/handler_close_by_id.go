@@ -49,5 +49,10 @@ func (h *closeByClientIdsHandler) Handler(c echo.Context) error {
 			Message: err.Error(),
 		})
 	}
-	return c.JSON(http.StatusOK, response)
+
+	return c.JSON(http.StatusOK, utils.CommonResponse{
+		Code:    utils.SuccessCode,
+		Message: "success",
+		Data:    response,
+	})
 }

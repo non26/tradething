@@ -1,7 +1,7 @@
 package bnfuture
 
 type CloseBySymbols struct {
-	Data []CloseBySymbolsData `json:"data"`
+	Data []CloseBySymbolsData
 }
 
 type CloseBySymbolsData struct {

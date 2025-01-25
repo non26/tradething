@@ -45,13 +45,12 @@ func (h *queryOrderHandler) Handler(c echo.Context) error {
 			utils.CommonResponse{
 				Code:    utils.FailCode,
 				Message: err.Error(),
-				Data:    nil,
 			},
 		)
 	}
 	request.Transform()
 
-	res, err := h.service.QueryOrder(
+	response, err := h.service.QueryOrder(
 		c.Request().Context(),
 		request.ToServiceModel(),
 	)
@@ -61,7 +60,6 @@ func (h *queryOrderHandler) Handler(c echo.Context) error {
 			utils.CommonResponse{
 				Code:    utils.FailCode,
 				Message: err.Error(),
-				Data:    nil,
 			},
 		)
 	}
@@ -71,7 +69,7 @@ func (h *queryOrderHandler) Handler(c echo.Context) error {
 		utils.CommonResponse{
 			Code:    utils.SuccessCode,
 			Message: "success",
-			Data:    res,
+			Data:    response,
 		},
 	)
 }

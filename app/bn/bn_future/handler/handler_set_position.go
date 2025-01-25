@@ -6,6 +6,7 @@ import (
 	bnfuture "tradething/app/bn/bn_future/service"
 
 	"github.com/labstack/echo/v4"
+	"github.com/non26/tradepkg/pkg/bn/utils"
 )
 
 type ISetPositionHandler interface {
@@ -36,12 +37,26 @@ func (h *setPositionHandler) GetRequestBody(c echo.Context) (*handlerreq.PlacePo
 func (h *setPositionHandler) Handler(c echo.Context) error {
 	req, err := h.GetRequestBody(c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, utils.CommonResponse{
+			Code:    utils.FailCode,
+			Message: err.Error(),
+		})
 	}
 
 	response, err := h.service.SetPosition(c.Request().Context(), req.ToServiceModel())
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return c.JSON(http.StatusInternalServerError, utils.CommonResponse{
+			Code:    utils.FailCode,
+			Message: err.Error(),
+		})
 	}
-	return c.JSON(http.StatusOK, response)
+
+	return c.JSON(
+		http.StatusOK,
+		utils.CommonResponse{
+			Code:    utils.SuccessCode,
+			Message: "success",
+			Data:    response,
+		},
+	)
 }

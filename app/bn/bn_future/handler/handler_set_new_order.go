@@ -43,12 +43,12 @@ func (h *setNewLeveragehandler) Handler(c echo.Context) error {
 			utils.CommonResponse{
 				Code:    utils.FailCode,
 				Message: err.Error(),
-				Data:    nil,
 			},
 		)
 	}
+	request.Transform()
 
-	res, err := h.service.SetNewLeverage(
+	response, err := h.service.SetNewLeverage(
 		c.Request().Context(),
 		request.ToServiceModel(),
 	)
@@ -58,18 +58,16 @@ func (h *setNewLeveragehandler) Handler(c echo.Context) error {
 			utils.CommonResponse{
 				Code:    utils.FailCode,
 				Message: err.Error(),
-				Data:    nil,
 			},
 		)
 	}
-	request.Transform()
 
 	return c.JSON(
 		http.StatusOK,
 		utils.CommonResponse{
 			Code:    utils.SuccessCode,
 			Message: "success",
-			Data:    res,
+			Data:    response,
 		},
 	)
 }

@@ -1,7 +1,7 @@
 package bnfuture
 
 type CloseByClientIds struct {
-	Data []CloseByClientIdsData `json:"data"`
+	Data []CloseByClientIdsData
 }
 
 type CloseByClientIdsData struct {

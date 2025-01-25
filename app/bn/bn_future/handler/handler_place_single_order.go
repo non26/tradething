@@ -45,7 +45,6 @@ func (h *placeSinglerOrderHandler) Handler(c echo.Context) error {
 			utils.CommonResponse{
 				Code:    utils.FailCode,
 				Message: err.Error(),
-				Data:    nil,
 			},
 		)
 	}
@@ -57,12 +56,11 @@ func (h *placeSinglerOrderHandler) Handler(c echo.Context) error {
 			utils.CommonResponse{
 				Code:    utils.FailCode,
 				Message: err.Error(),
-				Data:    nil,
 			},
 		)
 	}
 
-	res, err := h.service.PlaceSingleOrder(
+	response, err := h.service.PlaceSingleOrder(
 		c.Request().Context(),
 		request.ToServiceModel(),
 	)
@@ -72,7 +70,6 @@ func (h *placeSinglerOrderHandler) Handler(c echo.Context) error {
 			utils.CommonResponse{
 				Code:    utils.FailCode,
 				Message: err.Error(),
-				Data:    nil,
 			},
 		)
 	}
@@ -82,7 +79,7 @@ func (h *placeSinglerOrderHandler) Handler(c echo.Context) error {
 		utils.CommonResponse{
 			Code:    utils.SuccessCode,
 			Message: "success",
-			Data:    res,
+			Data:    response,
 		},
 	)
 }

@@ -6,6 +6,7 @@ import (
 	bnfuture "tradething/app/bn/bn_future/service"
 
 	"github.com/labstack/echo/v4"
+	"github.com/non26/tradepkg/pkg/bn/utils"
 )
 
 type IInvalidatePositionHandler interface {
@@ -36,12 +37,22 @@ func (h *invalidatePositionHandler) GetRequestBody(c echo.Context) (*handlerreq.
 func (h *invalidatePositionHandler) Handler(c echo.Context) error {
 	req, err := h.GetRequestBody(c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, utils.CommonResponse{
+			Code:    utils.FailCode,
+			Message: err.Error(),
+		})
 	}
 
-	res, err := h.service.InvalidatePosition(c.Request().Context(), req.ToServiceModel())
+	response, err := h.service.InvalidatePosition(c.Request().Context(), req.ToServiceModel())
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return c.JSON(http.StatusInternalServerError, utils.CommonResponse{
+			Code:    utils.FailCode,
+			Message: err.Error(),
+		})
 	}
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, utils.CommonResponse{
+		Code:    utils.SuccessCode,
+		Message: "success",
+		Data:    response,
+	})
 }
