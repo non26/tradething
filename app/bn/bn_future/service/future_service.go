@@ -23,7 +23,7 @@ type IBinanceFutureService interface {
 	QueryOrder(
 		ctx context.Context,
 		request *model.Order,
-	) (*handlerres.QueryOrder, error)
+	) (*handlerres.QueryOrder, serviceerror.IError)
 	PlaceMultiOrder(
 		ctx context.Context,
 		request *model.Positions,
