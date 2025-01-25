@@ -5,7 +5,7 @@ import (
 	"errors"
 	"log"
 	"time"
-	svcFuture "tradething/app/bn/bn_future/service_model"
+	svcModels "tradething/app/bn/bn_future/service_model"
 
 	bntradereq "tradething/app/bn/bn_future/bnservice_response/trade"
 
@@ -13,7 +13,7 @@ import (
 	utils "github.com/non26/tradepkg/pkg/bn/utils"
 )
 
-func (b *binanceFutureService) closePosition(ctx context.Context, request *svcFuture.Position) (*bntradereq.PlacePositionData, error) {
+func (b *binanceFutureService) closePosition(ctx context.Context, request *svcModels.Position) (*bntradereq.PlacePositionData, error) {
 	closePosition, err := b.binanceService.PlaceSingleOrder(
 		ctx,
 		request.ToBinanceServiceModel(),
@@ -34,7 +34,23 @@ func (b *binanceFutureService) closePosition(ctx context.Context, request *svcFu
 
 }
 
-func (b *binanceFutureService) openPosition(ctx context.Context, request *svcFuture.Position, dbQUsdt *dynamodbmodel.BnFtQouteUSDT) (*bntradereq.PlacePositionData, error) {
+func (b *binanceFutureService) openPosition(ctx context.Context, request *svcModels.Position) (*bntradereq.PlacePositionData, error) {
+	dbQUsdt, err := b.bnFtQouteUsdtTable.Get(ctx, request.GetSymbol())
+	if err != nil {
+		return nil, errors.New("get qoute usdt error " + err.Error())
+	}
+	if !dbQUsdt.IsFound() {
+		dbQUsdt = dynamodbmodel.NewBinanceFutureQouteUSTDTableRecord(request.GetSymbol(), request.IsLongPosition())
+		err = b.bnFtQouteUsdtTable.Insert(ctx, dbQUsdt)
+		if err != nil {
+			return nil, errors.New("insert new symbol qoute usdt error " + err.Error())
+		}
+	}
+	// Set Default Client Order Id
+	if request.GetClientId() == "" {
+		b.setDefaultClientOrderId(request, dbQUsdt)
+	}
+
 	openPosition, err := b.binanceService.PlaceSingleOrder(
 		ctx,
 		request.ToBinanceServiceModel(),
@@ -57,20 +73,26 @@ func (b *binanceFutureService) openPosition(ctx context.Context, request *svcFut
 	if err != nil {
 		log.Println("error new open order", err.Error())
 	}
+
+	err = b.bnFtAdvancedPositionTable.Delete(ctx, request.ToBnAdvancedPositionRepositoryModel())
+	if err != nil {
+		log.Println("error delete advanced position", err.Error())
+	}
+
 	return openPosition, nil
 }
 
-func (b *binanceFutureService) setDefaultClientOrderId(request *svcFuture.Position, dbQUsdt *dynamodbmodel.BnFtQouteUSDT) {
+func (b *binanceFutureService) setDefaultClientOrderId(request *svcModels.Position, dbQUsdt *dynamodbmodel.BnFtQouteUSDT) {
 	var counting int
 	if request.IsLongPosition() {
 		counting = dbQUsdt.GetCountingLong()
 	} else {
 		counting = dbQUsdt.GetCountingShort()
 	}
-	request.SetClientOrderId(utils.BinanceDefaultClientID(request.GetSymbol(), request.GetPositionSide(), counting))
+	request.SetClientId(utils.BinanceDefaultClientID(request.GetSymbol(), request.GetPositionSide(), counting))
 }
 
-func (b *binanceFutureService) accumulateOrder(ctx context.Context, request *svcFuture.Position, dbOpeningOrder *dynamodbmodel.BnFtOpeningPosition) (*bntradereq.PlacePositionData, error) {
+func (b *binanceFutureService) accumulateOrder(ctx context.Context, request *svcModels.Position, dbOpeningOrder *dynamodbmodel.BnFtOpeningPosition) (*bntradereq.PlacePositionData, error) {
 	// for accumulate order
 	placeOrderRes, err := b.binanceService.PlaceSingleOrder(
 		ctx,
@@ -84,12 +106,20 @@ func (b *binanceFutureService) accumulateOrder(ctx context.Context, request *svc
 	err = b.bnFtOpeningPositionTable.Update(ctx, dbOpeningOrder)
 	if err != nil {
 		log.Println("error update open order for accumulate order", err.Error())
-		return nil, err
+	}
+
+	err = b.bnFtHistoryTable.Insert(ctx, &dynamodbmodel.BnFtHistory{
+		ClientId:     request.GetClientId(),
+		Symbol:       request.GetSymbol(),
+		PositionSide: request.GetPositionSide(),
+	})
+	if err != nil {
+		log.Println("error insert history for accumulate order", err.Error())
 	}
 	return placeOrderRes, nil
 }
 
-func (b *binanceFutureService) getPreviousBnTimeStartAndEnd(request *svcFuture.Position) (*time.Time, *time.Time, error) {
+func (b *binanceFutureService) getPreviousBnTimeStartAndEnd(request *svcModels.Position) (*time.Time, *time.Time, error) {
 	var prv_start, prv_end time.Time
 	bnTime := utils.NewBinanceTime(time.Now())
 

@@ -22,8 +22,10 @@ type Position struct {
 	leverageLevel int
 	clientOrderId string
 	// leverage      int
-	stopLoss   *valueobject.StopLoss
-	takeProfit *valueobject.TakeProfit
+	stopLoss           *valueobject.StopLoss
+	takeProfit         *valueobject.TakeProfit
+	ValidatePosition   []string
+	InvalidatePosition []string
 }
 
 func (p *Position) GetPositionSide() string {
@@ -66,11 +68,11 @@ func (p *Position) SetLeverageLevel(leverageLevel int) {
 	p.leverageLevel = leverageLevel
 }
 
-func (p *Position) GetClientOrderId() string {
+func (p *Position) GetClientId() string {
 	return p.clientOrderId
 }
 
-func (p *Position) SetClientOrderId(clientOrderId string) {
+func (p *Position) SetClientId(clientOrderId string) {
 	p.clientOrderId = clientOrderId
 }
 
@@ -116,6 +118,22 @@ func (p *Position) SetTakeProfit(takeProfit *valueobject.TakeProfit) {
 
 func (p *Position) GetTakeProfit() *valueobject.TakeProfit {
 	return p.takeProfit
+}
+
+func (p *Position) GetValidatePosition() []string {
+	return p.ValidatePosition
+}
+
+func (p *Position) GetInvalidatePosition() []string {
+	return p.InvalidatePosition
+}
+
+func (p *Position) SetValidatePosition(validatePosition []string) {
+	p.ValidatePosition = validatePosition
+}
+
+func (p *Position) SetInvalidatePosition(invalidatePosition []string) {
+	p.InvalidatePosition = invalidatePosition
 }
 
 func (p *Position) GetAmountB() string {
@@ -219,6 +237,17 @@ func (p *Position) ToBnPositionHistoryRepositoryModel() *dynamodbmodel.BnFtHisto
 		Symbol:       p.symbol,
 		PositionSide: p.positionSide,
 		ClientId:     p.clientOrderId,
+	}
+	return &m
+}
+
+func (p *Position) ToBnAdvancedPositionRepositoryModel() *dynamodbmodel.BnFtAdvancedPositionModel {
+	m := dynamodbmodel.BnFtAdvancedPositionModel{
+		Symbol:       p.symbol,
+		PositionSide: p.positionSide,
+		ClientId:     p.clientOrderId,
+		AmountB:      p.entryQuantity,
+		Side:         p.side,
 	}
 	return &m
 }

@@ -6,53 +6,41 @@ import (
 	handlerres "tradething/app/bn/bn_future/handler_response"
 	model "tradething/app/bn/bn_future/service_model"
 
-	dynamodbrepository "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
+	serviceerror "github.com/non26/tradepkg/pkg/bn/service_error"
 )
 
 func (b *binanceFutureService) SetAdvancedPosition(
 	ctx context.Context,
 	request *model.Position,
-) (*handlerres.SetAdvancedPosition, error) {
+) (*handlerres.SetAdvancedPosition, serviceerror.IError) {
 
-	dbHistory, err := b.bnFtHistoryTable.Get(ctx, request.GetClientOrderId())
+	dbHistory, err := b.bnFtHistoryTable.Get(ctx, request.GetClientId())
 	if err != nil {
-		return nil, errors.New("get history error " + err.Error())
+		return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_HISTORY_ERROR, err)
 	}
 	if dbHistory.IsFound() {
-		return nil, errors.New("history not found")
+		return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_HISTORY_ERROR, errors.New("history not found"))
 	}
 
-	dbOpenOrder, err := b.bnFtOpeningPositionTable.Get(ctx, &dynamodbrepository.BnFtOpeningPosition{
-		Symbol:       request.GetSymbol(),
-		PositionSide: request.GetPositionSide(),
-	})
+	dbOpenOrder, err := b.bnFtOpeningPositionTable.Get(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
 	if err != nil {
-		return nil, errors.New("get open order error " + err.Error())
+		return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_OPENING_POSITION_ERROR, err)
 	}
 	if dbOpenOrder.IsFound() {
-		return nil, errors.New("open order already exists")
+		return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_OPENING_POSITION_ERROR, errors.New("open order already exists"))
 	}
 
-	dbAdvancedPosition, err := b.bnFtAdvancedPositionTable.Get(ctx, &dynamodbrepository.BnFtAdvancedPositionModel{
-		Symbol:       request.GetSymbol(),
-		PositionSide: request.GetPositionSide(),
-	})
+	dbAdvancedPosition, err := b.bnFtAdvancedPositionTable.Get(ctx, request.ToBnAdvancedPositionRepositoryModel())
 	if err != nil {
-		return nil, errors.New("get advanced position error " + err.Error())
+		return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_ADVANCED_POSITION_ERROR, err)
 	}
 	if dbAdvancedPosition.IsFound() {
-		return nil, errors.New("advanced position already exists")
+		return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_ADVANCED_POSITION_ERROR, errors.New("advanced position already exists"))
 	}
 
-	err = b.bnFtAdvancedPositionTable.Insert(ctx, &dynamodbrepository.BnFtAdvancedPositionModel{
-		Symbol:       request.GetSymbol(),
-		PositionSide: request.GetPositionSide(),
-		Side:         request.GetSide(),
-		AmountB:      request.GetEntryQuantity(),
-		ClientId:     request.GetClientOrderId(),
-	})
+	err = b.bnFtAdvancedPositionTable.Insert(ctx, request.ToBnAdvancedPositionRepositoryModel())
 	if err != nil {
-		return nil, errors.New("insert advanced position error " + err.Error())
+		return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_ADVANCED_POSITION_ERROR, err)
 	}
 
 	return &handlerres.SetAdvancedPosition{

@@ -7,7 +7,6 @@ import (
 	model "tradething/app/bn/bn_future/service_model"
 
 	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
-	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
 
 	utils "github.com/non26/tradepkg/pkg/bn/utils"
 )
@@ -24,7 +23,7 @@ func (b *binanceFutureService) PlaceSingleOrder(
 	request *model.Position,
 ) (*handlerres.PlacePosition, error) {
 
-	positionHistory, err := b.bnFtHistoryTable.Get(ctx, request.GetClientOrderId())
+	positionHistory, err := b.bnFtHistoryTable.Get(ctx, request.GetClientId())
 	if err != nil {
 		return nil, errors.New("get history error " + err.Error())
 	}
@@ -33,61 +32,41 @@ func (b *binanceFutureService) PlaceSingleOrder(
 	}
 
 	openingPositionTable := request.ToBinanceFutureOpeningPositionRepositoryModel()
-	dbOpeningOrder, err := b.bnFtOpeningPositionTable.Get(ctx, openingPositionTable)
+	dbOpeningPosition, err := b.bnFtOpeningPositionTable.Get(ctx, openingPositionTable)
 	if err != nil {
 		return nil, errors.New("get open order error " + err.Error())
 	}
 
-	if request.IsSellOrder() {
-		placeSellOrderRes, err := b.closePosition(ctx, request)
-		if err != nil {
-			return nil, errors.New("close position error " + err.Error())
-		}
-		return placeSellOrderRes.ToBnHandlerResponse(), nil
-	}
+	if !(dbOpeningPosition.IsFound() || utils.IsSellPosition(request.GetPositionSide(), request.GetSide())) { // meaing this is new order, no existing order is found
 
-	if request.IsStopLossNil() {
-		return nil, errors.New("stop loss is mandatory")
-	}
-
-	if !dbOpeningOrder.IsFound() { // meaing this is new order, no existing order is found
-		dbQUsdt, err := b.bnFtQouteUsdtTable.Get(ctx, request.GetSymbol())
-		if err != nil {
-			return nil, errors.New("get qoute usdt error " + err.Error())
-		}
-
-		if !dbQUsdt.IsFound() {
-			dbQUsdt = dynamodbmodel.NewBinanceFutureQouteUSTDTableRecord(request.GetSymbol(), request.IsLongPosition())
-			err = b.bnFtQouteUsdtTable.Insert(ctx, dbQUsdt)
-			if err != nil {
-				return nil, errors.New("insert new symbol qoute usdt error " + err.Error())
-			}
-		}
-
-		// Set Default Client Order Id
-		if request.GetClientOrderId() == "" {
-			b.setDefaultClientOrderId(request, dbQUsdt)
-		}
-
-		placeOrderRes, err := b.openPosition(ctx, request, dbQUsdt)
+		placeOrderRes, err := b.openPosition(ctx, request)
 		if err != nil {
 			return nil, errors.New("open position error " + err.Error())
 		}
 
 		return placeOrderRes.ToBnHandlerResponse(), nil
 	} else { // there is existing order
-		if request.GetSymbol() != dbOpeningOrder.Symbol {
+		if request.IsSellOrder() {
+			placeSellOrderRes, err := b.closePosition(ctx, request)
+			if err != nil {
+				return nil, errors.New("close position error " + err.Error())
+			}
+			return placeSellOrderRes.ToBnHandlerResponse(), nil
+		}
+
+		if request.GetSymbol() != dbOpeningPosition.Symbol {
 			return nil, errors.New("symbol not match")
 		}
-		if request.GetPositionSide() != dbOpeningOrder.PositionSide {
+		if request.GetPositionSide() != dbOpeningPosition.PositionSide {
 			return nil, errors.New("position side not match")
 		}
-		if request.GetClientOrderId() == "" {
+		if request.GetClientId() == "" {
 			return nil, errors.New("client order id is empty")
 		}
 
-		if request.GetClientOrderId() != dbOpeningOrder.ClientId {
-			placeOrderRes, err := b.accumulateOrder(ctx, request, dbOpeningOrder)
+		if request.GetClientId() != dbOpeningPosition.ClientId {
+			// accumulate order
+			placeOrderRes, err := b.accumulateOrder(ctx, request, dbOpeningPosition)
 			if err != nil {
 				return nil, errors.New("accumulate order error " + err.Error())
 			}

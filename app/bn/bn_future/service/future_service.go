@@ -8,6 +8,7 @@ import (
 	model "tradething/app/bn/bn_future/service_model"
 
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
+	serviceerror "github.com/non26/tradepkg/pkg/bn/service_error"
 )
 
 type IBinanceFutureService interface {
@@ -46,7 +47,7 @@ type IBinanceFutureService interface {
 	SetAdvancedPosition(
 		ctx context.Context,
 		request *model.Position,
-	) (*handlerres.SetAdvancedPosition, error)
+	) (*handlerres.SetAdvancedPosition, serviceerror.IError)
 }
 
 type binanceFutureService struct {
