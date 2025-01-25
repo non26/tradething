@@ -81,6 +81,11 @@ func RouteRestApiComposing(
 		service,
 	)
 	binanceGroup.POST("/advanced-position", advancedPositionHandler.Handler)
+
+	validatePositionHandler := handler.NewValidatePositionHandler(
+		service,
+	)
+	binanceGroup.POST("/validate-advanced-position", validatePositionHandler.Handler)
 }
 
 func RouteBotRestApiComposing(

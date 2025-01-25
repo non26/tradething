@@ -23,7 +23,7 @@ func (b *binanceFutureService) InvalidatePosition(
 			return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_HISTORY_ERROR, err)
 		}
 		if dbHistory.IsFound() {
-			addValidatePositionData(&response, clientId, "position history found", "success")
+			addInValidatePositionData(&response, clientId, "position history found", "success")
 			continue
 		}
 
@@ -42,7 +42,7 @@ func (b *binanceFutureService) InvalidatePosition(
 
 			_, svcerr := b.PlaceSingleOrder(ctx, &bnreq)
 			if svcerr != nil {
-				addValidatePositionData(&response, clientId, svcerr.Error(), "fail")
+				addInValidatePositionData(&response, clientId, svcerr.Error(), "fail")
 				continue
 			}
 
@@ -59,7 +59,7 @@ func (b *binanceFutureService) InvalidatePosition(
 			if err != nil {
 				continue
 			}
-			addValidatePositionData(&response, clientId, "success", "success")
+			addInValidatePositionData(&response, clientId, "success", "success")
 		}
 
 		dbAdvancePosition, err := b.bnFtAdvancedPositionTable.ScanWith(ctx, clientId)
@@ -73,14 +73,14 @@ func (b *binanceFutureService) InvalidatePosition(
 			if err != nil {
 				continue
 			}
-			addValidatePositionData(&response, clientId, "success", "success")
+			addInValidatePositionData(&response, clientId, "success", "success")
 
 		} else {
 			err = b.bnFtHistoryTable.Insert(ctx, &dynamodbrepository.BnFtHistory{
 				ClientId: clientId,
 			})
 			if err != nil {
-				addValidatePositionData(&response, clientId, err.Error(), "fail")
+				addInValidatePositionData(&response, clientId, err.Error(), "fail")
 			}
 		}
 
@@ -88,7 +88,7 @@ func (b *binanceFutureService) InvalidatePosition(
 	return &response, nil
 }
 
-func addValidatePositionData(response *handlerres.InvalidatePosition, clientId string, message string, status string) {
+func addInValidatePositionData(response *handlerres.InvalidatePosition, clientId string, message string, status string) {
 	response.Result = append(response.Result, handlerres.InvalidatePositionData{
 		OrderId: clientId,
 		Message: message,
