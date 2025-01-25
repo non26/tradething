@@ -15,7 +15,7 @@ type IBinanceFutureService interface {
 	SetNewLeverage(
 		ctx context.Context,
 		request *model.Leverage,
-	) (*handlerres.SetLeverage, error)
+	) (*handlerres.SetLeverage, serviceerror.IError)
 	PlaceSingleOrder(
 		ctx context.Context,
 		request *model.Position,
