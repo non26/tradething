@@ -43,11 +43,11 @@ func (h *setPositionHandler) Handler(c echo.Context) error {
 		})
 	}
 
-	response, err := h.service.SetPosition(c.Request().Context(), req.ToServiceModel())
-	if err != nil {
+	response, svcerr := h.service.SetAdvancedPosition(c.Request().Context(), req.ToServiceModel())
+	if svcerr != nil {
 		return c.JSON(http.StatusInternalServerError, utils.CommonResponse{
 			Code:    utils.FailCode,
-			Message: err.Error(),
+			Message: svcerr.Error(),
 		})
 	}
 

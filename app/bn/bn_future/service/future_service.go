@@ -36,10 +36,10 @@ type IBinanceFutureService interface {
 		ctx context.Context,
 		request *model.PositionSide,
 	) (*handlerres.CloseBySymbols, serviceerror.IError)
-	SetPosition(
-		ctx context.Context,
-		request *model.Position,
-	) (*handlerres.PlacePosition, error)
+	// SetPosition(
+	// 	ctx context.Context,
+	// 	request *model.Position,
+	// ) (*handlerres.PlacePosition, serviceerror.IError)
 	InvalidatePosition(
 		ctx context.Context,
 		request *model.ClientIds,
