@@ -7,6 +7,7 @@ import (
 	model "tradething/app/bn/bn_future/service_model"
 
 	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
+	serviceerror "github.com/non26/tradepkg/pkg/bn/service_error"
 
 	utils "github.com/non26/tradepkg/pkg/bn/utils"
 )
@@ -21,60 +22,59 @@ import (
 func (b *binanceFutureService) PlaceSingleOrder(
 	ctx context.Context,
 	request *model.Position,
-) (*handlerres.PlacePosition, error) {
+) (*handlerres.PlacePosition, serviceerror.IError) {
 
 	positionHistory, err := b.bnFtHistoryTable.Get(ctx, request.GetClientId())
 	if err != nil {
-		return nil, errors.New("get history error " + err.Error())
+		return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_HISTORY_ERROR, err)
 	}
 	if positionHistory.IsFound() {
-		return nil, errors.New("position client id is not valid")
+		return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_HISTORY_ERROR, errors.New("position client id is not valid"))
 	}
 
 	openingPositionTable := request.ToBinanceFutureOpeningPositionRepositoryModel()
 	dbOpeningPosition, err := b.bnFtOpeningPositionTable.Get(ctx, openingPositionTable)
 	if err != nil {
-		return nil, errors.New("get open order error " + err.Error())
+		return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_OPENING_POSITION_ERROR, err)
 	}
 
-	if !(dbOpeningPosition.IsFound() || utils.IsSellPosition(request.GetPositionSide(), request.GetSide())) { // meaing this is new order, no existing order is found
-
-		placeOrderRes, err := b.openPosition(ctx, request)
-		if err != nil {
-			return nil, errors.New("open position error " + err.Error())
+	if !(dbOpeningPosition.IsFound() || utils.IsSellPosition(request.GetPositionSide(), request.GetSide())) {
+		// meaing this is new order, no existing order is found
+		placeOrderRes, svcerr := b.openPosition(ctx, request)
+		if svcerr != nil {
+			return nil, svcerr
 		}
-
 		return placeOrderRes.ToBnHandlerResponse(), nil
-	} else { // there is existing order
+	} else {
+		// there is existing order
 		if request.IsSellOrder() {
-			placeSellOrderRes, err := b.closePosition(ctx, request)
-			if err != nil {
-				return nil, errors.New("close position error " + err.Error())
+			placeSellOrderRes, svcerr := b.closePosition(ctx, request)
+			if svcerr != nil {
+				return nil, svcerr
 			}
 			return placeSellOrderRes.ToBnHandlerResponse(), nil
 		}
 
 		if request.GetSymbol() != dbOpeningPosition.Symbol {
-			return nil, errors.New("symbol not match")
+			return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_OPENING_POSITION_ERROR, errors.New("symbol not match"))
 		}
 		if request.GetPositionSide() != dbOpeningPosition.PositionSide {
-			return nil, errors.New("position side not match")
+			return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_OPENING_POSITION_ERROR, errors.New("position side not match"))
 		}
 		if request.GetClientId() == "" {
-			return nil, errors.New("client order id is empty")
+			return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_OPENING_POSITION_ERROR, errors.New("client order id is empty"))
 		}
 
 		if request.GetClientId() != dbOpeningPosition.ClientId {
-			// accumulate order
-			placeOrderRes, err := b.accumulateOrder(ctx, request, dbOpeningPosition)
-			if err != nil {
-				return nil, errors.New("accumulate order error " + err.Error())
+			placeOrderRes, svcerr := b.accumulateOrder(ctx, request, dbOpeningPosition)
+			if svcerr != nil {
+				return nil, svcerr
 			}
 			return placeOrderRes.ToBnHandlerResponse(), nil
 		} else {
-			prv_start, prv_end, err := b.getPreviousBnTimeStartAndEnd(request)
-			if err != nil {
-				return nil, errors.New("get previous bn time start and end for watching order error " + err.Error())
+			prv_start, prv_end, svcerr := b.getPreviousBnTimeStartAndEnd(request)
+			if svcerr != nil {
+				return nil, svcerr
 			}
 
 			dbMarketData, err := b.bnMarketDataService.GetCandleStickData(ctx, request.ToBnCandleStickModel(
@@ -82,25 +82,26 @@ func (b *binanceFutureService) PlaceSingleOrder(
 				utils.GetSpecificBnTimestamp(prv_end),
 			))
 			if err != nil {
-				return nil, errors.New("get candle stick data for watching order error " + err.Error())
+				return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_OPENING_POSITION_ERROR, err)
 			}
+
 			closePrice := dbMarketData.GetClosePrice().GetFloat64()
 			if !request.IsStopLossNil() {
 				if request.IsLongPosition() {
 					if closePrice < request.GetStopLoss().Price {
 						request.SetSide(bnconstant.SELL)
-						closePositionRes, err := b.closePosition(ctx, request)
-						if err != nil {
-							return nil, errors.New("close position error " + err.Error())
+						closePositionRes, svcerr := b.closePosition(ctx, request)
+						if svcerr != nil {
+							return nil, svcerr
 						}
 						return closePositionRes.ToBnHandlerResponse(), nil
 					}
 				} else if request.IsShortPosition() {
 					if closePrice > request.GetStopLoss().Price {
 						request.SetSide(bnconstant.BUY)
-						closePositionRes, err := b.closePosition(ctx, request)
-						if err != nil {
-							return nil, errors.New("close position error " + err.Error())
+						closePositionRes, svcerr := b.closePosition(ctx, request)
+						if svcerr != nil {
+							return nil, svcerr
 						}
 						return closePositionRes.ToBnHandlerResponse(), nil
 					}
@@ -111,18 +112,18 @@ func (b *binanceFutureService) PlaceSingleOrder(
 				if request.IsLongPosition() {
 					if dbMarketData.GetClosePrice().GetFloat64() > request.GetTakeProfit().Price {
 						request.SetSide(bnconstant.SELL)
-						closePositionRes, err := b.closePosition(ctx, request)
-						if err != nil {
-							return nil, errors.New("close position error " + err.Error())
+						closePositionRes, svcerr := b.closePosition(ctx, request)
+						if svcerr != nil {
+							return nil, svcerr
 						}
 						return closePositionRes.ToBnHandlerResponse(), nil
 					}
 				} else if request.IsShortPosition() {
 					if dbMarketData.GetClosePrice().GetFloat64() < request.GetTakeProfit().Price {
 						request.SetSide(bnconstant.BUY)
-						closePositionRes, err := b.closePosition(ctx, request)
-						if err != nil {
-							return nil, errors.New("close position error " + err.Error())
+						closePositionRes, svcerr := b.closePosition(ctx, request)
+						if svcerr != nil {
+							return nil, svcerr
 						}
 						return closePositionRes.ToBnHandlerResponse(), nil
 					}

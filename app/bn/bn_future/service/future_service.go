@@ -19,7 +19,7 @@ type IBinanceFutureService interface {
 	PlaceSingleOrder(
 		ctx context.Context,
 		request *model.Position,
-	) (*handlerres.PlacePosition, error)
+	) (*handlerres.PlacePosition, serviceerror.IError)
 	QueryOrder(
 		ctx context.Context,
 		request *model.Order,
@@ -43,7 +43,7 @@ type IBinanceFutureService interface {
 	InvalidatePosition(
 		ctx context.Context,
 		request *model.ClientIds,
-	) (*handlerres.InvalidatePosition, error)
+	) (*handlerres.InvalidatePosition, serviceerror.IError)
 	SetAdvancedPosition(
 		ctx context.Context,
 		request *model.Position,
