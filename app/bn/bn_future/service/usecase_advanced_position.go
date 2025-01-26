@@ -22,13 +22,13 @@ func (b *binanceFutureService) SetAdvancedPosition(
 		return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_HISTORY_ERROR, errors.New("history not found"))
 	}
 
-	dbOpenOrder, err := b.bnFtOpeningPositionTable.Get(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
-	if err != nil {
-		return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_OPENING_POSITION_ERROR, err)
-	}
-	if dbOpenOrder.IsFound() {
-		return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_OPENING_POSITION_ERROR, errors.New("open order already exists"))
-	}
+	// dbOpenOrder, err := b.bnFtOpeningPositionTable.Get(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
+	// if err != nil {
+	// 	return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_OPENING_POSITION_ERROR, err)
+	// }
+	// if dbOpenOrder.IsFound() {
+	// 	return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_OPENING_POSITION_ERROR, errors.New("open order already exists"))
+	// }
 
 	dbAdvancedPosition, err := b.bnFtAdvancedPositionTable.Get(ctx, request.ToBnAdvancedPositionRepositoryModel())
 	if err != nil {

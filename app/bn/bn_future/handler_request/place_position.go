@@ -68,7 +68,17 @@ func (p *PlacePosition) ToServiceModel() *model.Position {
 	m.SetLeverageLevel(p.LeverageLevel)
 	m.SetStopLoss(p.Watching.StopLoss)
 	m.SetTakeProfit(p.Watching.TakeProfit)
-	m.SetValidatePosition(p.ValidatePosition)
-	m.SetInvalidatePosition(p.InvalidatePosition)
+	return &m
+}
+
+func (p *PlacePosition) ToValidatePosiionServiceModel() *model.ClientIds {
+	m := model.ClientIds{}
+	m.SetClientIds(p.ValidatePosition)
+	return &m
+}
+
+func (p *PlacePosition) ToInvaldiatePositionServiceModel() *model.ClientIds {
+	m := model.ClientIds{}
+	m.SetClientIds(p.InvalidatePosition)
 	return &m
 }

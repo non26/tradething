@@ -43,6 +43,13 @@ func (h *placeMultipleOrderHandler) Handler(c echo.Context) error {
 		})
 	}
 
+	if err := request.Validate(); err != nil {
+		return c.JSON(http.StatusBadRequest, utils.CommonResponse{
+			Code:    utils.FailCode,
+			Message: err.Error(),
+		})
+	}
+
 	request.Transform()
 	response, err := h.service.PlaceMultiOrder(c.Request().Context(), request.ToServiceModel())
 	if err != nil {

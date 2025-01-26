@@ -130,6 +130,5 @@ func (b *binanceFutureService) PlaceSingleOrder(
 			// }
 		}
 	}
-
 	return nil, nil
 }

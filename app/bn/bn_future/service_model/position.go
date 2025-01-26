@@ -17,15 +17,12 @@ import (
 type Position struct {
 	positionSide  string
 	side          string
-	entryQuantity string // amountQ
+	entryQuantity string // amountB
 	symbol        string
 	leverageLevel int
 	clientOrderId string
-	// leverage      int
-	stopLoss           *valueobject.StopLoss
-	takeProfit         *valueobject.TakeProfit
-	ValidatePosition   []string
-	InvalidatePosition []string
+	stopLoss      *valueobject.StopLoss
+	takeProfit    *valueobject.TakeProfit
 }
 
 func (p *Position) GetPositionSide() string {
@@ -76,34 +73,6 @@ func (p *Position) SetClientId(clientOrderId string) {
 	p.clientOrderId = clientOrderId
 }
 
-// func (p *Position) GetWatching() *valueobject.Watching {
-// 	return p.watching
-// }
-
-// func (p *Position) SetWatching(watching *valueobject.Watching) {
-// 	p.watching = watching
-// }
-
-// func (p *Position) IsWatchingNil() bool {
-// 	return p.watching == nil
-// }
-
-// func (p *Position) IsWatchingStopLossNil() bool {
-// 	return p.watching.StopLoss == nil
-// }
-
-// func (p *Position) IsWatchingTakeProfitNil() bool {
-// 	return p.watching.TakeProfit == nil
-// }
-
-// func (p *Position) GetWatchingStopLoss() *valueobject.StopLoss {
-// 	return p.watching.StopLoss
-// }
-
-// func (p *Position) GetWatchingTakeProfit() *valueobject.TakeProfit {
-// 	return p.watching.TakeProfit
-// }
-
 func (p *Position) SetStopLoss(stopLoss *valueobject.StopLoss) {
 	p.stopLoss = stopLoss
 }
@@ -118,22 +87,6 @@ func (p *Position) SetTakeProfit(takeProfit *valueobject.TakeProfit) {
 
 func (p *Position) GetTakeProfit() *valueobject.TakeProfit {
 	return p.takeProfit
-}
-
-func (p *Position) GetValidatePosition() []string {
-	return p.ValidatePosition
-}
-
-func (p *Position) GetInvalidatePosition() []string {
-	return p.InvalidatePosition
-}
-
-func (p *Position) SetValidatePosition(validatePosition []string) {
-	p.ValidatePosition = validatePosition
-}
-
-func (p *Position) SetInvalidatePosition(invalidatePosition []string) {
-	p.InvalidatePosition = invalidatePosition
 }
 
 func (p *Position) GetAmountB() string {
