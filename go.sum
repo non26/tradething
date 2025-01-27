@@ -71,14 +71,6 @@ github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWE
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/mitchellh/mapstructure v1.5.0 h1:jeMsZIYE/09sWLaz43PL7Gy6RuMjD2eJVyuac5Z2hdY=
 github.com/mitchellh/mapstructure v1.5.0/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
-github.com/non26/tradepkg v0.1.13 h1:Zs4zHQkDg2wI2JZtB+jXTDg5ueNoN17CRPoKqynzjZU=
-github.com/non26/tradepkg v0.1.13/go.mod h1:l0CMODXcaEHkndhUklKEjtCqmDBAcVeHQSPr+sc4zr0=
-github.com/non26/tradepkg v0.1.14 h1:z/jahyIXdn87AnKey2J2S4QJfWpoNpguZvOgcAcK95Q=
-github.com/non26/tradepkg v0.1.14/go.mod h1:l0CMODXcaEHkndhUklKEjtCqmDBAcVeHQSPr+sc4zr0=
-github.com/non26/tradepkg v0.1.15 h1:J7iLkp36DjA1hafQq5/ojI/tU0XZJyQRr4JSX94MJFA=
-github.com/non26/tradepkg v0.1.15/go.mod h1:l0CMODXcaEHkndhUklKEjtCqmDBAcVeHQSPr+sc4zr0=
-github.com/non26/tradepkg v0.1.16 h1:vm6OJ7JRKL6RGX3ZtmhuS09RW4OfhN01TLhvzUDK1Vk=
-github.com/non26/tradepkg v0.1.16/go.mod h1:l0CMODXcaEHkndhUklKEjtCqmDBAcVeHQSPr+sc4zr0=
 github.com/non26/tradepkg v0.2.0 h1:rreAsxaGlTuVvljqotkMCiQqG5gD7E1yZ+9ZT79nF/M=
 github.com/non26/tradepkg v0.2.0/go.mod h1:l0CMODXcaEHkndhUklKEjtCqmDBAcVeHQSPr+sc4zr0=
 github.com/nxadm/tail v1.4.11 h1:8feyoE3OzPrcshW5/MJ4sGESc5cqmGkGCWlco4l0bqY=
