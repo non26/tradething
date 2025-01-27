@@ -61,28 +61,6 @@ func (b *binanceFutureService) InvalidatePosition(
 			}
 			addInValidatePositionData(&response, clientId, "success", "success")
 		}
-
-		dbAdvancePosition, err := b.bnFtAdvancedPositionTable.ScanWith(ctx, clientId)
-		if err != nil {
-			continue
-		}
-		if dbAdvancePosition.IsFound() {
-			b.bnFtHistoryTable.Insert(ctx, &dynamodbrepository.BnFtHistory{
-				ClientId: clientId,
-			})
-			b.bnFtAdvancedPositionTable.Delete(ctx, dbAdvancePosition)
-
-			addInValidatePositionData(&response, clientId, "success", "success")
-
-		} else {
-			err = b.bnFtHistoryTable.Insert(ctx, &dynamodbrepository.BnFtHistory{
-				ClientId: clientId,
-			})
-			if err != nil {
-				addInValidatePositionData(&response, clientId, err.Error(), "fail")
-			}
-		}
-
 	}
 	return &response, nil
 }

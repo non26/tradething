@@ -24,7 +24,6 @@ func RouteRestApiComposing(
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
 	bnFtQouteUsdtTable bndynamodb.IBnFtQouteUSDTRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
-	bnFtAdvancedPositionTable bndynamodb.IBnFtAdvancedPositionRepository,
 	httpttransport bntransport.IBinanceServiceHttpTransport,
 	httpclient bnclient.IBinanceSerivceHttpClient,
 	bnTradeService bntrade.IBinanceFutureExternalService,
@@ -38,7 +37,6 @@ func RouteRestApiComposing(
 		bnFtOpeningPositionTable,
 		bnFtQouteUsdtTable,
 		bnFtHistoryTable,
-		bnFtAdvancedPositionTable,
 	)
 
 	placeOrderHandler := handler.NewPlaceSinglerOrderHandler(
@@ -61,31 +59,15 @@ func RouteRestApiComposing(
 	)
 	binanceGroup.POST("/place-multiple-order", placeMultipleOrderHandler.Handler)
 
-	// close order by multiple client id
 	closeByClientIdsHandler := handler.NewCloseByClientIdsHandler(
 		service,
 	)
 	binanceGroup.POST("/close-by-client-ids", closeByClientIdsHandler.Handler)
 
-	setPositionHandler := handler.NewSetPositionHandler(
-		service,
-	)
-	binanceGroup.POST("/set-position", setPositionHandler.Handler)
-
 	invalidatePositionHandler := handler.NewInvalidatePositionHandler(
 		service,
 	)
 	binanceGroup.POST("/invalidate-position", invalidatePositionHandler.Handler)
-
-	advancedPositionHandler := handler.NewAdvancedPositionHandler(
-		service,
-	)
-	binanceGroup.POST("/advanced-position", advancedPositionHandler.Handler)
-
-	validatePositionHandler := handler.NewValidatePositionHandler(
-		service,
-	)
-	binanceGroup.POST("/validate-advanced-position", validatePositionHandler.Handler)
 }
 
 func RouteBotRestApiComposing(
@@ -113,11 +95,6 @@ func RouteBotRestApiComposing(
 		botService,
 	)
 	botGroup.POST("/timeframe-exe-interval", botTimeframeExeIntervalHandler.Handler)
-
-	// invalidateBotHandler := bothandler.NewInvalidateBotHandler(
-	// 	botService,
-	// )
-	// botGroup.POST("/invalidate", invalidateBotHandler.Handler)
 }
 
 func RouteLambda(

@@ -43,7 +43,6 @@ func init() {
 	bnFtOpeningPositionTable := bndynamodb.NewConnectionBnFtOpeningPositionRepository(dynamodbclient)
 	bnFtQouteUsdtTable := bndynamodb.NewConnectionBnFtQouteUSDTRepository(dynamodbclient)
 	bnFtHistoryTable := bndynamodb.NewConnectionBnFtHistoryRepository(dynamodbclient)
-	bnFtAdvancedPositionTable := bndynamodb.NewConnectionBnFtAdvancedPositionRepository(dynamodbclient)
 	bnFtBotTable := bndynamodb.NewConnectionBnFtBotRepository(dynamodbclient)
 	bnFtBotOnRunTable := bndynamodb.NewConnectionBnFtBotOnRunRepository(dynamodbclient)
 	httptransport := bntransport.NewBinanceTransport(&http.Transport{})
@@ -82,7 +81,6 @@ func init() {
 		bnFtOpeningPositionTable,
 		bnFtQouteUsdtTable,
 		bnFtHistoryTable,
-		bnFtAdvancedPositionTable,
 		httptransport,
 		httpclient,
 		binanceServie,

@@ -1,7 +1,6 @@
 package bnfuture
 
 import (
-	"errors"
 	model "tradething/app/bn/bn_future/service_model"
 )
 
@@ -16,11 +15,11 @@ func (p *PlaceMultiplePositions) Transform() {
 }
 
 func (p *PlaceMultiplePositions) Validate() error {
-	for _, order := range p.Positions {
-		if order.Watching != nil && len(order.InvalidatePosition) != 0 && len(order.ValidatePosition) != 0 {
-			return errors.New("invalidate request")
-		}
-	}
+	// for _, order := range p.Positions {
+	// 	if order.Watching != nil && len(order.InvalidatePosition) != 0 && len(order.ValidatePosition) != 0 {
+	// 		return errors.New("invalidate request")
+	// 	}
+	// }
 	return nil
 }
 

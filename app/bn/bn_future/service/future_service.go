@@ -40,24 +40,15 @@ type IBinanceFutureService interface {
 		ctx context.Context,
 		request *model.ClientIds,
 	) (*handlerres.InvalidatePosition, serviceerror.IError)
-	ValidateAdavancedPosition(
-		ctx context.Context,
-		request *model.ClientIds,
-	) (*handlerres.ValidatePosition, serviceerror.IError)
-	SetAdvancedPosition(
-		ctx context.Context,
-		request *model.Position,
-	) (*handlerres.SetAdvancedPosition, serviceerror.IError)
 }
 
 type binanceFutureService struct {
-	binanceFutureServiceName  string
-	binanceService            bntrade.IBinanceFutureExternalService
-	bnMarketDataService       bnmarket.IBnMarketDataService
-	bnFtOpeningPositionTable  bndynamodb.IBnFtOpeningPositionRepository
-	bnFtQouteUsdtTable        bndynamodb.IBnFtQouteUSDTRepository
-	bnFtHistoryTable          bndynamodb.IBnFtHistoryRepository
-	bnFtAdvancedPositionTable bndynamodb.IBnFtAdvancedPositionRepository
+	binanceFutureServiceName string
+	binanceService           bntrade.IBinanceFutureExternalService
+	bnMarketDataService      bnmarket.IBnMarketDataService
+	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository
+	bnFtQouteUsdtTable       bndynamodb.IBnFtQouteUSDTRepository
+	bnFtHistoryTable         bndynamodb.IBnFtHistoryRepository
 }
 
 func NewBinanceFutureService(
@@ -67,7 +58,6 @@ func NewBinanceFutureService(
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
 	bnFtQouteUsdtTable bndynamodb.IBnFtQouteUSDTRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
-	bnFtAdvancedPositionTable bndynamodb.IBnFtAdvancedPositionRepository,
 ) IBinanceFutureService {
 	return &binanceFutureService{
 		binanceFutureServiceName,
@@ -76,6 +66,5 @@ func NewBinanceFutureService(
 		bnFtOpeningPositionTable,
 		bnFtQouteUsdtTable,
 		bnFtHistoryTable,
-		bnFtAdvancedPositionTable,
 	}
 }

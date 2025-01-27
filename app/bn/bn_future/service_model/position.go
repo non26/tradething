@@ -1,7 +1,6 @@
 package bnfuture
 
 import (
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -12,6 +11,7 @@ import (
 
 	positionconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
 	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
+	"github.com/shopspring/decimal"
 )
 
 type Position struct {
@@ -143,6 +143,19 @@ func (p *Position) AddEntryQuantity(entryQuantity string) {
 	p.entryQuantity = fmt.Sprintf("%v", currentQuantity+additionalQuantity)
 }
 
+func (p *Position) AddMoreAmountB(amountB string) error {
+	amountQInt, err := decimal.NewFromString(amountB)
+	if err != nil {
+		return err
+	}
+	prevAmountQInt, err := decimal.NewFromString(p.entryQuantity)
+	if err != nil {
+		return err
+	}
+	p.entryQuantity = amountQInt.Add(prevAmountQInt).String()
+	return nil
+}
+
 func (p *Position) ToBinanceServiceModel() *bntradereq.PlacePosition {
 	m := bntradereq.PlacePosition{
 		PositionSide:  p.positionSide,
@@ -159,19 +172,9 @@ func (p *Position) ToBinanceFutureOpeningPositionRepositoryModel() *dynamodbmode
 		Symbol:       p.symbol,
 		PositionSide: p.positionSide,
 		AmountB:      p.entryQuantity,
-		Leverage:     fmt.Sprintf("%v", p.leverageLevel),
 		ClientId:     p.clientOrderId,
 		Side:         p.side,
 	}
-	watchingConfig := valueobject.Watching{
-		StopLoss:   p.stopLoss,
-		TakeProfit: p.takeProfit,
-	}
-	_json, err := json.Marshal(watchingConfig)
-	if err != nil {
-		return nil
-	}
-	m.SetWatchingConfig(_json)
 	return &m
 }
 
@@ -190,17 +193,6 @@ func (p *Position) ToBnPositionHistoryRepositoryModel() *dynamodbmodel.BnFtHisto
 		Symbol:       p.symbol,
 		PositionSide: p.positionSide,
 		ClientId:     p.clientOrderId,
-	}
-	return &m
-}
-
-func (p *Position) ToBnAdvancedPositionRepositoryModel() *dynamodbmodel.BnFtAdvancedPositionModel {
-	m := dynamodbmodel.BnFtAdvancedPositionModel{
-		Symbol:       p.symbol,
-		PositionSide: p.positionSide,
-		ClientId:     p.clientOrderId,
-		AmountB:      p.entryQuantity,
-		Side:         p.side,
 	}
 	return &m
 }

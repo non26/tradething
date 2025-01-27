@@ -76,12 +76,6 @@ func (b *binanceFutureService) openPosition(ctx context.Context, request *svcMod
 	if err != nil {
 		log.Println("error new open order", err.Error())
 	}
-
-	err = b.bnFtAdvancedPositionTable.Delete(ctx, request.ToBnAdvancedPositionRepositoryModel())
-	if err != nil {
-		log.Println("error delete advanced position", err.Error())
-	}
-
 	return openPosition, nil
 }
 
@@ -95,15 +89,15 @@ func (b *binanceFutureService) setDefaultClientOrderId(request *svcModels.Positi
 	request.SetClientId(utils.BinanceDefaultClientID(request.GetSymbol(), request.GetPositionSide(), counting))
 }
 
-func (b *binanceFutureService) accumulateOrder(ctx context.Context, request *svcModels.Position, dbOpeningOrder *dynamodbmodel.BnFtOpeningPosition) (*bntradereq.PlacePositionData, serviceerror.IError) {
+func (b *binanceFutureService) accumulateOrder(ctx context.Context, request *svcModels.Position) (*bntradereq.PlacePositionData, serviceerror.IError) {
 	placeOrderRes, err := b.binanceService.PlaceSingleOrder(ctx, request.ToBinanceServiceModel())
 	if err != nil {
 		log.Println("error place order for accumulate order", err.Error())
 		return nil, serviceerror.NewServiceErrorWith(serviceerror.BN_OPENING_POSITION_ERROR, err)
 	}
 
-	dbOpeningOrder.AddMoreAmountB(request.GetAmountB())
-	err = b.bnFtOpeningPositionTable.Update(ctx, dbOpeningOrder)
+	request.AddEntryQuantity(request.GetAmountB())
+	err = b.bnFtOpeningPositionTable.Update(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
 	if err != nil {
 		log.Println("error update open order for accumulate order", err.Error())
 	}

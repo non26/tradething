@@ -27,7 +27,7 @@ func (b *binanceFutureService) CloseByClientIds(
 			continue
 		}
 		if positionHistory.IsFound() {
-			addCloseOrderData(&closeOrders, closeOrder, clientId, "fail", "no position history found")
+			addCloseOrderData(&closeOrders, closeOrder, clientId, "fail", "position history found")
 			continue
 		}
 
