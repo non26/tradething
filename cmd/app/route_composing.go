@@ -40,12 +40,12 @@ func RouteRestApiComposing(
 	placeOrderHandler := handler.NewPlaceSinglerOrderHandler(
 		service,
 	)
-	binanceGroup.POST("/place-order", placeOrderHandler.Handler)
+	binanceGroup.POST("/position", placeOrderHandler.Handler)
 
 	setLeverageHandler := handler.NewsetNewLeveragehandler(
 		service,
 	)
-	binanceGroup.POST("/set-leverage", setLeverageHandler.Handler)
+	binanceGroup.POST("/new-leverage", setLeverageHandler.Handler)
 
 	queryOrderHandler := handler.NewqueryOrderHandler(
 		service,
@@ -55,7 +55,7 @@ func RouteRestApiComposing(
 	placeMultipleOrderHandler := handler.NewPlaceMultipleOrderHandler(
 		service,
 	)
-	binanceGroup.POST("/place-multiple-order", placeMultipleOrderHandler.Handler)
+	binanceGroup.POST("/positions", placeMultipleOrderHandler.Handler)
 
 	closeByClientIdsHandler := handler.NewCloseByClientIdsHandler(
 		service,

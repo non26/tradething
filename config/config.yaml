@@ -4,8 +4,8 @@ port: 8080
 
 dynamodb:
   region: us-west-2
-  ak: w66e3f
-  sk: 4238kj
+  ak: acoimy
+  sk: g3gifr
   endpoint: http://localhost:8000
 
 service-name:
@@ -15,8 +15,6 @@ service-name:
 secrets:
   binance-apikey: 79c5d0858edfd09a166f5a1c69ad876518174fa72af071a16c2ca21bd50e4c1d
   binance-secretKey: c921a243ffa6b57dca1db29959d8e2cc0d1828cf3f3848d94a5533de45c2ce1d
-  binance-subAccount-apikey: 79c5d0858edfd09a166f5a1c69ad876518174fa72af071a16c2ca21bd50e4c1d
-  binance-subAccount-secretKey: c921a243ffa6b57dca1db29959d8e2cc0d1828cf3f3848d94a5533de45c2ce1d
   
 
 binance-future-url:
