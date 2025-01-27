@@ -3,8 +3,6 @@ package app
 import (
 	bnmarket "tradething/app/bn/bn_future/bnservice/market_data"
 	bntrade "tradething/app/bn/bn_future/bnservice/trade"
-	botservice "tradething/app/bn/bn_future/bot"
-	bothandler "tradething/app/bn/bn_future/bot_handler"
 	handler "tradething/app/bn/bn_future/handler"
 	service "tradething/app/bn/bn_future/service"
 	lambdaroute "tradething/cmd/app/route/lambda"
@@ -68,33 +66,6 @@ func RouteRestApiComposing(
 		service,
 	)
 	binanceGroup.POST("/invalidate-position", invalidatePositionHandler.Handler)
-}
-
-func RouteBotRestApiComposing(
-	app *echo.Echo,
-	config *config.AppConfig,
-	bnFtBotTable bndynamodb.IBnFtBotRepository,
-	bnFtBotOnRunTable bndynamodb.IBnFtBotOnRunRepository,
-	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
-	bnFtQouteUsdtTable bndynamodb.IBnFtQouteUSDTRepository,
-	httpttransport bntransport.IBinanceServiceHttpTransport,
-	httpclient bnclient.IBinanceSerivceHttpClient,
-	bnTradeService bntrade.IBinanceFutureExternalService,
-	bnMarketService bnmarket.IBnMarketDataService,
-) {
-	botGroup := app.Group("/" + config.ServiceName.BinanceFuture + "/bot")
-	botService := botservice.NewBotService(
-		bnTradeService,
-		bnFtBotTable,
-		bnFtBotOnRunTable,
-		bnFtHistoryTable,
-		bnFtQouteUsdtTable,
-	)
-
-	botTimeframeExeIntervalHandler := bothandler.NewBotTimeframeExeIntervalHandler(
-		botService,
-	)
-	botGroup.POST("/timeframe-exe-interval", botTimeframeExeIntervalHandler.Handler)
 }
 
 func RouteLambda(

@@ -43,8 +43,6 @@ func init() {
 	bnFtOpeningPositionTable := bndynamodb.NewConnectionBnFtOpeningPositionRepository(dynamodbclient)
 	bnFtQouteUsdtTable := bndynamodb.NewConnectionBnFtQouteUSDTRepository(dynamodbclient)
 	bnFtHistoryTable := bndynamodb.NewConnectionBnFtHistoryRepository(dynamodbclient)
-	bnFtBotTable := bndynamodb.NewConnectionBnFtBotRepository(dynamodbclient)
-	bnFtBotOnRunTable := bndynamodb.NewConnectionBnFtBotOnRunRepository(dynamodbclient)
 	httptransport := bntransport.NewBinanceTransport(&http.Transport{})
 	httpclient := bnclient.NewBinanceSerivceHttpClient()
 
@@ -63,15 +61,6 @@ func init() {
 		httptransport,
 		httpclient,
 	)
-
-	bot_binanceServie := bntrade.NewBinanceFutureExternalService(
-		&_config.BinanceFutureUrl,
-		_config.Secrets.BinanceSubAccountApikey,
-		_config.Secrets.BinanceSubAccountSecretKey,
-		_config.ServiceName.BinanceFuture,
-		httptransport,
-		httpclient,
-	)
 	app_echo := echo.New()
 	app.MiddlerwareComposing(app_echo)
 	app.HealthCheck(app_echo)
@@ -84,18 +73,6 @@ func init() {
 		httptransport,
 		httpclient,
 		binanceServie,
-		marketData,
-	)
-	app.RouteBotRestApiComposing(
-		app_echo,
-		_config,
-		bnFtBotTable,
-		bnFtBotOnRunTable,
-		bnFtHistoryTable,
-		bnFtQouteUsdtTable,
-		httptransport,
-		httpclient,
-		bot_binanceServie,
 		marketData,
 	)
 	app.RouteLambda(app_echo, _config)
