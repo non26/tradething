@@ -97,7 +97,7 @@ func (b *binanceFutureService) accumulateOrder(ctx context.Context, request *svc
 	}
 
 	request.AddEntryQuantity(request.GetAmountB())
-	err = b.bnFtOpeningPositionTable.Update(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
+	err = b.bnFtOpeningPositionTable.UpdateAmountB(ctx, request.ToBinanceFutureOpeningPositionRepositoryModel())
 	if err != nil {
 		log.Println("error update open order for accumulate order", err.Error())
 	}
