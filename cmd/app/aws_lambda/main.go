@@ -17,6 +17,7 @@ import (
 
 	bnclient "github.com/non26/tradepkg/pkg/bn/bn_client"
 	bntransport "github.com/non26/tradepkg/pkg/bn/bn_transport"
+	bndynamodbconfig "github.com/non26/tradepkg/pkg/bn/dynamodb_config"
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
 )
 
@@ -31,17 +32,17 @@ func init() {
 		panic(err.Error())
 	}
 
-	dynamodbconfig := bndynamodb.NewDynamodbConfig()
-	dynamodbendpoint := bndynamodb.NewEndPointResolver(_config.Dynamodb.Region, _config.Dynamodb.Endpoint)
-	dynamodbcredential := bndynamodb.NewCredential(_config.Dynamodb.Ak, _config.Dynamodb.Sk)
+	dynamodbconfig := bndynamodbconfig.NewDynamodbConfig()
+	dynamodbendpoint := bndynamodbconfig.NewEndPointResolver(_config.Dynamodb.Region, _config.Dynamodb.Endpoint)
+	dynamodbcredential := bndynamodbconfig.NewCredential(_config.Dynamodb.Ak, _config.Dynamodb.Sk)
 	var dynamodbclient *dynamodb.Client
 	if _config.IsLocal() {
-		dynamodbclient = bndynamodb.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewLocal()
+		dynamodbclient = bndynamodbconfig.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewLocal()
 	} else {
-		dynamodbclient = bndynamodb.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewPrd()
+		dynamodbclient = bndynamodbconfig.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewPrd()
 	}
 	bnFtOpeningPositionTable := bndynamodb.NewConnectionBnFtOpeningPositionRepository(dynamodbclient)
-	bnFtQouteUsdtTable := bndynamodb.NewConnectionBnFtQouteUSDTRepository(dynamodbclient)
+	bnFtQouteUsdtTable := bndynamodb.NewConnectionBnFtCryptoRepository(dynamodbclient)
 	bnFtHistoryTable := bndynamodb.NewConnectionBnFtHistoryRepository(dynamodbclient)
 	httptransport := bntransport.NewBinanceTransport(&http.Transport{})
 	httpclient := bnclient.NewBinanceSerivceHttpClient()

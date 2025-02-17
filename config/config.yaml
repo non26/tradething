@@ -13,8 +13,10 @@ service-name:
   binance-spot: BNS
 
 secrets:
-  binance-apikey: 79c5d0858edfd09a166f5a1c69ad876518174fa72af071a16c2ca21bd50e4c1d
+  binance-apiKey: 79c5d0858edfd09a166f5a1c69ad876518174fa72af071a16c2ca21bd50e4c1d
   binance-secretKey: c921a243ffa6b57dca1db29959d8e2cc0d1828cf3f3848d94a5533de45c2ce1d
+  binance-spot-apiKey:
+  binance-spot-secretKey:
   
 
 binance-future-url:
@@ -26,4 +28,13 @@ binance-future-url:
   market-data:
     candle-stick: /fapi/v1/klines
   binance-future-baseUrl:
+    binance1: https://testnet.binancefuture.com
+
+
+binance-spot-url:
+  single-order: /api/v3/order
+  miltiple-order: /api/v3/batchOrders
+  query-order: /api/v3/order
+  exchange-info: /api/v3/exchangeInfo
+  binance-spot-baseUrl:
     binance1: https://testnet.binancefuture.com

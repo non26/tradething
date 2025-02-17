@@ -20,7 +20,7 @@ func RouteRestApiComposing(
 	app *echo.Echo,
 	config *config.AppConfig,
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
-	bnFtQouteUsdtTable bndynamodb.IBnFtQouteUSDTRepository,
+	bnFtQouteUsdtTable bndynamodb.IBnFtCryptoRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
 	httpttransport bntransport.IBinanceServiceHttpTransport,
 	httpclient bnclient.IBinanceSerivceHttpClient,
