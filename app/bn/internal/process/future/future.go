@@ -9,4 +9,5 @@ import (
 type IFuture interface {
 	PlaceOrder(ctx context.Context, position domain.Position) error
 	ClosePositionByClientIds(ctx context.Context, clientIds []string) (*response.CloseByClientIds, error)
+	MultiplePosition(ctx context.Context, positions []domain.Position) (*response.MultiplePosition, error)
 }
