@@ -15,8 +15,8 @@ service-name:
 secrets:
   binance-apiKey: 79c5d0858edfd09a166f5a1c69ad876518174fa72af071a16c2ca21bd50e4c1d
   binance-secretKey: c921a243ffa6b57dca1db29959d8e2cc0d1828cf3f3848d94a5533de45c2ce1d
-  binance-spot-apiKey:
-  binance-spot-secretKey:
+  binance-spot-apiKey: 2BD0T3HdyL6M3WajxlTbucaK0Jy6p9cQbkeHHPkndI3z86PkriODrpwpYXbBIqGZ
+  binance-spot-secretKey: gR28QYwkSnlCTK7LrD2odaeB4OoczE1FrvGybdPB2h5oXXsbj8zOghuW0LSEfnkA
   
 
 binance-future-url:
@@ -32,9 +32,9 @@ binance-future-url:
 
 
 binance-spot-url:
-  single-order: /api/v3/order
-  miltiple-order: /api/v3/batchOrders
-  query-order: /api/v3/order
-  exchange-info: /api/v3/exchangeInfo
+  single-order: /v3/order
+  miltiple-order: /v3/batchOrders
+  query-order: /v3/order
+  exchange-info: /v3/exchangeInfo
   binance-spot-baseUrl:
-    binance1: https://testnet.binancefuture.com
+    binance1: https://testnet.binance.vision/api
