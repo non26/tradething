@@ -30,9 +30,9 @@ func (p *positionHandler) Handler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	err := p.processPosition.PlaceOrder(c.Request().Context(), request.ToDomain())
+	response, err := p.processPosition.PlaceOrder(c.Request().Context(), request.ToDomain())
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, "success")
+	return c.JSON(http.StatusOK, response)
 }

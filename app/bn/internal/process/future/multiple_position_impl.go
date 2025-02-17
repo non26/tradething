@@ -8,7 +8,7 @@ import (
 
 func (f *future) MultiplePosition(ctx context.Context, positions []domain.Position) (response *response.MultiplePosition, err error) {
 	for _, position := range positions {
-		err = f.PlaceOrder(ctx, position)
+		_, err = f.PlaceOrder(ctx, position)
 		if err != nil {
 			response.AddWithData(position.GetClientId(), position.GetSymbol(), "failed")
 			continue

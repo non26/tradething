@@ -2,6 +2,8 @@ package process
 
 import (
 	"context"
+	"errors"
+	response "tradething/app/bn/internal/handlers/future/res"
 	infrastructure "tradething/app/bn/internal/infrastructure/future"
 	domain "tradething/app/bn/internal/process/future/domain"
 
@@ -29,19 +31,22 @@ func NewFuture(
 	}
 }
 
-func (f *future) PlaceOrder(ctx context.Context, position domain.Position) error {
+func (f *future) PlaceOrder(ctx context.Context, position domain.Position) (*response.Position, error) {
 	bnHistory, err := f.bnFtHistoryTable.Get(ctx, position.GetClientId())
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if bnHistory.IsFound() {
-		return err
+		return nil, errors.New("duplicate client id")
 	}
 
 	err = f.infraFuture.PlacePosition(ctx, position.ToInfraPosition())
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return &response.Position{
+		ClientId: position.GetClientId(),
+		Symbol:   position.GetSymbol(),
+	}, nil
 }
