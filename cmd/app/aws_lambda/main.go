@@ -12,12 +12,15 @@ import (
 	echoadapter "github.com/awslabs/aws-lambda-go-api-proxy/echo"
 	"github.com/labstack/echo/v4"
 
-	bnmarket "tradething/app/bn/bn_future/bnservice/market_data"
-	bntrade "tradething/app/bn/bn_future/bnservice/trade"
+	routefuture "tradething/cmd/app/route/future"
+	routelambda "tradething/cmd/app/route/lambda"
+	routespot "tradething/cmd/app/route/spot"
 
 	bnclient "github.com/non26/tradepkg/pkg/bn/bn_client"
 	bntransport "github.com/non26/tradepkg/pkg/bn/bn_transport"
+	bndynamodbconfig "github.com/non26/tradepkg/pkg/bn/dynamodb_config"
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
+	bndynamodbspot "github.com/non26/tradepkg/pkg/bn/dynamodb_spot"
 )
 
 var echoLambda *echoadapter.EchoLambda
@@ -31,51 +34,32 @@ func init() {
 		panic(err.Error())
 	}
 
-	dynamodbconfig := bndynamodb.NewDynamodbConfig()
-	dynamodbendpoint := bndynamodb.NewEndPointResolver(_config.Dynamodb.Region, _config.Dynamodb.Endpoint)
-	dynamodbcredential := bndynamodb.NewCredential(_config.Dynamodb.Ak, _config.Dynamodb.Sk)
+	dynamodbconfig := bndynamodbconfig.NewDynamodbConfig()
+	dynamodbendpoint := bndynamodbconfig.NewEndPointResolver(_config.Dynamodb.Region, _config.Dynamodb.Endpoint)
+	dynamodbcredential := bndynamodbconfig.NewCredential(_config.Dynamodb.Ak, _config.Dynamodb.Sk)
 	var dynamodbclient *dynamodb.Client
 	if _config.IsLocal() {
-		dynamodbclient = bndynamodb.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewLocal()
+		dynamodbclient = bndynamodbconfig.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewLocal()
 	} else {
-		dynamodbclient = bndynamodb.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewPrd()
+		dynamodbclient = bndynamodbconfig.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewPrd()
 	}
+	// future
 	bnFtOpeningPositionTable := bndynamodb.NewConnectionBnFtOpeningPositionRepository(dynamodbclient)
-	bnFtQouteUsdtTable := bndynamodb.NewConnectionBnFtQouteUSDTRepository(dynamodbclient)
+	bnFtQouteUsdtTable := bndynamodb.NewConnectionBnFtCryptoRepository(dynamodbclient)
 	bnFtHistoryTable := bndynamodb.NewConnectionBnFtHistoryRepository(dynamodbclient)
+	// spot
+	bnSpotOpeningPositionTable := bndynamodbspot.NewConnectionBnSpotOpeningPositionRepository(dynamodbclient)
+	bnSpotQouteUsdtTable := bndynamodbspot.NewConnectionBnSpotCryptoRepository(dynamodbclient)
+	bnSpotHistoryTable := bndynamodbspot.NewConnectionBnSpotHistoryRepository(dynamodbclient)
 	httptransport := bntransport.NewBinanceTransport(&http.Transport{})
 	httpclient := bnclient.NewBinanceSerivceHttpClient()
 
-	marketData := bnmarket.NewBnMarketDataService(
-		&_config.BinanceFutureUrl,
-		&_config.Secrets,
-		_config.ServiceName.BinanceFuture,
-		httptransport,
-		httpclient,
-	)
-	binanceServie := bntrade.NewBinanceFutureExternalService(
-		&_config.BinanceFutureUrl,
-		_config.Secrets.BinanceApiKey,
-		_config.Secrets.BinanceSecretKey,
-		_config.ServiceName.BinanceFuture,
-		httptransport,
-		httpclient,
-	)
 	app_echo := echo.New()
 	app.MiddlerwareComposing(app_echo)
 	app.HealthCheck(app_echo)
-	app.RouteRestApiComposing(
-		app_echo,
-		_config,
-		bnFtOpeningPositionTable,
-		bnFtQouteUsdtTable,
-		bnFtHistoryTable,
-		httptransport,
-		httpclient,
-		binanceServie,
-		marketData,
-	)
-	app.RouteLambda(app_echo, _config)
+	routefuture.RouteFuture(app_echo, _config, bnFtOpeningPositionTable, bnFtQouteUsdtTable, bnFtHistoryTable, httptransport, httpclient)
+	routespot.RouteSpot(app_echo, _config, bnSpotOpeningPositionTable, bnSpotQouteUsdtTable, bnSpotHistoryTable, httptransport, httpclient)
+	routelambda.RouteLambda(app_echo, _config)
 
 	echoLambda = echoadapter.New(app_echo)
 }

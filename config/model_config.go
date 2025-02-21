@@ -7,6 +7,7 @@ type AppConfig struct {
 	Secrets          Secrets          `mapstructure:"secrets" json:"secrets"`
 	BinanceFutureUrl BinanceFutureUrl `mapstructure:"binance-future-url" json:"binance-future-url"`
 	Dynamodb         Dynamodb         `mapstructure:"dynamodb" json:"dynamodb"`
+	BinanceSpotUrl   BinanceSpotUrl   `mapstructure:"binance-spot-url" json:"binance-spot-url"`
 }
 
 func (c *AppConfig) IsLocal() bool {
@@ -27,6 +28,8 @@ type Dynamodb struct {
 type Secrets struct {
 	BinanceApiKey              string `mapstructure:"binance-apiKey" json:"binance-apiKey"`
 	BinanceSecretKey           string `mapstructure:"binance-secretKey" json:"binance-secretKey"`
+	BinanceSpotApiKey          string `mapstructure:"binance-spot-apiKey" json:"binance-spot-apiKey"`
+	BinanceSpotSecretKey       string `mapstructure:"binance-spot-secretKey" json:"binance-spot-secretKey"`
 	BinanceSubAccountApikey    string `mapstructure:"binance-subAccount-apikey" json:"binance-subAccount-apikey"`
 	BinanceSubAccountSecretKey string `mapstructure:"binance-subAccount-secretKey" json:"binance-subAccount-secretKey"`
 }
@@ -52,4 +55,16 @@ type BinanceFutureUrl struct {
 	ExchangeInfo            string                  `mapstructure:"exchange-info" json:"exchange-info"`
 	BinanceFutureBaseUrl    BinanceFutureBaseUrl    `mapstructure:"binance-future-baseUrl" json:"binance-future-baseUrl"`
 	BinanceFutureMarketData BinanceFutureMarketData `mapstructure:"market-data" json:"market-data"`
+}
+
+type BinanceSpotUrl struct {
+	SingleOrder        string               `mapstructure:"single-order" json:"single-order"`
+	MultipleOrders     string               `mapstructure:"miltiple-order" json:"miltiple-order"`
+	QueryOrder         string               `mapstructure:"query-order" json:"query-order"`
+	ExcahngeInfo       string               `mapstructure:"exchange-info" json:"exchange-info"`
+	BinanceSpotBaseUrl BinanceFutureBaseUrl `mapstructure:"binance-spot-baseUrl" json:"binance-spot-baseUrl"`
+}
+
+type BinanceSpotBaseUrl struct {
+	BianceUrl1 string `mapstructure:"binance1" json:"binance1"`
 }
