@@ -1,6 +1,11 @@
 package req
 
-import bnrequest "github.com/non26/tradepkg/pkg/bn/bn_request"
+import (
+	"strconv"
+
+	bnrequest "github.com/non26/tradepkg/pkg/bn/bn_request"
+	bnutils "github.com/non26/tradepkg/pkg/bn/utils"
+)
 
 type SpotOrderRequest struct {
 	Symbol           string `json:"symbol"`
@@ -9,7 +14,6 @@ type SpotOrderRequest struct {
 	Quantity         string `json:"quantity"`
 	NewClientOrderId string `json:"newClientOrderId"`
 	Timestamp        string `json:"timestamp"`
-	Signature        string `json:"signature"`
 }
 
 // type IBnFutureServiceRequest interface {
@@ -17,10 +21,16 @@ type SpotOrderRequest struct {
 // 	GetData() interface{}
 // }
 
-func (s *SpotOrderRequest) PrepareRequest() {}
+func (s *SpotOrderRequest) PrepareRequest() {
+	s.setTimestamp()
+}
 
 func (s *SpotOrderRequest) GetData() interface{} {
 	return s
+}
+
+func (s *SpotOrderRequest) setTimestamp() {
+	s.Timestamp = strconv.FormatInt(bnutils.GetBinanceTimestamp(), 10)
 }
 
 func NewPlaceSignleOrderBinanceServiceRequest(

@@ -26,8 +26,8 @@ func RouteSpot(
 	spotGroup := app.Group("/" + config.ServiceName.BinanceSpot)
 	spotAdaptor := adaptor.NewBinanceSpotAdaptorService(
 		&config.BinanceSpotUrl,
-		config.Secrets.BinanceApiKey,
-		config.Secrets.BinanceSecretKey,
+		config.Secrets.BinanceSpotApiKey,
+		config.Secrets.BinanceSpotSecretKey,
 		config.ServiceName.BinanceSpot,
 		httpttransport,
 		httpclient,
@@ -52,10 +52,10 @@ func RouteSpot(
 	)
 
 	spotHandler := handlers.NewOrderHandler(spotProcess)
-	spotGroup.POST("/spot", spotHandler.Handler)
+	spotGroup.POST("/order", spotHandler.Handler)
 
 	multipleOrderHandler := handlers.NewMultipleOrderHandler(spotProcess)
-	spotGroup.POST("/spots", multipleOrderHandler.Handler)
+	spotGroup.POST("/orders", multipleOrderHandler.Handler)
 
 	closeByIdHandler := handlers.NewCloseByIdHandler(spotProcess)
 	spotGroup.POST("/close-by-ids", closeByIdHandler.Handler)

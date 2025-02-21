@@ -5,7 +5,9 @@ import (
 
 	infra "tradething/app/bn/infrastructure/future/position"
 
+	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
 	positionconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
+	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
 )
 
 type Position struct {
@@ -89,9 +91,17 @@ func (p *Position) ToInfraPosition() *infra.Position {
 		PositionSide: p.positionSide,
 		AmountB:      p.amountB,
 		Symbol:       p.symbol,
-		// OrderType    : p.Order
-		ClientId: p.clientId,
-		Side:     p.side,
+		OrderType:    bnconstant.MARKET,
+		ClientId:     p.clientId,
+		Side:         p.side,
 	}
 	return &infraPosition
+}
+
+func (p *Position) ToHistoryTable() *dynamodbmodel.BnFtHistory {
+	return &dynamodbmodel.BnFtHistory{
+		ClientId:     p.clientId,
+		Symbol:       p.symbol,
+		PositionSide: p.positionSide,
+	}
 }

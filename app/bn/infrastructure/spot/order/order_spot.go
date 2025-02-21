@@ -20,7 +20,7 @@ type Order struct {
 	NewClientOrderId string
 }
 
-func (o *Order) SetDefaultClientId(counting int) {
+func (o *Order) SetDefaultClientId(counting int64) {
 	if o.NewClientOrderId == "" {
 		o.NewClientOrderId = utils.BinanceDefaultClientID(o.Symbol, "post", counting)
 	}
@@ -86,17 +86,19 @@ func NewOrderSpot(
 }
 
 func (o *OrderSpot) BuyOrder(ctx context.Context, order *Order) error {
-	crypto, err := o.bnSpotCryptoTable.Get(context.Background(), order.Symbol)
+	crypto, err := o.bnSpotCryptoTable.Get(ctx, order.Symbol)
 	if err != nil {
 		return err
 	}
 
 	if !crypto.IsFound() {
 		crypto = dynamodbmodel.NewBinanceSpotCryptoTableRecord(order.Symbol)
+	} else {
+		crypto.SetCounting(crypto.GetCounting() + 1)
 	}
 	order.SetDefaultClientId(crypto.GetCounting())
 
-	openingSpot, err := o.bnSpotOpeningPositionTable.Get(context.Background(), order.ToOpeningSpotTable())
+	openingSpot, err := o.bnSpotOpeningPositionTable.Get(ctx, order.ToOpeningSpotTable())
 	if err != nil {
 		return err
 	}
@@ -105,7 +107,7 @@ func (o *OrderSpot) BuyOrder(ctx context.Context, order *Order) error {
 		return errors.New("duplicate client id")
 	}
 
-	_, err = o.adaptor.PlaceOrder(context.Background(), order.ToSpotOrderRequest())
+	_, err = o.adaptor.PlaceOrder(ctx, order.ToSpotOrderRequest())
 	if err != nil {
 		return err
 	}
@@ -115,14 +117,21 @@ func (o *OrderSpot) BuyOrder(ctx context.Context, order *Order) error {
 		if err != nil {
 			return err
 		}
+
+		err = o.bnSpotHistoryTable.Insert(ctx, order.ToHistoryTable())
+		if err != nil {
+			return err
+		}
+
+		order.NewClientOrderId = openingSpot.ClientId
 	}
 
-	err = o.bnSpotOpeningPositionTable.Upsert(context.Background(), order.ToOpeningSpotTable())
+	err = o.bnSpotOpeningPositionTable.Upsert(ctx, order.ToOpeningSpotTable())
 	if err != nil {
 		return err
 	}
 
-	err = o.bnSpotCryptoTable.Update(context.Background(), crypto)
+	err = o.bnSpotCryptoTable.Update(ctx, crypto)
 	if err != nil {
 		return err
 	}
@@ -132,17 +141,17 @@ func (o *OrderSpot) BuyOrder(ctx context.Context, order *Order) error {
 
 func (o *OrderSpot) SellOrder(ctx context.Context, order *Order) error {
 
-	_, err := o.adaptor.PlaceOrder(context.Background(), order.ToSpotOrderRequest())
+	_, err := o.adaptor.PlaceOrder(ctx, order.ToSpotOrderRequest())
 	if err != nil {
 		return err
 	}
 
-	err = o.bnSpotOpeningPositionTable.Delete(context.Background(), order.ToOpeningSpotTable())
+	err = o.bnSpotOpeningPositionTable.Delete(ctx, order.ToOpeningSpotTable())
 	if err != nil {
 		return err
 	}
 
-	err = o.bnSpotHistoryTable.Insert(context.Background(), order.ToHistoryTable())
+	err = o.bnSpotHistoryTable.Insert(ctx, order.ToHistoryTable())
 	if err != nil {
 		return err
 	}

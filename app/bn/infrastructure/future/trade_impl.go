@@ -7,7 +7,6 @@ import (
 
 	positionconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
-	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
 )
 
 type trade struct {
@@ -35,18 +34,7 @@ func NewTrade(
 }
 
 func (t *trade) PlacePosition(ctx context.Context, position *position.Position) error {
-
-	qouteUsdt, err := t.bnFtCryptoTable.Get(ctx, position.Symbol)
-	if err != nil {
-		return err
-	}
-	if !qouteUsdt.IsFound() {
-		qouteUsdt = dynamodbmodel.NewBinanceFutureCryptoTableRecord(position.Symbol, position.PositionSide)
-	}
-
 	if position.IsLongPosition() {
-		position.SetDefaultClientId(qouteUsdt.GetCountingLong())
-
 		switch position.Side {
 		case positionconstant.BUY:
 			err := t.longPosition.BuyPosition(ctx, position)
@@ -61,7 +49,6 @@ func (t *trade) PlacePosition(ctx context.Context, position *position.Position) 
 			}
 		}
 	} else if position.IsShortPosition() {
-		position.SetDefaultClientId(qouteUsdt.GetCountingShort())
 		switch position.Side {
 		case positionconstant.BUY:
 			err := t.shortPosition.SellPosition(ctx, position)

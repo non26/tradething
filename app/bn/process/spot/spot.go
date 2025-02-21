@@ -62,6 +62,7 @@ func (s *spot) PlaceOrder(ctx context.Context, order *domain.Order) (*res.Trade,
 }
 
 func (s *spot) CloseOrderByClientIds(ctx context.Context, clientIds []string) (response *res.CloseByClientIds, err error) {
+	response = &res.CloseByClientIds{}
 	for _, clientId := range clientIds {
 		spotHistory, err := s.bnSpotHistoryTable.Get(ctx, clientId)
 		if err != nil {
@@ -77,8 +78,8 @@ func (s *spot) CloseOrderByClientIds(ctx context.Context, clientIds []string) (r
 			return nil, err
 		}
 
-		if openingPosition.IsFound() {
-			response.AddWithData(clientId, "", "opening position isfound")
+		if !openingPosition.IsFound() {
+			response.AddWithData(clientId, "", "opening position is not found")
 			continue
 		}
 		orderRequest := domain.Order{
@@ -98,6 +99,7 @@ func (s *spot) CloseOrderByClientIds(ctx context.Context, clientIds []string) (r
 }
 
 func (s *spot) MultiplePosition(ctx context.Context, orders []domain.Order) (response *res.MultipleOrder, err error) {
+	response = &res.MultipleOrder{}
 	for _, order := range orders {
 		_, err := s.PlaceOrder(ctx, &order)
 		if err != nil {

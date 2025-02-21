@@ -5,8 +5,8 @@ import "tradething/app/bn/process/spot/domain"
 type Trade struct {
 	Symbol   string `json:"symbol"`
 	Side     string `json:"side"`
-	AmountB  string `json:"amountB"`
-	ClientId string `json:"clientId"`
+	AmountB  string `json:"amount_b"`
+	ClientId string `json:"client_id"`
 }
 
 func (t *Trade) ToOrder() *domain.Order {

@@ -31,20 +31,16 @@ func NewLongPosition(
 }
 
 func (l *LongPosition) BuyPosition(ctx context.Context, position *Position) error {
-	qouteUsdt, err := l.bnFtCryptoTable.Get(ctx, position.Symbol)
+	cryptoCoin, err := l.bnFtCryptoTable.Get(ctx, position.Symbol)
 	if err != nil {
 		return err
 	}
-	if !qouteUsdt.IsFound() {
-		qouteUsdt = dynamodbmodel.NewBinanceFutureCryptoTableRecord(position.Symbol, position.PositionSide)
-		err := l.bnFtCryptoTable.Insert(ctx, qouteUsdt)
-		if err != nil {
-			return err
-		}
+	if !cryptoCoin.IsFound() {
+		cryptoCoin = dynamodbmodel.NewBinanceFutureCryptoTableRecord(position.Symbol, position.PositionSide)
 	} else {
-		qouteUsdt.SetCountingLong(qouteUsdt.GetNextCountingLong().Int())
+		cryptoCoin.SetCountingLong(cryptoCoin.GetNextCountingLong().Int())
 	}
-	position.SetDefaultClientId(qouteUsdt.GetCountingLong())
+	position.SetDefaultClientId(cryptoCoin.GetCountingLong())
 
 	openingPosition, err := l.bnFtOpeningPositionTable.Get(ctx, l.ToOpeningPositionTable(position))
 	if err != nil {
@@ -64,14 +60,19 @@ func (l *LongPosition) BuyPosition(ctx context.Context, position *Position) erro
 		if err != nil {
 			return err
 		}
+		err = l.bnFtHistoryTable.Insert(ctx, position.ToHistoryTable())
+		if err != nil {
+			return err
+		}
+		position.ClientId = openingPosition.ClientId
 	}
 	// this would be Upsert
 	err = l.bnFtOpeningPositionTable.Upsert(ctx, l.ToOpeningPositionTable(position))
 	if err != nil {
 		return err
 	}
-
-	err = l.bnFtCryptoTable.Update(ctx, qouteUsdt)
+	// upsert
+	err = l.bnFtCryptoTable.Upsert(ctx, cryptoCoin)
 	if err != nil {
 		return err
 	}
@@ -119,6 +120,7 @@ func (l *LongPosition) ToOpeningPositionTable(position *Position) *dynamodbmodel
 
 func (l *LongPosition) ToHistoryTable(position *Position) *dynamodbmodel.BnFtHistory {
 	return &dynamodbmodel.BnFtHistory{
+		ClientId:     position.ClientId,
 		Symbol:       position.Symbol,
 		PositionSide: position.PositionSide,
 	}

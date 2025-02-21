@@ -5,6 +5,7 @@ import (
 	req "tradething/app/bn/infrastructure/adaptor/future/req/future_trade"
 
 	positionconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
+	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
 	"github.com/non26/tradepkg/pkg/bn/utils"
 	"github.com/shopspring/decimal"
 )
@@ -41,7 +42,7 @@ func (p *Position) IsShortPosition() bool {
 	return p.PositionSide == positionconstant.SHORT
 }
 
-func (p *Position) SetDefaultClientId(counting int) {
+func (p *Position) SetDefaultClientId(counting int64) {
 	if p.ClientId == "" {
 		p.ClientId = utils.BinanceDefaultClientID(p.Symbol, p.PositionSide, counting)
 	}
@@ -58,4 +59,12 @@ func (p *Position) AddMoreAmountB(amountB string) error {
 	}
 	p.AmountB = amountQInt.Add(prevAmountQInt).String()
 	return nil
+}
+
+func (p *Position) ToHistoryTable() *dynamodbmodel.BnFtHistory {
+	return &dynamodbmodel.BnFtHistory{
+		ClientId:     p.ClientId,
+		Symbol:       p.Symbol,
+		PositionSide: p.PositionSide,
+	}
 }

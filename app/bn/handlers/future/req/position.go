@@ -7,7 +7,7 @@ import (
 )
 
 type Position struct {
-	PositionSide string `json:"positionSide"`
+	PositionSide string `json:"position_side"`
 	Side         string `json:"side"`
 	AmountB      string `json:"amount_b"`
 	Symbol       string `json:"symbol"`

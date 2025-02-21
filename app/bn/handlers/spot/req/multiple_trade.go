@@ -16,7 +16,9 @@ func (m *MultipleOrders) ToDomain() []domain.Order {
 
 func (t *Trade) ToDomain() domain.Order {
 	return domain.Order{
-		Symbol: t.Symbol,
-		Side:   t.Side,
+		Symbol:   t.Symbol,
+		Side:     t.Side,
+		AmountB:  t.AmountB,
+		ClientId: t.ClientId,
 	}
 }
