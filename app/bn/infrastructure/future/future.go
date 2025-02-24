@@ -14,3 +14,7 @@ type ITrade interface {
 	// close position by symbol
 	// invalidate psoition
 }
+
+type ITradePosition interface {
+	GetPosition(ctx context.Context, position_side string) position.IPosition
+}

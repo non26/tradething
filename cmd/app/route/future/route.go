@@ -48,9 +48,13 @@ func RouteFuture(
 		bnFtHistoryTable,
 	)
 
-	trade := infratrade.NewTrade(
+	tradePosition := infratrade.NewTradePosition(
 		longPosition,
 		shortPosition,
+	)
+
+	trade := infratrade.NewTrade(
+		tradePosition,
 		bnFtOpeningPositionTable,
 		bnFtQouteUsdtTable,
 		bnFtHistoryTable,
