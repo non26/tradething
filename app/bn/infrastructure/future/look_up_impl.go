@@ -20,7 +20,7 @@ func NewLookUp(
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
 	bnFtCryptoTable bndynamodb.IBnFtCryptoRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
-) ILookUp {
+) ITradeLookUp {
 	return &lookUp{
 		bnFtOpeningPositionTable: bnFtOpeningPositionTable,
 		bnFtCryptoTable:          bnFtCryptoTable,
