@@ -21,7 +21,7 @@ type ITradeLookUp interface {
 	LookUp(ctx context.Context, position *position.Position) (*tradedomainsvc.TradeLookUp, error)
 }
 
-type ISavePosition interface {
+type ITradeSavePosition interface {
 	Save(ctx context.Context, position *position.Position, lookup *tradedomainsvc.TradeLookUp) error
 }
 

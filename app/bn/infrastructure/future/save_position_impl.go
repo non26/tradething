@@ -33,7 +33,7 @@ type savePosition struct {
 	queryPosition ISavePositionBuilder
 }
 
-func NewSavePosition(queryPosition ISavePositionBuilder) ISavePosition {
+func NewSavePosition(queryPosition ISavePositionBuilder) ITradeSavePosition {
 	return &savePosition{queryPosition}
 }
 

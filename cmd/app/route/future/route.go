@@ -93,7 +93,7 @@ func RouteFuture(
 		bnFtHistoryTable,
 	)
 
-	ftProcess := process.NewFuture(
+	process := process.NewFuture(
 		trade,
 		lookUp,
 		savePosition,
@@ -103,13 +103,13 @@ func RouteFuture(
 		bnFtHistoryTable,
 	)
 
-	positionHandler := handlers.NewPositionHandler(ftProcess)
+	positionHandler := handlers.NewPositionHandler(process)
 	binanceGroup.POST("/position", positionHandler.Handler)
 
-	multiPositionHandler := handlers.NewMultiplePositionHandler(ftProcess)
+	multiPositionHandler := handlers.NewMultiplePositionHandler(process)
 	binanceGroup.POST("/positions", multiPositionHandler.Handler)
 
-	closeByIdsHandler := handlers.NewCloseByIdHandler(ftProcess)
+	closeByIdsHandler := handlers.NewCloseByIdHandler(process)
 	binanceGroup.POST("/close-by-ids", closeByIdsHandler.Handler)
 
 }
