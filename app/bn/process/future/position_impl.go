@@ -8,13 +8,6 @@ import (
 )
 
 func (f *future) PlaceOrder(ctx context.Context, position domain.Position) (*response.Position, error) {
-	// bnHistory, err := f.bnFtHistoryTable.Get(ctx, position.GetClientId())
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// if bnHistory.IsFound() {
-	// 	return nil, errors.New("duplicate client id")
-	// }
 
 	bnposition := position.ToInfraPosition()
 	lookUp, err := f.infraLookUp.LookUp(ctx, bnposition)

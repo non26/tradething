@@ -4,7 +4,8 @@ import (
 	"context"
 
 	position "tradething/app/bn/infrastructure/future/position"
-	domainservice "tradething/app/bn/process/future/domain_service/trade"
+	closedomainsvc "tradething/app/bn/process/future/domain_service/close_position"
+	tradedomainsvc "tradething/app/bn/process/future/domain_service/trade"
 )
 
 type ITrade interface {
@@ -17,13 +18,13 @@ type ITrade interface {
 }
 
 type ITradeLookUp interface {
-	LookUp(ctx context.Context, position *position.Position) (*domainservice.LookUp, error)
+	LookUp(ctx context.Context, position *position.Position) (*tradedomainsvc.TradeLookUp, error)
 }
 
 type ISavePosition interface {
-	Save(ctx context.Context, position *position.Position, lookup *domainservice.LookUp) error
+	Save(ctx context.Context, position *position.Position, lookup *tradedomainsvc.TradeLookUp) error
 }
 
 type IClosePositionLookup interface {
-	ById(ctx context.Context, clientId string) (*domainservice.LookUp, error)
+	ById(ctx context.Context, clientId string) (*closedomainsvc.ClsoePositionLookUp, error)
 }

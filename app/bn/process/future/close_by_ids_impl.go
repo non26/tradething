@@ -5,49 +5,42 @@ import (
 	response "tradething/app/bn/handlers/future/res"
 	"tradething/app/bn/process/future/domain"
 
+	domainservice "tradething/app/bn/process/future/domain_service/close_position"
+
 	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
 )
 
 func (f *future) ClosePositionByClientIds(ctx context.Context, clientIds []string) (responses *response.CloseByClientIds, err error) {
 	responses = &response.CloseByClientIds{}
 	for _, clientId := range clientIds {
-		bnHistory, err := f.bnFtHistoryTable.Get(ctx, clientId)
+		lookUp, err := f.infraClosePositionLookUp.ById(ctx, clientId)
 		if err != nil {
-			responses.AddWithData("error", "error", "error", "error", clientId)
-			continue
-		}
-		if bnHistory.IsFound() {
-			responses.AddWithData("error", "error", bnHistory.Symbol, bnHistory.PositionSide, clientId)
+			responses.AddWithData(err.Error(), "error", "error", "error", clientId)
 			continue
 		}
 
-		bnOpening, err := f.bnFtOpeningPositionTable.ScanWith(ctx, clientId)
-		if err != nil {
-			return nil, err
-		}
-		if !bnOpening.IsFound() {
-			responses.AddWithData("error", "error", "error", "error", clientId)
-			continue
-		}
-
-		position := domain.Position{}
-		position.SetClientId(clientId)
-		position.SetSymbol(bnOpening.Symbol)
-		position.SetPositionSide(bnOpening.PositionSide)
-		if bnOpening.PositionSide == bnconstant.LONG {
-			position.SetSide(bnconstant.SELL)
-		} else {
-			position.SetSide(bnconstant.BUY)
-		}
-		position.SetEntryQuantity(bnOpening.AmountB)
-
+		position := createClosePositionById(lookUp, clientId)
 		err = f.infraFuture.PlacePosition(ctx, position.ToInfraPosition())
 		if err != nil {
-			responses.AddWithData("error", "error", bnOpening.Symbol, bnHistory.PositionSide, clientId)
+			responses.AddWithData(err.Error(), "error", lookUp.OpeningPosition.GetSymbol(), lookUp.OpeningPosition.GetPositionSide(), clientId)
 			continue
 		}
-		responses.AddWithData("success", "success", bnOpening.Symbol, bnOpening.PositionSide, clientId)
+		responses.AddWithData("success", "success", lookUp.OpeningPosition.GetSymbol(), lookUp.OpeningPosition.GetPositionSide(), clientId)
 	}
 
 	return responses, nil
+}
+
+func createClosePositionById(lookUp *domainservice.ClsoePositionLookUp, clientId string) *domain.Position {
+	position := domain.Position{}
+	position.SetClientId(clientId)
+	position.SetSymbol(lookUp.OpeningPosition.GetSymbol())
+	position.SetPositionSide(lookUp.OpeningPosition.GetPositionSide())
+	if lookUp.OpeningPosition.GetPositionSide() == bnconstant.LONG {
+		position.SetSide(bnconstant.SELL)
+	} else {
+		position.SetSide(bnconstant.BUY)
+	}
+	position.SetEntryQuantity(lookUp.OpeningPosition.GetAmountB())
+	return &position
 }

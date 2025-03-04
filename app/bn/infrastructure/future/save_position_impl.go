@@ -37,7 +37,7 @@ func NewSavePosition(queryPosition ISavePositionBuilder) ISavePosition {
 	return &savePosition{queryPosition}
 }
 
-func (s *savePosition) Save(ctx context.Context, position *position.Position, lookup *domainservice.LookUp) error {
+func (s *savePosition) Save(ctx context.Context, position *position.Position, lookup *domainservice.TradeLookUp) error {
 	savePositionBySide := s.queryPosition.Get(ctx, position)
 	return savePositionBySide.Save(ctx, position, lookup)
 }

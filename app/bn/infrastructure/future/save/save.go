@@ -10,7 +10,7 @@ import (
 )
 
 type ISavePositionBySide interface {
-	Save(ctx context.Context, position *position.Position, lookup *domainservice.LookUp) error
+	Save(ctx context.Context, position *position.Position, lookup *domainservice.TradeLookUp) error
 }
 
 func ToOpeningPositionTable(position *position.Position) *dynamodbmodel.BnFtOpeningPosition {
@@ -32,7 +32,7 @@ func ToHistoryTable(position *position.Position) *dynamodbmodel.BnFtHistory {
 	}
 }
 
-func ToCryptoTable(lookUp *domainservice.LookUp) *dynamodbmodel.BnFtCrypto {
+func ToCryptoTable(lookUp *domainservice.TradeLookUp) *dynamodbmodel.BnFtCrypto {
 	return &dynamodbmodel.BnFtCrypto{
 		Symbol:        lookUp.Symbol.GetSymbol(),
 		CountingLong:  lookUp.Symbol.GetCountingLong(),

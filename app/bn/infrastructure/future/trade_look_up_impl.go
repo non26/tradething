@@ -39,7 +39,7 @@ func (l *tradeLookUp) ToOpeningPositionTable(position *position.Position) *dynam
 	}
 }
 
-func (l *tradeLookUp) LookUp(ctx context.Context, position *position.Position) (*domainservice.LookUp, error) {
+func (l *tradeLookUp) LookUp(ctx context.Context, position *position.Position) (*domainservice.TradeLookUp, error) {
 	bnHistory, err := l.bnFtHistoryTable.Get(ctx, position.GetClientId())
 	if err != nil {
 		return nil, err
@@ -65,13 +65,12 @@ func (l *tradeLookUp) LookUp(ctx context.Context, position *position.Position) (
 		return nil, err
 	}
 
-	lookUp := domainservice.NewLookUp()
+	lookUp := domainservice.NewTradeLookUp()
 	lookUp.OpeningPosition.SetIsFound(openingPosition.IsFound())
 	lookUp.OpeningPosition.SetAmountB(openingPosition.AmountB)
 	lookUp.OpeningPosition.SetClientId(openingPosition.ClientId)
 	lookUp.Symbol.SetSymbol(cryptoCoin.Symbol)
 	lookUp.Symbol.SetCountingLong(cryptoCoin.CountingLong)
 	lookUp.Symbol.SetCountingShort(cryptoCoin.CountingShort)
-
 	return lookUp, nil
 }

@@ -87,10 +87,17 @@ func RouteFuture(
 
 	savePosition := infra.NewSavePosition(savePositionBuilder)
 
+	closePositionLookUp := infra.NewClosePositionLookUp(
+		bnFtOpeningPositionTable,
+		bnFtCryptoTable,
+		bnFtHistoryTable,
+	)
+
 	ftProcess := process.NewFuture(
 		trade,
 		lookUp,
 		savePosition,
+		closePositionLookUp,
 		bnFtOpeningPositionTable,
 		bnFtCryptoTable,
 		bnFtHistoryTable,

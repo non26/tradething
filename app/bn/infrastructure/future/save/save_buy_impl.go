@@ -23,7 +23,7 @@ func NewSaveBuyPosition(
 	return &saveBuyPosition{bnFtOpeningPositionTable, bnFtCryptoTable, bnFtHistoryTable}
 }
 
-func (s *saveBuyPosition) Save(ctx context.Context, position *position.Position, lookup *domainservice.LookUp) error {
+func (s *saveBuyPosition) Save(ctx context.Context, position *position.Position, lookup *domainservice.TradeLookUp) error {
 
 	if lookup.OpeningPosition.IsFound() {
 		err := position.AddMoreAmountB(lookup.OpeningPosition.GetAmountB())

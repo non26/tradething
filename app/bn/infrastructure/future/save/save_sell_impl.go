@@ -22,7 +22,7 @@ func NewSaveSellPosition(
 	return &saveSellPosition{bnFtOpeningPositionTable, bnFtCryptoTable, bnFtHistoryTable}
 }
 
-func (s *saveSellPosition) Save(ctx context.Context, position *position.Position, lookup *domainservice.LookUp) error {
+func (s *saveSellPosition) Save(ctx context.Context, position *position.Position, lookup *domainservice.TradeLookUp) error {
 	err := s.bnFtOpeningPositionTable.Delete(ctx, ToOpeningPositionTable(position))
 	if err != nil {
 		return err

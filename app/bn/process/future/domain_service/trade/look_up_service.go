@@ -1,13 +1,17 @@
 package domainservice
 
-type LookUp struct {
-	OpeningPosition *lookupOpeningPosition
-	Symbol          *lookUpSymbol
+import (
+	lookupitem "tradething/app/bn/process/future/domain_service"
+)
+
+type TradeLookUp struct {
+	OpeningPosition *lookupitem.LookupOpeningPosition
+	Symbol          *lookupitem.LookUpSymbol
 }
 
-func NewLookUp() *LookUp {
-	return &LookUp{
-		OpeningPosition: NewLookupOpeningPosition(),
-		Symbol:          NewLookUpSymbol(),
+func NewTradeLookUp() *TradeLookUp {
+	return &TradeLookUp{
+		OpeningPosition: lookupitem.NewLookupOpeningPosition(),
+		Symbol:          lookupitem.NewLookUpSymbol(),
 	}
 }

@@ -19,6 +19,7 @@ type future struct {
 	infraFuture              infrastructure.ITrade
 	infraLookUp              infrastructure.ITradeLookUp
 	infraSavePosition        infrastructure.ISavePosition
+	infraClosePositionLookUp infrastructure.IClosePositionLookup
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository
 	bnFtCryptoTable          bndynamodb.IBnFtCryptoRepository
 	bnFtHistoryTable         bndynamodb.IBnFtHistoryRepository
@@ -28,6 +29,7 @@ func NewFuture(
 	infraFuture infrastructure.ITrade,
 	infraLookUp infrastructure.ITradeLookUp,
 	infraSavePosition infrastructure.ISavePosition,
+	infraClosePositionLookUp infrastructure.IClosePositionLookup,
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
 	bnFtCryptoTable bndynamodb.IBnFtCryptoRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
@@ -36,6 +38,7 @@ func NewFuture(
 		infraFuture,
 		infraLookUp,
 		infraSavePosition,
+		infraClosePositionLookUp,
 		bnFtOpeningPositionTable,
 		bnFtCryptoTable,
 		bnFtHistoryTable,
