@@ -4,31 +4,31 @@ import (
 	"context"
 	"errors"
 	position "tradething/app/bn/infrastructure/future/position"
-	domainservice "tradething/app/bn/process/future/domain_service"
+	domainservice "tradething/app/bn/process/future/domain_service/trade"
 
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
 	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
 )
 
-type lookUp struct {
+type tradeLookUp struct {
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository
 	bnFtCryptoTable          bndynamodb.IBnFtCryptoRepository
 	bnFtHistoryTable         bndynamodb.IBnFtHistoryRepository
 }
 
-func NewLookUp(
+func NewTradeLookUp(
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
 	bnFtCryptoTable bndynamodb.IBnFtCryptoRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
 ) ITradeLookUp {
-	return &lookUp{
+	return &tradeLookUp{
 		bnFtOpeningPositionTable: bnFtOpeningPositionTable,
 		bnFtCryptoTable:          bnFtCryptoTable,
 		bnFtHistoryTable:         bnFtHistoryTable,
 	}
 }
 
-func (l *lookUp) ToOpeningPositionTable(position *position.Position) *dynamodbmodel.BnFtOpeningPosition {
+func (l *tradeLookUp) ToOpeningPositionTable(position *position.Position) *dynamodbmodel.BnFtOpeningPosition {
 	return &dynamodbmodel.BnFtOpeningPosition{
 		Symbol:       position.Symbol,
 		PositionSide: position.PositionSide,
@@ -39,7 +39,7 @@ func (l *lookUp) ToOpeningPositionTable(position *position.Position) *dynamodbmo
 	}
 }
 
-func (l *lookUp) LookUp(ctx context.Context, position *position.Position) (*domainservice.LookUp, error) {
+func (l *tradeLookUp) LookUp(ctx context.Context, position *position.Position) (*domainservice.LookUp, error) {
 	bnHistory, err := l.bnFtHistoryTable.Get(ctx, position.GetClientId())
 	if err != nil {
 		return nil, err

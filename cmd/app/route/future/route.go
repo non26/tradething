@@ -62,7 +62,7 @@ func RouteFuture(
 		bnFtHistoryTable,
 	)
 
-	lookUp := infra.NewLookUp(
+	lookUp := infra.NewTradeLookUp(
 		bnFtOpeningPositionTable,
 		bnFtCryptoTable,
 		bnFtHistoryTable,

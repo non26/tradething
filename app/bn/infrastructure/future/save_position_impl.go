@@ -4,7 +4,7 @@ import (
 	"context"
 	position "tradething/app/bn/infrastructure/future/position"
 	"tradething/app/bn/infrastructure/future/save"
-	domainservice "tradething/app/bn/process/future/domain_service"
+	domainservice "tradething/app/bn/process/future/domain_service/trade"
 
 	"github.com/non26/tradepkg/pkg/bn/utils"
 )

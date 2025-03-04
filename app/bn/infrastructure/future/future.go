@@ -4,7 +4,7 @@ import (
 	"context"
 
 	position "tradething/app/bn/infrastructure/future/position"
-	domainservice "tradething/app/bn/process/future/domain_service"
+	domainservice "tradething/app/bn/process/future/domain_service/trade"
 )
 
 type ITrade interface {
@@ -22,4 +22,8 @@ type ITradeLookUp interface {
 
 type ISavePosition interface {
 	Save(ctx context.Context, position *position.Position, lookup *domainservice.LookUp) error
+}
+
+type IClosePositionLookup interface {
+	ById(ctx context.Context, clientId string) (*domainservice.LookUp, error)
 }
