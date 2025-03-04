@@ -48,6 +48,10 @@ func (p *Position) SetDefaultClientId(counting int64) {
 	}
 }
 
+func (p *Position) GetClientId() string {
+	return p.ClientId
+}
+
 func (p *Position) AddMoreAmountB(amountB string) error {
 	amountQInt, err := decimal.NewFromString(amountB)
 	if err != nil {

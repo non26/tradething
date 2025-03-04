@@ -3,11 +3,13 @@ package route
 import (
 	handlers "tradething/app/bn/handlers/future"
 	adaptor "tradething/app/bn/infrastructure/adaptor/future"
-	infratrade "tradething/app/bn/infrastructure/future"
+	infra "tradething/app/bn/infrastructure/future"
 	infraposition "tradething/app/bn/infrastructure/future/position"
 	process "tradething/app/bn/process/future"
 
 	"tradething/config"
+
+	savepositionby "tradething/app/bn/infrastructure/future/save"
 
 	"github.com/labstack/echo/v4"
 	bnclient "github.com/non26/tradepkg/pkg/bn/bn_client"
@@ -19,7 +21,7 @@ func RouteFuture(
 	app *echo.Echo,
 	config *config.AppConfig,
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
-	bnFtQouteUsdtTable bndynamodb.IBnFtCryptoRepository,
+	bnFtCryptoTable bndynamodb.IBnFtCryptoRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
 	httpttransport bntransport.IBinanceServiceHttpTransport,
 	httpclient bnclient.IBinanceSerivceHttpClient,
@@ -37,33 +39,60 @@ func RouteFuture(
 	longPosition := infraposition.NewLongPosition(
 		ftAdaptor,
 		bnFtOpeningPositionTable,
-		bnFtQouteUsdtTable,
+		bnFtCryptoTable,
 		bnFtHistoryTable,
 	)
 
 	shortPosition := infraposition.NewShortPosition(
 		ftAdaptor,
 		bnFtOpeningPositionTable,
-		bnFtQouteUsdtTable,
+		bnFtCryptoTable,
 		bnFtHistoryTable,
 	)
 
-	tradePosition := infratrade.NewTradePosition(
+	tradeBuilder := infra.NewTradePosition(
 		longPosition,
 		shortPosition,
 	)
 
-	trade := infratrade.NewTrade(
-		tradePosition,
+	trade := infra.NewTrade(
+		tradeBuilder,
 		bnFtOpeningPositionTable,
-		bnFtQouteUsdtTable,
+		bnFtCryptoTable,
 		bnFtHistoryTable,
 	)
 
+	lookUp := infra.NewLookUp(
+		bnFtOpeningPositionTable,
+		bnFtCryptoTable,
+		bnFtHistoryTable,
+	)
+
+	saveBuyPosition := savepositionby.NewSaveBuyPosition(
+		bnFtOpeningPositionTable,
+		bnFtCryptoTable,
+		bnFtHistoryTable,
+	)
+
+	saveSellPosition := savepositionby.NewSaveSellPosition(
+		bnFtOpeningPositionTable,
+		bnFtCryptoTable,
+		bnFtHistoryTable,
+	)
+
+	savePositionBuilder := infra.NewSavePositionBuilder(
+		saveBuyPosition,
+		saveSellPosition,
+	)
+
+	savePosition := infra.NewSavePosition(savePositionBuilder)
+
 	ftProcess := process.NewFuture(
 		trade,
+		lookUp,
+		savePosition,
 		bnFtOpeningPositionTable,
-		bnFtQouteUsdtTable,
+		bnFtCryptoTable,
 		bnFtHistoryTable,
 	)
 
