@@ -2,7 +2,6 @@ package order
 
 import (
 	"context"
-	"errors"
 	spot "tradething/app/bn/infrastructure/adaptor/spot"
 	spotreq "tradething/app/bn/infrastructure/adaptor/spot/req"
 
@@ -86,55 +85,55 @@ func NewOrderSpot(
 }
 
 func (o *OrderSpot) BuyOrder(ctx context.Context, order *Order) error {
-	crypto, err := o.bnSpotCryptoTable.Get(ctx, order.Symbol)
+	// crypto, err := o.bnSpotCryptoTable.Get(ctx, order.Symbol)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// if !crypto.IsFound() {
+	// 	crypto = dynamodbmodel.NewBinanceSpotCryptoTableRecord(order.Symbol)
+	// } else {
+	// 	crypto.SetCounting(crypto.GetCounting() + 1)
+	// }
+	// order.SetDefaultClientId(crypto.GetCounting())
+
+	// openingSpot, err := o.bnSpotOpeningPositionTable.Get(ctx, order.ToOpeningSpotTable())
+	// if err != nil {
+	// 	return err
+	// }
+
+	// if openingSpot.ClientId == order.NewClientOrderId {
+	// 	return errors.New("duplicate client id")
+	// }
+
+	_, err := o.adaptor.PlaceOrder(ctx, order.ToSpotOrderRequest())
 	if err != nil {
 		return err
 	}
 
-	if !crypto.IsFound() {
-		crypto = dynamodbmodel.NewBinanceSpotCryptoTableRecord(order.Symbol)
-	} else {
-		crypto.SetCounting(crypto.GetCounting() + 1)
-	}
-	order.SetDefaultClientId(crypto.GetCounting())
+	// if openingSpot.IsFound() {
+	// 	err = order.AddMoreAmountB(order.Quantity)
+	// 	if err != nil {
+	// 		return err
+	// 	}
 
-	openingSpot, err := o.bnSpotOpeningPositionTable.Get(ctx, order.ToOpeningSpotTable())
-	if err != nil {
-		return err
-	}
+	// 	err = o.bnSpotHistoryTable.Insert(ctx, order.ToHistoryTable())
+	// 	if err != nil {
+	// 		return err
+	// 	}
 
-	if openingSpot.ClientId == order.NewClientOrderId {
-		return errors.New("duplicate client id")
-	}
+	// 	order.NewClientOrderId = openingSpot.ClientId
+	// }
 
-	_, err = o.adaptor.PlaceOrder(ctx, order.ToSpotOrderRequest())
-	if err != nil {
-		return err
-	}
+	// err = o.bnSpotOpeningPositionTable.Upsert(ctx, order.ToOpeningSpotTable())
+	// if err != nil {
+	// 	return err
+	// }
 
-	if openingSpot.IsFound() {
-		err = order.AddMoreAmountB(order.Quantity)
-		if err != nil {
-			return err
-		}
-
-		err = o.bnSpotHistoryTable.Insert(ctx, order.ToHistoryTable())
-		if err != nil {
-			return err
-		}
-
-		order.NewClientOrderId = openingSpot.ClientId
-	}
-
-	err = o.bnSpotOpeningPositionTable.Upsert(ctx, order.ToOpeningSpotTable())
-	if err != nil {
-		return err
-	}
-
-	err = o.bnSpotCryptoTable.Update(ctx, crypto)
-	if err != nil {
-		return err
-	}
+	// err = o.bnSpotCryptoTable.Update(ctx, crypto)
+	// if err != nil {
+	// 	return err
+	// }
 
 	return nil
 }
@@ -146,15 +145,15 @@ func (o *OrderSpot) SellOrder(ctx context.Context, order *Order) error {
 		return err
 	}
 
-	err = o.bnSpotOpeningPositionTable.Delete(ctx, order.ToOpeningSpotTable())
-	if err != nil {
-		return err
-	}
+	// err = o.bnSpotOpeningPositionTable.Delete(ctx, order.ToOpeningSpotTable())
+	// if err != nil {
+	// 	return err
+	// }
 
-	err = o.bnSpotHistoryTable.Insert(ctx, order.ToHistoryTable())
-	if err != nil {
-		return err
-	}
+	// err = o.bnSpotHistoryTable.Insert(ctx, order.ToHistoryTable())
+	// if err != nil {
+	// 	return err
+	// }
 
 	return nil
 }

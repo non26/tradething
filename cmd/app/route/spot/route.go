@@ -10,6 +10,7 @@ import (
 	adaptor "tradething/app/bn/infrastructure/adaptor/spot"
 	infrastructure "tradething/app/bn/infrastructure/spot"
 	infraorder "tradething/app/bn/infrastructure/spot/order"
+	infrasave "tradething/app/bn/infrastructure/spot/save"
 	process "tradething/app/bn/process/spot"
 	"tradething/config"
 )
@@ -33,6 +34,42 @@ func RouteSpot(
 		httpclient,
 	)
 
+	infraSpotLookUp := infrastructure.NewTradeLookUp(
+		bnSpotOpeningPositionTable,
+		bnSpotQouteUsdtTable,
+		bnSpotHistoryTable,
+	)
+
+	saveBuy := infrasave.NewSaveBuy(
+		bnSpotOpeningPositionTable,
+		bnSpotQouteUsdtTable,
+		bnSpotHistoryTable,
+	)
+
+	saveSell := infrasave.NewSaveSell(
+		bnSpotOpeningPositionTable,
+		bnSpotQouteUsdtTable,
+		bnSpotHistoryTable,
+	)
+
+	saveOrderBuilder := infrastructure.NewTradeSaveOrderBuilder(
+		saveBuy,
+		saveSell,
+	)
+
+	infraSaveOrder := infrastructure.NewTradeSaveOrder(
+		saveOrderBuilder,
+		bnSpotOpeningPositionTable,
+		bnSpotQouteUsdtTable,
+		bnSpotHistoryTable,
+	)
+
+	infraClosePositionLookUp := infrastructure.NewCloseOrderLookUp(
+		bnSpotOpeningPositionTable,
+		bnSpotQouteUsdtTable,
+		bnSpotHistoryTable,
+	)
+
 	orderSpot := infraorder.NewOrderSpot(
 		spotAdaptor,
 		bnSpotOpeningPositionTable,
@@ -44,20 +81,23 @@ func RouteSpot(
 		orderSpot,
 	)
 
-	spotProcess := process.NewSpot(
+	process := process.NewSpot(
+		infraSpotLookUp,
+		infraSaveOrder,
+		infraClosePositionLookUp,
+		tradeSpot,
 		bnSpotOpeningPositionTable,
 		bnSpotQouteUsdtTable,
 		bnSpotHistoryTable,
-		tradeSpot,
 	)
 
-	spotHandler := handlers.NewOrderHandler(spotProcess)
+	spotHandler := handlers.NewOrderHandler(process)
 	spotGroup.POST("/order", spotHandler.Handler)
 
-	multipleOrderHandler := handlers.NewMultipleOrderHandler(spotProcess)
+	multipleOrderHandler := handlers.NewMultipleOrderHandler(process)
 	spotGroup.POST("/orders", multipleOrderHandler.Handler)
 
-	closeByIdHandler := handlers.NewCloseByIdHandler(spotProcess)
+	closeByIdHandler := handlers.NewCloseByIdHandler(process)
 	spotGroup.POST("/close-by-ids", closeByIdHandler.Handler)
 
 }

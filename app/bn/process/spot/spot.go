@@ -2,7 +2,6 @@ package spot
 
 import (
 	"context"
-	"errors"
 	infrastructure "tradething/app/bn/infrastructure/spot"
 	"tradething/app/bn/process/spot/domain"
 
@@ -19,38 +18,48 @@ type ISpot interface {
 }
 
 type spot struct {
+	infraSpotLookUp            infrastructure.ITradeLookUp
+	infraSpotSaveOrder         infrastructure.ITradeSaveOrder
+	infraClosePositionLookUp   infrastructure.ICloseOrderLookUp
+	infraSpot                  infrastructure.ITrade
 	bnSpotOpeningPositionTable bndynamodb.IBnSpotOpeningPositionRepository
 	bnSpotCryptoTable          bndynamodb.IBnSpotCryptoRepository
 	bnSpotHistoryTable         bndynamodb.IBnSpotHistoryRepository
-	infraSpot                  infrastructure.ITrade
 }
 
 func NewSpot(
+	infraSpotLookUp infrastructure.ITradeLookUp,
+	infraSpotSaveOrder infrastructure.ITradeSaveOrder,
+	infraClosePositionLookUp infrastructure.ICloseOrderLookUp,
+	infraSpot infrastructure.ITrade,
 	bnSpotOpeningPositionTable bndynamodb.IBnSpotOpeningPositionRepository,
 	bnSpotCryptoTable bndynamodb.IBnSpotCryptoRepository,
 	bnSpotHistoryTable bndynamodb.IBnSpotHistoryRepository,
-	infraSpot infrastructure.ITrade,
 ) ISpot {
 	return &spot{
+		infraSpotLookUp:            infraSpotLookUp,
+		infraSpotSaveOrder:         infraSpotSaveOrder,
+		infraClosePositionLookUp:   infraClosePositionLookUp,
+		infraSpot:                  infraSpot,
 		bnSpotOpeningPositionTable: bnSpotOpeningPositionTable,
 		bnSpotCryptoTable:          bnSpotCryptoTable,
 		bnSpotHistoryTable:         bnSpotHistoryTable,
-		infraSpot:                  infraSpot,
 	}
 }
 
 func (s *spot) PlaceOrder(ctx context.Context, order *domain.Order) (*res.Trade, error) {
 
-	spotHistory, err := s.bnSpotHistoryTable.Get(ctx, order.ClientId)
+	lookup, err := s.infraSpotLookUp.LookUp(ctx, order.ToInfrastructureOrder())
 	if err != nil {
 		return nil, err
 	}
 
-	if spotHistory.IsFound() {
-		return nil, errors.New("duplicate client id")
+	err = s.infraSpot.PlaceOrder(ctx, order.ToInfrastructureOrder())
+	if err != nil {
+		return nil, err
 	}
 
-	err = s.infraSpot.PlaceOrder(ctx, order.ToInfrastructureOrder())
+	err = s.infraSpotSaveOrder.Save(ctx, order.ToInfrastructureOrder(), lookup)
 	if err != nil {
 		return nil, err
 	}
@@ -64,35 +73,30 @@ func (s *spot) PlaceOrder(ctx context.Context, order *domain.Order) (*res.Trade,
 func (s *spot) CloseOrderByClientIds(ctx context.Context, clientIds []string) (response *res.CloseByClientIds, err error) {
 	response = &res.CloseByClientIds{}
 	for _, clientId := range clientIds {
-		spotHistory, err := s.bnSpotHistoryTable.Get(ctx, clientId)
+		lookup, err := s.infraClosePositionLookUp.ById(ctx, clientId)
 		if err != nil {
-			return nil, err
-		}
-		if spotHistory.IsFound() {
-			response.AddWithData(clientId, "", "client id isfound")
+			response.AddWithData(clientId, "", err.Error())
 			continue
 		}
 
-		openingPosition, err := s.bnSpotOpeningPositionTable.ScanWith(ctx, clientId)
-		if err != nil {
-			return nil, err
-		}
-
-		if !openingPosition.IsFound() {
-			response.AddWithData(clientId, "", "opening position is not found")
-			continue
-		}
 		orderRequest := domain.Order{
 			ClientId: clientId,
-			Symbol:   openingPosition.Symbol,
+			Symbol:   lookup.OpeningPosition.GetSymbol(),
 			Side:     bnconstant.SELL,
-			AmountB:  openingPosition.AmountB,
+			AmountB:  lookup.OpeningPosition.GetQuantity(),
 		}
 		err = s.infraSpot.PlaceOrder(ctx, orderRequest.ToInfrastructureOrder())
 		if err != nil {
 			response.AddWithData(clientId, orderRequest.Symbol, "failed")
 			continue
 		}
+
+		err = s.infraSpotSaveOrder.Save(ctx, orderRequest.ToInfrastructureOrder(), lookup.ToTradeLookUp())
+		if err != nil {
+			response.AddWithData(clientId, orderRequest.Symbol, "failed")
+			continue
+		}
+
 		response.AddWithData(clientId, orderRequest.Symbol, "success")
 	}
 	return response, nil
