@@ -16,7 +16,7 @@ type ITrade interface {
 	// invalidate psoition
 }
 
-type ILookUp interface {
+type ITradeLookUp interface {
 	LookUp(ctx context.Context, position *position.Position) (*domainservice.LookUp, error)
 }
 
