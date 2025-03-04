@@ -25,6 +25,13 @@ func (f *future) ClosePositionByClientIds(ctx context.Context, clientIds []strin
 			responses.AddWithData(err.Error(), "error", lookUp.OpeningPosition.GetSymbol(), lookUp.OpeningPosition.GetPositionSide(), clientId)
 			continue
 		}
+
+		err = f.infraSavePosition.Save(ctx, position.ToInfraPosition(), lookUp.ToTradeLookUp())
+		if err != nil {
+			responses.AddWithData(err.Error(), "error", lookUp.OpeningPosition.GetSymbol(), lookUp.OpeningPosition.GetPositionSide(), clientId)
+			continue
+		}
+
 		responses.AddWithData("success", "success", lookUp.OpeningPosition.GetSymbol(), lookUp.OpeningPosition.GetPositionSide(), clientId)
 	}
 
