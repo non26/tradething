@@ -60,11 +60,12 @@ func NewTrade(
 }
 
 func (t *trade) PlacePosition(ctx context.Context, position *position.Position) error {
-	trade := t.tradePosition.GetPosition(ctx, position.Side)
+	var err error
+	trade := t.tradePosition.GetPosition(ctx, position.PositionSide)
 	if utils.IsBuyPosition(position.Side, position.PositionSide) {
-		trade.BuyPosition(ctx, position)
+		err = trade.BuyPosition(ctx, position)
 	} else if utils.IsSellPosition(position.Side, position.PositionSide) {
-		trade.SellPosition(ctx, position)
+		err = trade.SellPosition(ctx, position)
 	}
-	return nil
+	return err
 }

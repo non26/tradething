@@ -5,6 +5,8 @@ import (
 	"errors"
 	response "tradething/app/bn/handlers/future/res"
 	domain "tradething/app/bn/process/future/domain"
+
+	"github.com/non26/tradepkg/pkg/bn/utils"
 )
 
 func (f *future) PlaceOrder(ctx context.Context, position domain.Position) (*response.Position, error) {
@@ -15,8 +17,10 @@ func (f *future) PlaceOrder(ctx context.Context, position domain.Position) (*res
 		return nil, err
 	}
 
-	if position.GetClientId() == lookUp.OpeningPosition.GetClientId() {
-		return nil, errors.New("duplicate client id")
+	if utils.IsBuyPosition(position.GetSide(), position.GetPositionSide()) {
+		if position.GetClientId() == lookUp.OpeningPosition.GetClientId() {
+			return nil, errors.New("duplicate client id")
+		}
 	}
 
 	err = f.infraFuture.PlacePosition(ctx, bnposition)

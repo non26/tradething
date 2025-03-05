@@ -26,7 +26,7 @@ func NewSaveBuyPosition(
 func (s *saveBuyPosition) Save(ctx context.Context, position *position.Position, lookup *domainservice.TradeLookUp) error {
 
 	if lookup.OpeningPosition.IsFound() {
-		err := position.AddMoreAmountB(position.AmountB)
+		err := position.AddMoreAmountB(lookup.OpeningPosition.GetAmountB())
 		if err != nil {
 			return err
 		}

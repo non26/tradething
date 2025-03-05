@@ -6,6 +6,7 @@ import (
 	"tradething/app/bn/infrastructure/spot/order"
 	domainservice "tradething/app/bn/process/spot/domain_service/trade"
 
+	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_spot"
 	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_spot/models"
 )
@@ -56,8 +57,10 @@ func (t *tradeLookUp) LookUp(ctx context.Context, order *order.Order) (*domainse
 		return nil, err
 	}
 
-	if openingSpot.ClientId == order.NewClientOrderId {
-		return nil, errors.New("duplicate client id")
+	if order.Side == bnconstant.BUY {
+		if openingSpot.ClientId == order.NewClientOrderId {
+			return nil, errors.New("duplicate client id")
+		}
 	}
 
 	lookup := domainservice.NewTradeLookUp()
