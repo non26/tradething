@@ -34,6 +34,7 @@ func init() {
 		panic(err.Error())
 	}
 
+	// dynamodb config
 	dynamodbconfig := bndynamodbconfig.NewDynamodbConfig()
 	dynamodbendpoint := bndynamodbconfig.NewEndPointResolver(_config.Dynamodb.Region, _config.Dynamodb.Endpoint)
 	dynamodbcredential := bndynamodbconfig.NewCredential(_config.Dynamodb.Ak, _config.Dynamodb.Sk)
@@ -43,20 +44,23 @@ func init() {
 	} else {
 		dynamodbclient = bndynamodbconfig.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewPrd()
 	}
-	// future
+	// dynamodb for future
 	bnFtOpeningPositionTable := bndynamodb.NewConnectionBnFtOpeningPositionRepository(dynamodbclient)
 	bnFtQouteUsdtTable := bndynamodb.NewConnectionBnFtCryptoRepository(dynamodbclient)
 	bnFtHistoryTable := bndynamodb.NewConnectionBnFtHistoryRepository(dynamodbclient)
-	// spot
+	// dynamodb for spot
 	bnSpotOpeningPositionTable := bndynamodbspot.NewConnectionBnSpotOpeningPositionRepository(dynamodbclient)
 	bnSpotQouteUsdtTable := bndynamodbspot.NewConnectionBnSpotCryptoRepository(dynamodbclient)
 	bnSpotHistoryTable := bndynamodbspot.NewConnectionBnSpotHistoryRepository(dynamodbclient)
+	// http
 	httptransport := bntransport.NewBinanceTransport(&http.Transport{})
 	httpclient := bnclient.NewBinanceSerivceHttpClient()
 
+	// echo
 	app_echo := echo.New()
 	app.MiddlerwareComposing(app_echo)
 	app.HealthCheck(app_echo)
+	// route
 	routefuture.RouteFuture(app_echo, _config, bnFtOpeningPositionTable, bnFtQouteUsdtTable, bnFtHistoryTable, httptransport, httpclient)
 	routespot.RouteSpot(app_echo, _config, bnSpotOpeningPositionTable, bnSpotQouteUsdtTable, bnSpotHistoryTable, httptransport, httpclient)
 	routelambda.RouteLambda(app_echo, _config)

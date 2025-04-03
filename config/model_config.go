@@ -10,6 +10,10 @@ type AppConfig struct {
 	BinanceSpotUrl   BinanceSpotUrl   `mapstructure:"binance-spot-url" json:"binance-spot-url"`
 }
 
+func (a AppConfig) GetPortWithFormat() string {
+	return ":" + a.Port
+}
+
 func (c *AppConfig) IsLocal() bool {
 	return c.Env == "local"
 }

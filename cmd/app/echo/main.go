@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"tradething/cmd/app"
 	routefuture "tradething/cmd/app/route/future"
@@ -21,11 +20,12 @@ func main() {
 		panic(err.Error())
 	}
 
+	// dynamodb config
 	dynamodbconfig := bndynamodbconfig.NewDynamodbConfig()
 	dynamodbendpoint := bndynamodbconfig.NewEndPointResolver(config.Dynamodb.Region, config.Dynamodb.Endpoint)
 	dynamodbcredential := bndynamodbconfig.NewCredential(config.Dynamodb.Ak, config.Dynamodb.Sk)
 	dynamodbclient := bndynamodbconfig.DynamoDB(dynamodbendpoint, dynamodbcredential, dynamodbconfig.LoadConfig()).NewLocal()
-	// future
+	// dynamodb for future
 	bnFtOpeningPositionTable := bndynamodb.NewConnectionBnFtOpeningPositionRepository(dynamodbclient)
 	bnFtQouteUsdtTable := bndynamodb.NewConnectionBnFtCryptoRepository(dynamodbclient)
 	bnFtHistoryTable := bndynamodb.NewConnectionBnFtHistoryRepository(dynamodbclient)
@@ -36,10 +36,11 @@ func main() {
 
 	httptransport := bntransport.NewBinanceTransport(&http.Transport{})
 	httpclient := bnclient.NewBinanceSerivceHttpClient()
-
+	// echo
 	app_echo := echo.New()
 	app.HealthCheck(app_echo)
+	// route
 	routefuture.RouteFuture(app_echo, config, bnFtOpeningPositionTable, bnFtQouteUsdtTable, bnFtHistoryTable, httptransport, httpclient)
 	routespot.RouteSpot(app_echo, config, bnSpotOpeningPositionTable, bnSpotQouteUsdtTable, bnSpotHistoryTable, httptransport, httpclient)
-	app_echo.Start(fmt.Sprintf(":%v", config.Port))
+	app_echo.Start(config.GetPortWithFormat())
 }
