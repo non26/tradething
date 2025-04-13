@@ -7,7 +7,7 @@ import (
 )
 
 func HealthCheck(app *echo.Echo) {
-	app.GET("/", func(c echo.Context) error {
+	app.GET("/health-check", func(c echo.Context) error {
 		type HealthCheck struct {
 			Message string `json:"message"`
 		}
