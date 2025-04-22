@@ -1,5 +1,9 @@
 package domainservice
 
+import (
+	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
+)
+
 type LookUpSymbol struct {
 	symbol        string
 	countingLong  int64
@@ -32,4 +36,11 @@ func (l *LookUpSymbol) SetCountingLong(countingLong int64) {
 
 func (l *LookUpSymbol) SetCountingShort(countingShort int64) {
 	l.countingShort = countingShort
+}
+
+func (l *LookUpSymbol) GetCountingBy(positionSide string) int64 {
+	if positionSide == bnconstant.LONG {
+		return l.countingLong
+	}
+	return l.countingShort
 }

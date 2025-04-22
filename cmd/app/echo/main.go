@@ -29,6 +29,7 @@ func main() {
 	bnFtOpeningPositionTable := bndynamodb.NewConnectionBnFtOpeningPositionRepository(dynamodbclient)
 	bnFtQouteUsdtTable := bndynamodb.NewConnectionBnFtCryptoRepository(dynamodbclient)
 	bnFtHistoryTable := bndynamodb.NewConnectionBnFtHistoryRepository(dynamodbclient)
+	bnFtAdvancedPosition := bndynamodb.NewConnectionBnFtAdvancedPositionRepository(dynamodbclient)
 	// spot
 	bnSpotOpeningPositionTable := bndynamodbspot.NewConnectionBnSpotOpeningPositionRepository(dynamodbclient)
 	bnSpotQouteUsdtTable := bndynamodbspot.NewConnectionBnSpotCryptoRepository(dynamodbclient)
@@ -40,7 +41,7 @@ func main() {
 	app_echo := echo.New()
 	app.HealthCheck(app_echo)
 	// route
-	routefuture.RouteFuture(app_echo, config, bnFtOpeningPositionTable, bnFtQouteUsdtTable, bnFtHistoryTable, httptransport, httpclient)
+	routefuture.RouteFuture(app_echo, config, bnFtOpeningPositionTable, bnFtQouteUsdtTable, bnFtHistoryTable, bnFtAdvancedPosition, httptransport, httpclient)
 	routespot.RouteSpot(app_echo, config, bnSpotOpeningPositionTable, bnSpotQouteUsdtTable, bnSpotHistoryTable, httptransport, httpclient)
 	app_echo.Start(config.GetPortWithFormat())
 }

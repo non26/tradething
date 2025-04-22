@@ -48,6 +48,7 @@ func init() {
 	bnFtOpeningPositionTable := bndynamodb.NewConnectionBnFtOpeningPositionRepository(dynamodbclient)
 	bnFtQouteUsdtTable := bndynamodb.NewConnectionBnFtCryptoRepository(dynamodbclient)
 	bnFtHistoryTable := bndynamodb.NewConnectionBnFtHistoryRepository(dynamodbclient)
+	bnFtAdvancedPosition := bndynamodb.NewConnectionBnFtAdvancedPositionRepository(dynamodbclient)
 	// dynamodb for spot
 	bnSpotOpeningPositionTable := bndynamodbspot.NewConnectionBnSpotOpeningPositionRepository(dynamodbclient)
 	bnSpotQouteUsdtTable := bndynamodbspot.NewConnectionBnSpotCryptoRepository(dynamodbclient)
@@ -61,7 +62,7 @@ func init() {
 	app.MiddlerwareComposing(app_echo)
 	app.HealthCheck(app_echo)
 	// route
-	routefuture.RouteFuture(app_echo, _config, bnFtOpeningPositionTable, bnFtQouteUsdtTable, bnFtHistoryTable, httptransport, httpclient)
+	routefuture.RouteFuture(app_echo, _config, bnFtOpeningPositionTable, bnFtQouteUsdtTable, bnFtHistoryTable, bnFtAdvancedPosition, httptransport, httpclient)
 	routespot.RouteSpot(app_echo, _config, bnSpotOpeningPositionTable, bnSpotQouteUsdtTable, bnSpotHistoryTable, httptransport, httpclient)
 	routelambda.RouteLambda(app_echo, _config)
 

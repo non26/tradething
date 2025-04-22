@@ -23,6 +23,7 @@ func RouteFuture(
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
 	bnFtCryptoTable bndynamodb.IBnFtCryptoRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
+	bnFtAdvancedPosition bndynamodb.IBnFtAdvancedPositionRepository,
 	httpttransport bntransport.IBinanceServiceHttpTransport,
 	httpclient bnclient.IBinanceSerivceHttpClient,
 ) {
@@ -62,7 +63,7 @@ func RouteFuture(
 		bnFtHistoryTable,
 	)
 
-	lookUp := infra.NewTradeLookUp(
+	tradeLookUp := infra.NewTradeLookUp(
 		bnFtOpeningPositionTable,
 		bnFtCryptoTable,
 		bnFtHistoryTable,
@@ -87,20 +88,33 @@ func RouteFuture(
 
 	savePosition := infra.NewSavePosition(savePositionBuilder)
 
-	closePositionLookUp := infra.NewClosePositionLookUp(
+	// closePositionLookUp := infra.NewClosePositionLookUp(
+	// 	bnFtOpeningPositionTable,
+	// 	bnFtCryptoTable,
+	// 	bnFtHistoryTable,
+	// )
+
+	advancedPositionLookUp := infra.NewAdvancedPositionLookUp(
 		bnFtOpeningPositionTable,
-		bnFtCryptoTable,
 		bnFtHistoryTable,
+		bnFtAdvancedPosition,
+	)
+
+	cryptoLookUp := infra.NewCryptoLookUp(
+		bnFtCryptoTable,
 	)
 
 	process := process.NewFuture(
 		trade,
-		lookUp,
+		tradeLookUp,
 		savePosition,
-		closePositionLookUp,
+		// closePositionLookUp,
+		advancedPositionLookUp,
+		cryptoLookUp,
 		bnFtOpeningPositionTable,
 		bnFtCryptoTable,
 		bnFtHistoryTable,
+		bnFtAdvancedPosition,
 	)
 
 	positionHandler := handlers.NewPositionHandler(process)
@@ -109,7 +123,11 @@ func RouteFuture(
 	multiPositionHandler := handlers.NewMultiplePositionHandler(process)
 	binanceGroup.POST("/positions", multiPositionHandler.Handler)
 
+	// manage-position
 	closeByIdsHandler := handlers.NewCloseByIdHandler(process)
 	binanceGroup.POST("/close-by-ids", closeByIdsHandler.Handler)
+
+	// set-advanced-position
+	// get-advanced-position
 
 }

@@ -45,32 +45,29 @@ func (l *tradeLookUp) LookUp(ctx context.Context, position *position.Position) (
 		return nil, err
 	}
 	if bnHistory.IsFound() {
-		return nil, errors.New("duplicate client id")
+		return nil, errors.New("duplicate history client id")
 	}
 
-	cryptoCoin, err := l.bnFtCryptoTable.Get(ctx, position.Symbol)
-	if err != nil {
-		return nil, err
-	}
-
-	if !cryptoCoin.IsFound() {
-		cryptoCoin = dynamodbmodel.NewBinanceFutureCryptoTableRecord(position.Symbol, position.PositionSide)
+	var openingPosition *dynamodbmodel.BnFtOpeningPosition
+	if position.Symbol != "" && position.PositionSide != "" {
+		openingPosition, err = l.bnFtOpeningPositionTable.Get(ctx, l.ToOpeningPositionTable(position))
+		if err != nil {
+			return nil, err
+		}
 	} else {
-		cryptoCoin.SetNextCountingBy(position.PositionSide)
-	}
-	position.SetDefaultClientId(cryptoCoin.GetCountingBy(position.PositionSide))
-
-	openingPosition, err := l.bnFtOpeningPositionTable.Get(ctx, l.ToOpeningPositionTable(position))
-	if err != nil {
-		return nil, err
+		openingPosition, err = l.bnFtOpeningPositionTable.ScanWith(ctx, position.ClientId)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	lookUp := domainservice.NewTradeLookUp()
 	lookUp.OpeningPosition.SetIsFound(openingPosition.IsFound())
 	lookUp.OpeningPosition.SetAmountB(openingPosition.AmountB)
 	lookUp.OpeningPosition.SetClientId(openingPosition.ClientId)
-	lookUp.Symbol.SetSymbol(cryptoCoin.Symbol)
-	lookUp.Symbol.SetCountingLong(cryptoCoin.CountingLong)
-	lookUp.Symbol.SetCountingShort(cryptoCoin.CountingShort)
+	lookUp.OpeningPosition.SetSymbol(openingPosition.Symbol)
+	lookUp.OpeningPosition.SetPositionSide(openingPosition.PositionSide)
+	lookUp.OpeningPosition.SetSide(openingPosition.Side)
+
 	return lookUp, nil
 }

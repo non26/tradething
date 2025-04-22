@@ -84,6 +84,14 @@ func (p *Position) IsSellOrder() bool {
 	return false
 }
 
+func (p *Position) SetSellSideFrom(positionSide string) {
+	if positionSide == bnconstant.LONG {
+		p.side = bnconstant.SELL
+	} else {
+		p.side = bnconstant.BUY
+	}
+}
+
 func (p *Position) ToInfraPosition() *infra.Position {
 	infraPosition := infra.Position{
 		PositionSide: p.positionSide,

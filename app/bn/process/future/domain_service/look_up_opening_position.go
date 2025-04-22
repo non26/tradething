@@ -6,6 +6,7 @@ type LookupOpeningPosition struct {
 	clientId     string
 	symbol       string
 	positionSide string
+	side         string
 }
 
 func NewLookupOpeningPosition() *LookupOpeningPosition {
@@ -32,6 +33,10 @@ func (l *LookupOpeningPosition) GetPositionSide() string {
 	return l.positionSide
 }
 
+func (l *LookupOpeningPosition) GetSide() string {
+	return l.side
+}
+
 func (l *LookupOpeningPosition) SetIsFound(isFound bool) {
 	l.isFound = isFound
 }
@@ -50,4 +55,8 @@ func (l *LookupOpeningPosition) SetSymbol(symbol string) {
 
 func (l *LookupOpeningPosition) SetPositionSide(positionSide string) {
 	l.positionSide = positionSide
+}
+
+func (l *LookupOpeningPosition) SetSide(side string) {
+	l.side = side
 }
