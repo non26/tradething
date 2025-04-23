@@ -5,6 +5,8 @@ import (
 
 	domainservice "tradething/app/bn/process/future/domain_service/advanced_position"
 
+	future "tradething/app/bn/infrastructure/future"
+
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
 )
 
@@ -18,7 +20,7 @@ func NewAdvancedPositionLookUp(
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
 	bnFtAdvancedPosition bndynamodb.IBnFtAdvancedPositionRepository,
-) IAdvancedPositionLookup {
+) future.IAdvancedPositionLookup {
 	return &advancedPositionLookUp{
 		bnFtOpeningPositionTable,
 		bnFtHistoryTable,

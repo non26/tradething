@@ -5,6 +5,8 @@ import (
 
 	position "tradething/app/bn/infrastructure/future/position"
 
+	future "tradething/app/bn/infrastructure/future"
+
 	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
 	"github.com/non26/tradepkg/pkg/bn/utils"
@@ -50,7 +52,7 @@ func NewTrade(
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
 	bnFtCryptoTable bndynamodb.IBnFtCryptoRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
-) ITrade {
+) future.ITrade {
 	return &trade{
 		tradePosition:            tradePosition,
 		bnFtOpeningPositionTable: bnFtOpeningPositionTable,

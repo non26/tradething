@@ -6,6 +6,8 @@ import (
 	position "tradething/app/bn/infrastructure/future/position"
 	domainservice "tradething/app/bn/process/future/domain_service/trade"
 
+	future "tradething/app/bn/infrastructure/future"
+
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
 	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
 )
@@ -20,7 +22,7 @@ func NewTradeLookUp(
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
 	bnFtCryptoTable bndynamodb.IBnFtCryptoRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
-) ITradeLookUp {
+) future.ITradeLookUp {
 	return &tradeLookUp{
 		bnFtOpeningPositionTable: bnFtOpeningPositionTable,
 		bnFtCryptoTable:          bnFtCryptoTable,

@@ -4,6 +4,8 @@ import (
 	"context"
 	domainservice "tradething/app/bn/process/future/domain_service"
 
+	future "tradething/app/bn/infrastructure/future"
+
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
 	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
 )
@@ -12,7 +14,7 @@ type cryptoLookUp struct {
 	bnFtCryptoTable bndynamodb.IBnFtCryptoRepository
 }
 
-func NewCryptoLookUp(bnFtCryptoTable bndynamodb.IBnFtCryptoRepository) ICryptoLookUp {
+func NewCryptoLookUp(bnFtCryptoTable bndynamodb.IBnFtCryptoRepository) future.ICryptoLookUp {
 	return &cryptoLookUp{bnFtCryptoTable}
 }
 

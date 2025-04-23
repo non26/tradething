@@ -3,13 +3,13 @@ package route
 import (
 	handlers "tradething/app/bn/handlers/future"
 	adaptor "tradething/app/bn/infrastructure/adaptor/future"
-	infra "tradething/app/bn/infrastructure/future"
+	infraBuilder "tradething/app/bn/infrastructure/future/builder"
+	infraLookup "tradething/app/bn/infrastructure/future/lookup"
 	infraposition "tradething/app/bn/infrastructure/future/position"
+	infraSave "tradething/app/bn/infrastructure/future/save"
 	process "tradething/app/bn/process/future"
 
 	"tradething/config"
-
-	savepositionby "tradething/app/bn/infrastructure/future/save"
 
 	"github.com/labstack/echo/v4"
 	bnclient "github.com/non26/tradepkg/pkg/bn/bn_client"
@@ -51,42 +51,42 @@ func RouteFuture(
 		bnFtHistoryTable,
 	)
 
-	tradeBuilder := infra.NewTradePosition(
+	tradeBuilder := infraBuilder.NewTradePosition(
 		longPosition,
 		shortPosition,
 	)
 
-	trade := infra.NewTrade(
+	trade := infraBuilder.NewTrade(
 		tradeBuilder,
 		bnFtOpeningPositionTable,
 		bnFtCryptoTable,
 		bnFtHistoryTable,
 	)
 
-	tradeLookUp := infra.NewTradeLookUp(
+	tradeLookUp := infraLookup.NewTradeLookUp(
 		bnFtOpeningPositionTable,
 		bnFtCryptoTable,
 		bnFtHistoryTable,
 	)
 
-	saveBuyPosition := savepositionby.NewSaveBuyPosition(
+	saveBuyPosition := infraSave.NewSaveBuyPosition(
 		bnFtOpeningPositionTable,
 		bnFtCryptoTable,
 		bnFtHistoryTable,
 	)
 
-	saveSellPosition := savepositionby.NewSaveSellPosition(
+	saveSellPosition := infraSave.NewSaveSellPosition(
 		bnFtOpeningPositionTable,
 		bnFtCryptoTable,
 		bnFtHistoryTable,
 	)
 
-	savePositionBuilder := infra.NewSavePositionBuilder(
+	savePositionBuilder := infraBuilder.NewSavePositionBuilder(
 		saveBuyPosition,
 		saveSellPosition,
 	)
 
-	savePosition := infra.NewSavePosition(savePositionBuilder)
+	savePosition := infraBuilder.NewSavePosition(savePositionBuilder)
 
 	// closePositionLookUp := infra.NewClosePositionLookUp(
 	// 	bnFtOpeningPositionTable,
@@ -94,13 +94,13 @@ func RouteFuture(
 	// 	bnFtHistoryTable,
 	// )
 
-	advancedPositionLookUp := infra.NewAdvancedPositionLookUp(
+	advancedPositionLookUp := infraLookup.NewAdvancedPositionLookUp(
 		bnFtOpeningPositionTable,
 		bnFtHistoryTable,
 		bnFtAdvancedPosition,
 	)
 
-	cryptoLookUp := infra.NewCryptoLookUp(
+	cryptoLookUp := infraLookup.NewCryptoLookUp(
 		bnFtCryptoTable,
 	)
 
