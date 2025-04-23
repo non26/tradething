@@ -12,13 +12,29 @@ func (f *future) SetAdvancedPosition(ctx context.Context, positions []domain.Pos
 	responses := response.NewSetAdvancedPositionResponses()
 	for _, position := range positions {
 		response := response.NewSetAdvancedPositionResponse()
-		lookUp, err := f.infraAdvancedPositionLookUp.LookUpByClientId(ctx, position.GetClientId())
+		tradeLookUp, err := f.infraTradeLookUp.LookUp(ctx, position.ToInfraPosition())
 		if err != nil {
 			response.Fail(position.GetClientId())
 			responses.Add(response)
 			continue
 		}
-		_ = lookUp
+		if tradeLookUp.OpeningPosition.IsFound() {
+			response.Fail(position.GetClientId())
+			responses.Add(response)
+			continue
+		}
+
+		AdvLookUp, err := f.infraAdvancedPositionLookUp.LookUpByClientId(ctx, position.GetClientId())
+		if err != nil {
+			response.Fail(position.GetClientId())
+			responses.Add(response)
+			continue
+		}
+		if AdvLookUp.AdvancedPosition.IsFound() {
+			response.Fail(position.GetClientId())
+			responses.Add(response)
+			continue
+		}
 
 		err = f.bnFtAdvancedPosition.Upsert(ctx, &dynamodbmodel.BnFtAdvancedPosition{
 			ClientID:     position.GetClientId(),
