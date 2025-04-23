@@ -51,7 +51,7 @@ func (f *future) PlaceOrder(ctx context.Context, position *domain.Position) (*re
 		return nil, err
 	}
 
-	err = f.infraSavePosition.Save(ctx, bnposition, tradeLookUp, cryptoLookUp)
+	err = f.infraSavePosition.Save(ctx, bnposition, tradeLookUp, cryptoLookUp, advancedPositionLookUp)
 	if err != nil {
 		return nil, err
 	}

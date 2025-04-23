@@ -4,6 +4,7 @@ import (
 	"context"
 
 	position "tradething/app/bn/infrastructure/future/position"
+	domainAdvPositionSvc "tradething/app/bn/process/future/domain_service/advanced_position"
 	domainCryptoSvc "tradething/app/bn/process/future/domain_service/crypto"
 	domainTradeSvc "tradething/app/bn/process/future/domain_service/trade"
 
@@ -11,7 +12,7 @@ import (
 )
 
 type ISavePositionBySide interface {
-	Save(ctx context.Context, position *position.Position, tradeLookUp *domainTradeSvc.TradeLookUp, cryptoLookUp *domainCryptoSvc.CryptoLookUp) error
+	Save(ctx context.Context, position *position.Position, tradeLookUp *domainTradeSvc.TradeLookUp, cryptoLookUp *domainCryptoSvc.CryptoLookUp, advPositionLookUp *domainAdvPositionSvc.AdvancedPositionLookUp) error
 }
 
 func ToOpeningPositionTable(position *position.Position) *dynamodbmodel.BnFtOpeningPosition {

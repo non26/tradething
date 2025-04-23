@@ -75,12 +75,14 @@ func RouteFuture(
 		bnFtOpeningPositionTable,
 		bnFtCryptoTable,
 		bnFtHistoryTable,
+		bnFtAdvancedPosition,
 	)
 
 	saveSellPosition := infraSave.NewSaveSellPosition(
 		bnFtOpeningPositionTable,
 		bnFtCryptoTable,
 		bnFtHistoryTable,
+		bnFtAdvancedPosition,
 	)
 
 	savePositionBuilder := infraBuilder.NewSavePositionBuilder(

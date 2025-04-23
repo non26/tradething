@@ -24,7 +24,7 @@ type ITradeLookUp interface {
 }
 
 type ITradeSavePosition interface {
-	Save(ctx context.Context, position *position.Position, tradeLookup *domainTradeSvc.TradeLookUp, cryptoLookup *domainCryptoSvc.CryptoLookUp) error
+	Save(ctx context.Context, position *position.Position, tradeLookup *domainTradeSvc.TradeLookUp, cryptoLookup *domainCryptoSvc.CryptoLookUp, advPositionLookUp *domainAdvPositionSvc.AdvancedPositionLookUp) error
 }
 
 type IAdvancedPositionLookup interface {

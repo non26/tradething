@@ -28,7 +28,7 @@ func (f *future) ClosePositionByClientIds(ctx context.Context, clientIds []strin
 			continue
 		}
 
-		err = f.infraSavePosition.Save(ctx, position.ToInfraPosition(), lookUp, nil)
+		err = f.infraSavePosition.Save(ctx, position.ToInfraPosition(), lookUp, nil, nil)
 		if err != nil {
 			responses.AddWithData(err.Error(), "error", lookUp.OpeningPosition.GetSymbol(), lookUp.OpeningPosition.GetPositionSide(), clientId)
 			continue
