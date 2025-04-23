@@ -12,7 +12,7 @@ import (
 func (f *future) PlaceOrder(ctx context.Context, position domain.Position) (*response.Position, error) {
 
 	bnposition := position.ToInfraPosition()
-	tradeLookUp, err := f.infraLookUp.LookUp(ctx, bnposition)
+	tradeLookUp, err := f.infraTradeLookUp.LookUp(ctx, bnposition)
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +29,7 @@ func (f *future) PlaceOrder(ctx context.Context, position domain.Position) (*res
 		}
 	}
 
-	err = f.infraFuture.PlacePosition(ctx, bnposition)
+	err = f.infraTrade.PlacePosition(ctx, bnposition)
 	if err != nil {
 		return nil, err
 	}

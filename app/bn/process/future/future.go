@@ -4,7 +4,6 @@ import (
 	"context"
 	response "tradething/app/bn/handlers/future/res"
 	infra "tradething/app/bn/infrastructure/future"
-	infrastructure "tradething/app/bn/infrastructure/future"
 
 	domain "tradething/app/bn/process/future/domain"
 
@@ -20,10 +19,9 @@ type IFuture interface {
 }
 
 type future struct {
-	infraTradeBuilder infra.ITrade
-	infraTradeLookUp  infra.ITradeLookUp
-	infraSavePosition infra.ITradeSavePosition
-	// infraClosePositionLookUp    infrastructure.IClosePositionLookup
+	infraTrade                  infra.ITrade
+	infraSavePosition           infra.ITradeSavePosition
+	infraTradeLookUp            infra.ITradeLookUp
 	infraAdvancedPositionLookUp infra.IAdvancedPositionLookup
 	infraCryptoLookUp           infra.ICryptoLookUp
 	bnFtOpeningPositionTable    bndynamodb.IBnFtOpeningPositionRepository
@@ -33,22 +31,20 @@ type future struct {
 }
 
 func NewFuture(
-	infraFuture infrastructure.ITrade,
-	infraLookUp infrastructure.ITradeLookUp,
-	infraSavePosition infrastructure.ITradeSavePosition,
-	// infraClosePositionLookUp infrastructure.IClosePositionLookup,
-	infraAdvancedPositionLookUp infrastructure.IAdvancedPositionLookup,
-	infraCryptoLookUp infrastructure.ICryptoLookUp,
+	infraTrade infra.ITrade,
+	infraSavePosition infra.ITradeSavePosition,
+	infraTradeLookUp infra.ITradeLookUp,
+	infraAdvancedPositionLookUp infra.IAdvancedPositionLookup,
+	infraCryptoLookUp infra.ICryptoLookUp,
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
 	bnFtCryptoTable bndynamodb.IBnFtCryptoRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
 	bnFtAdvancedPosition bndynamodb.IBnFtAdvancedPositionRepository,
 ) IFuture {
 	return &future{
-		infraFuture,
-		infraLookUp,
+		infraTrade,
 		infraSavePosition,
-		// infraClosePositionLookUp,
+		infraTradeLookUp,
 		infraAdvancedPositionLookUp,
 		infraCryptoLookUp,
 		bnFtOpeningPositionTable,

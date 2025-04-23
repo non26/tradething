@@ -13,14 +13,14 @@ func (f *future) ClosePositionByClientIds(ctx context.Context, clientIds []strin
 	for _, clientId := range clientIds {
 		position := &domain.Position{}
 		position.SetClientId(clientId)
-		lookUp, err := f.infraLookUp.LookUp(ctx, position.ToInfraPosition())
+		lookUp, err := f.infraTradeLookUp.LookUp(ctx, position.ToInfraPosition())
 		if err != nil {
 			responses.AddWithData(err.Error(), "error", "error", "error", clientId)
 			continue
 		}
 
 		position = createClosePositionById(lookUp, clientId)
-		err = f.infraFuture.PlacePosition(ctx, position.ToInfraPosition())
+		err = f.infraTrade.PlacePosition(ctx, position.ToInfraPosition())
 		if err != nil {
 			responses.AddWithData(err.Error(), "error", lookUp.OpeningPosition.GetSymbol(), lookUp.OpeningPosition.GetPositionSide(), clientId)
 			continue
