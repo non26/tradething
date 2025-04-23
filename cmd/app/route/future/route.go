@@ -7,6 +7,8 @@ import (
 	infraLookup "tradething/app/bn/infrastructure/future/lookup"
 	infraposition "tradething/app/bn/infrastructure/future/position"
 	infraSave "tradething/app/bn/infrastructure/future/save"
+	infraSavePosition "tradething/app/bn/infrastructure/future/save_position"
+	infraTrade "tradething/app/bn/infrastructure/future/trade"
 	process "tradething/app/bn/process/future"
 
 	"tradething/config"
@@ -56,7 +58,7 @@ func RouteFuture(
 		shortPosition,
 	)
 
-	trade := infraBuilder.NewTrade(
+	trade := infraTrade.NewTrade(
 		tradeBuilder,
 		bnFtOpeningPositionTable,
 		bnFtCryptoTable,
@@ -86,13 +88,7 @@ func RouteFuture(
 		saveSellPosition,
 	)
 
-	savePosition := infraBuilder.NewSavePosition(savePositionBuilder)
-
-	// closePositionLookUp := infra.NewClosePositionLookUp(
-	// 	bnFtOpeningPositionTable,
-	// 	bnFtCryptoTable,
-	// 	bnFtHistoryTable,
-	// )
+	savePosition := infraSavePosition.NewSavePosition(savePositionBuilder)
 
 	advancedPositionLookUp := infraLookup.NewAdvancedPositionLookUp(
 		bnFtOpeningPositionTable,
@@ -106,9 +102,8 @@ func RouteFuture(
 
 	process := process.NewFuture(
 		trade,
-		tradeLookUp,
 		savePosition,
-		// closePositionLookUp,
+		tradeLookUp,
 		advancedPositionLookUp,
 		cryptoLookUp,
 		bnFtOpeningPositionTable,
