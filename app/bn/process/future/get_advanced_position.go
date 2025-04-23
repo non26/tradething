@@ -7,20 +7,19 @@ import (
 )
 
 func (f *future) GetAdvancedPosition(ctx context.Context, clientId string) (*response.GetAdvancedPositionResponse, error) {
-	advancedPosition, err := f.bnFtAdvancedPosition.Get(ctx, clientId)
+	lookUp, err := f.infraAdvancedPositionLookUp.LookUpByClientId(ctx, clientId)
 	if err != nil {
 		return nil, err
 	}
-
-	if !advancedPosition.IsFound() {
+	if !lookUp.AdvancedPosition.IsFound() {
 		return nil, errors.New("advanced position not found")
 	}
 
 	return &response.GetAdvancedPositionResponse{
-		Symbol:       advancedPosition.Symbol,
-		PositionSide: advancedPosition.PositionSide,
-		Side:         advancedPosition.Side,
-		AmountB:      advancedPosition.AmountB,
-		ClientId:     advancedPosition.ClientID,
+		Symbol:       lookUp.AdvancedPosition.GetSymbol(),
+		PositionSide: lookUp.AdvancedPosition.GetPositionSide(),
+		Side:         lookUp.AdvancedPosition.GetSide(),
+		AmountB:      lookUp.AdvancedPosition.GetAmountB(),
+		ClientId:     lookUp.AdvancedPosition.GetClientId(),
 	}, nil
 }
