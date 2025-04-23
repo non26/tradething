@@ -29,6 +29,7 @@ func NewSaveBuyPosition(
 
 func (s *saveBuyPosition) Save(ctx context.Context, _position *position.Position, tradeLookUp *domainTradeSvc.TradeLookUp, cryptoLookUp *domainCryptoSvc.CryptoLookUp, advPositionLookUp *domainAdvPositionSvc.AdvancedPositionLookUp) error {
 
+	// in case of accumulation
 	if tradeLookUp.OpeningPosition.IsFound() {
 		err := _position.AddMoreAmountB(tradeLookUp.OpeningPosition.GetAmountB())
 		if err != nil {
@@ -41,6 +42,7 @@ func (s *saveBuyPosition) Save(ctx context.Context, _position *position.Position
 		_position.ClientId = tradeLookUp.OpeningPosition.GetClientId()
 	}
 
+	// in case of advacned position
 	if advPositionLookUp.AdvancedPosition.IsFound() {
 		err := s.bnFtAdvPositionTable.Delete(ctx, advPositionLookUp.AdvancedPosition.GetClientId())
 		if err != nil {
@@ -57,13 +59,11 @@ func (s *saveBuyPosition) Save(ctx context.Context, _position *position.Position
 		}
 	}
 
-	// this would be Upsert
 	err := s.bnFtOpeningPositionTable.Upsert(ctx, ToOpeningPositionTable(_position))
 	if err != nil {
 		return err
 	}
 
-	// upsert
 	err = s.bnFtCryptoTable.Upsert(ctx, ToCryptoTable(cryptoLookUp))
 	if err != nil {
 		return err

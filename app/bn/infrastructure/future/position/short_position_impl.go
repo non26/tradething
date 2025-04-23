@@ -30,52 +30,10 @@ func NewShortPosition(
 }
 
 func (p *ShortPosition) BuyPosition(ctx context.Context, position *Position) error {
-	// cryptoCoin, err := p.bnFtCryptoTable.Get(ctx, position.Symbol)
-	// if err != nil {
-	// 	return err
-	// }
-	// if !cryptoCoin.IsFound() {
-	// 	cryptoCoin = dynamodbmodel.NewBinanceFutureCryptoTableRecord(position.Symbol, position.PositionSide)
-	// } else {
-	// 	cryptoCoin.SetCountingShort(cryptoCoin.GetNextCountingShort().Int())
-	// }
-	// position.SetDefaultClientId(cryptoCoin.GetCountingShort())
-
-	// openingPosition, err := p.bnFtOpeningPositionTable.Get(ctx, p.ToOpeningPositionTable(position))
-	// if err != nil {
-	// 	return err
-	// }
-	// if position.ClientId == openingPosition.ClientId {
-	// 	return errors.New("duplicate client id")
-	// }
-
 	err := p.placePosition(ctx, position)
 	if err != nil {
 		return err
 	}
-
-	// if openingPosition.IsFound() {
-	// 	err = position.AddMoreAmountB(openingPosition.AmountB)
-	// 	if err != nil {
-	// 		return err
-	// 	}
-
-	// 	err = p.bnFtHistoryTable.Insert(ctx, position.ToHistoryTable())
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// 	position.ClientId = openingPosition.ClientId
-	// }
-	// // this would be Upsert
-	// err = p.bnFtOpeningPositionTable.Upsert(ctx, p.ToOpeningPositionTable(position))
-	// if err != nil {
-	// 	return err
-	// }
-
-	// err = p.bnFtCryptoTable.Upsert(ctx, cryptoCoin)
-	// if err != nil {
-	// 	return err
-	// }
 
 	return nil
 }
@@ -85,16 +43,6 @@ func (p *ShortPosition) SellPosition(ctx context.Context, position *Position) er
 	if err != nil {
 		return err
 	}
-
-	// err = p.bnFtOpeningPositionTable.Delete(ctx, p.ToOpeningPositionTable(position))
-	// if err != nil {
-	// 	return err
-	// }
-
-	// err = p.bnFtHistoryTable.Insert(ctx, p.ToHistoryTable(position))
-	// if err != nil {
-	// 	return err
-	// }
 
 	return nil
 }
