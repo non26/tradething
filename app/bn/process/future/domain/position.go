@@ -103,3 +103,17 @@ func (p *Position) ToInfraPosition() *infra.Position {
 	}
 	return &infraPosition
 }
+
+func (p *Position) NewClosePositionFrom(
+	clientId string,
+	symbol string,
+	positionSide string,
+	amountB string) *Position {
+	newPosition := Position{}
+	newPosition.SetClientId(clientId)
+	newPosition.SetSymbol(symbol)
+	newPosition.SetPositionSide(positionSide)
+	newPosition.SetSellSideFrom(positionSide)
+	newPosition.SetEntryQuantity(amountB)
+	return &newPosition
+}
