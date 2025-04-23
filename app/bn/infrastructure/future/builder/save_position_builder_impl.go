@@ -2,10 +2,8 @@ package infrastructure
 
 import (
 	"context"
-	future "tradething/app/bn/infrastructure/future"
 	position "tradething/app/bn/infrastructure/future/position"
 	save "tradething/app/bn/infrastructure/future/save"
-	domainservice "tradething/app/bn/process/future/domain_service/trade"
 
 	"github.com/non26/tradepkg/pkg/bn/utils"
 )
@@ -28,17 +26,4 @@ func (s *savePositionBuilder) Get(ctx context.Context, position *position.Positi
 		return s.saveBuyPosition
 	}
 	return s.saveSellPosition
-}
-
-type savePosition struct {
-	queryPosition ISavePositionBuilder
-}
-
-func NewSavePosition(queryPosition ISavePositionBuilder) future.ITradeSavePosition {
-	return &savePosition{queryPosition}
-}
-
-func (s *savePosition) Save(ctx context.Context, position *position.Position, lookup *domainservice.TradeLookUp) error {
-	savePositionBySide := s.queryPosition.Get(ctx, position)
-	return savePositionBySide.Save(ctx, position, lookup)
 }

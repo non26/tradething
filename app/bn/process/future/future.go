@@ -3,7 +3,9 @@ package process
 import (
 	"context"
 	response "tradething/app/bn/handlers/future/res"
+	infra "tradething/app/bn/infrastructure/future"
 	infrastructure "tradething/app/bn/infrastructure/future"
+
 	domain "tradething/app/bn/process/future/domain"
 
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
@@ -18,12 +20,12 @@ type IFuture interface {
 }
 
 type future struct {
-	infraFuture       infrastructure.ITrade
-	infraLookUp       infrastructure.ITradeLookUp
-	infraSavePosition infrastructure.ITradeSavePosition
+	infraTradeBuilder infra.ITrade
+	infraTradeLookUp  infra.ITradeLookUp
+	infraSavePosition infra.ITradeSavePosition
 	// infraClosePositionLookUp    infrastructure.IClosePositionLookup
-	infraAdvancedPositionLookUp infrastructure.IAdvancedPositionLookup
-	infraCryptoLookUp           infrastructure.ICryptoLookUp
+	infraAdvancedPositionLookUp infra.IAdvancedPositionLookup
+	infraCryptoLookUp           infra.ICryptoLookUp
 	bnFtOpeningPositionTable    bndynamodb.IBnFtOpeningPositionRepository
 	bnFtCryptoTable             bndynamodb.IBnFtCryptoRepository
 	bnFtHistoryTable            bndynamodb.IBnFtHistoryRepository
