@@ -4,7 +4,8 @@ import (
 	"context"
 	position "tradething/app/bn/infrastructure/future/position"
 
-	domainservice "tradething/app/bn/process/future/domain_service/trade"
+	domainCryptoSvc "tradething/app/bn/process/future/domain_service/crypto"
+	domainTradeSvc "tradething/app/bn/process/future/domain_service/trade"
 
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
 )
@@ -23,10 +24,10 @@ func NewSaveBuyPosition(
 	return &saveBuyPosition{bnFtOpeningPositionTable, bnFtCryptoTable, bnFtHistoryTable}
 }
 
-func (s *saveBuyPosition) Save(ctx context.Context, position *position.Position, lookup *domainservice.TradeLookUp) error {
+func (s *saveBuyPosition) Save(ctx context.Context, position *position.Position, tradeLookUp *domainTradeSvc.TradeLookUp, cryptoLookUp *domainCryptoSvc.CryptoLookUp) error {
 
-	if lookup.OpeningPosition.IsFound() {
-		err := position.AddMoreAmountB(lookup.OpeningPosition.GetAmountB())
+	if tradeLookUp.OpeningPosition.IsFound() {
+		err := position.AddMoreAmountB(tradeLookUp.OpeningPosition.GetAmountB())
 		if err != nil {
 			return err
 		}
@@ -34,7 +35,7 @@ func (s *saveBuyPosition) Save(ctx context.Context, position *position.Position,
 		if err != nil {
 			return err
 		}
-		position.ClientId = lookup.OpeningPosition.GetClientId()
+		position.ClientId = tradeLookUp.OpeningPosition.GetClientId()
 	}
 	// this would be Upsert
 	err := s.bnFtOpeningPositionTable.Upsert(ctx, ToOpeningPositionTable(position))
@@ -42,7 +43,7 @@ func (s *saveBuyPosition) Save(ctx context.Context, position *position.Position,
 		return err
 	}
 	// upsert
-	err = s.bnFtCryptoTable.Upsert(ctx, ToCryptoTable(lookup))
+	err = s.bnFtCryptoTable.Upsert(ctx, ToCryptoTable(cryptoLookUp))
 	if err != nil {
 		return err
 	}

@@ -6,7 +6,7 @@ import (
 	"tradething/app/bn/process/future/domain"
 )
 
-func (f *future) MultiplePosition(ctx context.Context, positions []domain.Position) (responses *response.MultiplePosition, err error) {
+func (f *future) MultiplePosition(ctx context.Context, positions []*domain.Position) (responses *response.MultiplePosition, err error) {
 	responses = &response.MultiplePosition{}
 	for _, position := range positions {
 		_, err = f.PlaceOrder(ctx, position)

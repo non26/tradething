@@ -2,7 +2,8 @@ package infrastructure
 
 import (
 	"context"
-	domainservice "tradething/app/bn/process/future/domain_service"
+
+	domainCryptoSvc "tradething/app/bn/process/future/domain_service/crypto"
 
 	future "tradething/app/bn/infrastructure/future"
 
@@ -18,7 +19,7 @@ func NewCryptoLookUp(bnFtCryptoTable bndynamodb.IBnFtCryptoRepository) future.IC
 	return &cryptoLookUp{bnFtCryptoTable}
 }
 
-func (c *cryptoLookUp) LookUpBySymbol(ctx context.Context, symbol string, positionSide string) (*domainservice.LookUpSymbol, error) {
+func (c *cryptoLookUp) LookUpBySymbol(ctx context.Context, symbol string, positionSide string) (*domainCryptoSvc.CryptoLookUp, error) {
 
 	cryptoCoin, err := c.bnFtCryptoTable.Get(ctx, symbol)
 	if err != nil {
@@ -31,9 +32,9 @@ func (c *cryptoLookUp) LookUpBySymbol(ctx context.Context, symbol string, positi
 		cryptoCoin.SetNextCountingBy(positionSide)
 	}
 
-	lookup := &domainservice.LookUpSymbol{}
-	lookup.SetSymbol(cryptoCoin.Symbol)
-	lookup.SetCountingLong(cryptoCoin.CountingLong)
-	lookup.SetCountingShort(cryptoCoin.CountingShort)
+	lookup := &domainCryptoSvc.CryptoLookUp{}
+	lookup.Symbol.SetSymbol(cryptoCoin.Symbol)
+	lookup.Symbol.SetCountingLong(cryptoCoin.CountingLong)
+	lookup.Symbol.SetCountingShort(cryptoCoin.CountingShort)
 	return lookup, nil
 }

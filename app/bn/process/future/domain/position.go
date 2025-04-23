@@ -16,6 +16,16 @@ type Position struct {
 	clientId     string
 }
 
+func NewPosition(clientId string, symbol string, positionSide string, side string, amountB string) *Position {
+	return &Position{
+		clientId:     clientId,
+		symbol:       symbol,
+		positionSide: positionSide,
+		side:         side,
+		amountB:      amountB,
+	}
+}
+
 func (p *Position) GetPositionSide() string {
 	return p.positionSide
 }

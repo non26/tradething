@@ -11,9 +11,9 @@ import (
 )
 
 type IFuture interface {
-	PlaceOrder(ctx context.Context, position domain.Position) (*response.Position, error)
+	PlaceOrder(ctx context.Context, position *domain.Position) (*response.Position, error)
 	ClosePositionByClientIds(ctx context.Context, clientIds []string) (*response.CloseByClientIds, error)
-	MultiplePosition(ctx context.Context, positions []domain.Position) (*response.MultiplePosition, error)
+	MultiplePosition(ctx context.Context, positions []*domain.Position) (*response.MultiplePosition, error)
 	SetAdvancedPosition(ctx context.Context, position []domain.Position) (*response.SetAdvancedPositionResponses, error)
 	GetAdvancedPosition(ctx context.Context, clientId string) (*response.GetAdvancedPositionResponse, error)
 }

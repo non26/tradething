@@ -42,12 +42,12 @@ func (p *Position) Validate() error {
 	return nil
 }
 
-func (p *Position) ToDomain() domain.Position {
+func (p *Position) ToDomain() *domain.Position {
 	processPosition := domain.Position{}
 	processPosition.SetPositionSide(p.PositionSide)
 	processPosition.SetSide(p.Side)
 	processPosition.SetEntryQuantity(p.AmountB)
 	processPosition.SetSymbol(p.Symbol)
 	processPosition.SetClientId(p.ClientId)
-	return processPosition
+	return &processPosition
 }

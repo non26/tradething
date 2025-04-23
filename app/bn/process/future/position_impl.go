@@ -9,19 +9,36 @@ import (
 	"github.com/non26/tradepkg/pkg/bn/utils"
 )
 
-func (f *future) PlaceOrder(ctx context.Context, position domain.Position) (*response.Position, error) {
+func (f *future) PlaceOrder(ctx context.Context, position *domain.Position) (*response.Position, error) {
 
 	bnposition := position.ToInfraPosition()
 	tradeLookUp, err := f.infraTradeLookUp.LookUp(ctx, bnposition)
 	if err != nil {
 		return nil, err
 	}
+	if tradeLookUp.OpeningPosition.IsFound() {
+		return nil, errors.New("duplicate history client id")
+	}
+
+	advancedPositionLookUp, err := f.infraAdvancedPositionLookUp.LookUpByClientId(ctx, position.GetClientId())
+	if err != nil {
+		return nil, err
+	}
+	if advancedPositionLookUp.AdvancedPosition.IsFound() {
+		position = domain.NewPosition(
+			position.GetClientId(),
+			position.GetSymbol(),
+			position.GetPositionSide(),
+			position.GetSide(),
+			position.GetEntryQuantity(),
+		)
+	}
 
 	cryptoLookUp, err := f.infraCryptoLookUp.LookUpBySymbol(ctx, position.GetSymbol(), position.GetPositionSide())
 	if err != nil {
 		return nil, err
 	}
-	bnposition.SetDefaultClientId(cryptoLookUp.GetCountingBy(position.GetPositionSide()))
+	bnposition.SetDefaultClientId(cryptoLookUp.Symbol.GetCountingBy(position.GetPositionSide()))
 
 	if utils.IsBuyPosition(position.GetSide(), position.GetPositionSide()) {
 		if position.GetClientId() == tradeLookUp.OpeningPosition.GetClientId() {
@@ -34,7 +51,7 @@ func (f *future) PlaceOrder(ctx context.Context, position domain.Position) (*res
 		return nil, err
 	}
 
-	err = f.infraSavePosition.Save(ctx, bnposition, tradeLookUp)
+	err = f.infraSavePosition.Save(ctx, bnposition, tradeLookUp, cryptoLookUp)
 	if err != nil {
 		return nil, err
 	}
