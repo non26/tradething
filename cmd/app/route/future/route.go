@@ -125,6 +125,11 @@ func RouteFuture(
 	binanceGroup.POST("/close-by-ids", closeByIdsHandler.Handler)
 
 	// set-advanced-position
+	setAdvancedPositionHandler := handlers.NewSetAdvancedPositionHandler(process)
+	binanceGroup.POST("/set-advanced-position", setAdvancedPositionHandler.Handler)
+
 	// get-advanced-position
+	getAdvancedPositionHandler := handlers.NewSetAdvancedPositionHandler(process)
+	binanceGroup.POST("/get-advanced-position", getAdvancedPositionHandler.Handler)
 
 }
