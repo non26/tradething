@@ -120,7 +120,7 @@ func RouteFuture(
 	multiPositionHandler := handlers.NewMultiplePositionHandler(process)
 	binanceGroup.POST("/positions", multiPositionHandler.Handler)
 
-	// manage-position
+	// close-position
 	closeByIdsHandler := handlers.NewCloseByIdHandler(process)
 	binanceGroup.POST("/close-by-ids", closeByIdsHandler.Handler)
 
@@ -131,5 +131,7 @@ func RouteFuture(
 	// get-advanced-position
 	getAdvancedPositionHandler := handlers.NewSetAdvancedPositionHandler(process)
 	binanceGroup.POST("/get-advanced-position", getAdvancedPositionHandler.Handler)
+
+	//manage-position
 
 }

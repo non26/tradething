@@ -16,6 +16,7 @@ type IFuture interface {
 	MultiplePosition(ctx context.Context, positions []*domain.Position) (*response.MultiplePosition, error)
 	SetAdvancedPosition(ctx context.Context, position []*domain.Position) (*response.SetAdvancedPositionResponses, error)
 	GetAdvancedPosition(ctx context.Context, clientId string) (*response.GetAdvancedPositionResponse, error)
+	ManagePosition(ctx context.Context, closeClientId []string, advPositionClientId []string) (*response.ManagePositionRes, error)
 }
 
 type future struct {
