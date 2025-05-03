@@ -13,28 +13,28 @@ func (f *future) ClosePositionByClientIds(ctx context.Context, clientIds []strin
 		position.SetClientId(clientId)
 		lookUp, err := f.infraTradeLookUp.LookUp(ctx, position.ToInfraPosition())
 		if err != nil {
-			responses.AddWithData(err.Error(), "error", "error", "error", clientId)
+			responses.AddFailed(err.Error(), "", "", clientId)
 			continue
 		}
 		if !lookUp.OpeningPosition.IsFound() {
-			responses.AddWithData("position not found", "error", "error", "error", clientId)
+			responses.AddFailed("position not found", "", "", clientId)
 			continue
 		}
 
 		position = position.NewClosePositionFrom(clientId, lookUp.OpeningPosition.GetSymbol(), lookUp.OpeningPosition.GetPositionSide(), lookUp.OpeningPosition.GetAmountB())
 		err = f.infraTrade.PlacePosition(ctx, position.ToInfraPosition())
 		if err != nil {
-			responses.AddWithData(err.Error(), "error", lookUp.OpeningPosition.GetSymbol(), lookUp.OpeningPosition.GetPositionSide(), clientId)
+			responses.AddFailed(err.Error(), lookUp.OpeningPosition.GetSymbol(), lookUp.OpeningPosition.GetPositionSide(), clientId)
 			continue
 		}
 
 		err = f.infraSavePosition.Save(ctx, position.ToInfraPosition(), lookUp, nil, nil)
 		if err != nil {
-			responses.AddWithData(err.Error(), "error", lookUp.OpeningPosition.GetSymbol(), lookUp.OpeningPosition.GetPositionSide(), clientId)
+			responses.AddFailed(err.Error(), lookUp.OpeningPosition.GetSymbol(), lookUp.OpeningPosition.GetPositionSide(), clientId)
 			continue
 		}
 
-		responses.AddWithData("success", "success", lookUp.OpeningPosition.GetSymbol(), lookUp.OpeningPosition.GetPositionSide(), clientId)
+		responses.AddSuccess(lookUp.OpeningPosition.GetSymbol(), lookUp.OpeningPosition.GetPositionSide(), clientId)
 	}
 
 	return responses, nil
