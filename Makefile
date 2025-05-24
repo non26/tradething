@@ -50,7 +50,7 @@
 go-curl:
 	go run curl/main.go
 
-go-app:
+local:
 	go run cmd/app/echo/main.go
 
 go-zip:

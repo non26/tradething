@@ -1,9 +1,10 @@
 package res
 
 type GetAdvancedPositionResponse struct {
-	ClientId     string `json:"client_id"`
-	Symbol       string `json:"symbol"`
-	Side         string `json:"side"`
-	AmountB      string `json:"amount_b"`
-	PositionSide string `json:"position_side"`
+	ClientId     string `json:"client_id,omitempty"`
+	Symbol       string `json:"symbol,omitempty"`
+	Side         string `json:"side,omitempty"`
+	AmountB      string `json:"amount_b,omitempty"`
+	PositionSide string `json:"position_side,omitempty"`
+	FailMessage  string `json:"fail_message,omitempty"`
 }

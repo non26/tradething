@@ -1,7 +1,7 @@
 package res
 
 type SetAdvancedPositionResponses struct {
-	Responses []SetAdvancedPositionResponse `json:"responses"`
+	Responses []SetAdvancedPositionResponse
 }
 
 func NewSetAdvancedPositionResponses() *SetAdvancedPositionResponses {
@@ -17,6 +17,7 @@ func (s *SetAdvancedPositionResponses) Add(response *SetAdvancedPositionResponse
 type SetAdvancedPositionResponse struct {
 	ClientId string `json:"client_id"`
 	Status   string `json:"status"`
+	Message  string `json:"message,omitempty"`
 }
 
 func NewSetAdvancedPositionResponse() *SetAdvancedPositionResponse {
@@ -26,9 +27,10 @@ func NewSetAdvancedPositionResponse() *SetAdvancedPositionResponse {
 	}
 }
 
-func (s *SetAdvancedPositionResponse) Fail(clientId string) {
+func (s *SetAdvancedPositionResponse) Fail(clientId string, message string) {
 	s.ClientId = clientId
 	s.Status = "fail"
+	s.Message = message
 }
 
 func (s *SetAdvancedPositionResponse) Success(clientId string) {

@@ -14,6 +14,7 @@ import (
 	"tradething/config"
 
 	"github.com/labstack/echo/v4"
+	apphandler "github.com/non26/tradepkg/pkg/bn/app_handler"
 	bnclient "github.com/non26/tradepkg/pkg/bn/bn_client"
 	bntransport "github.com/non26/tradepkg/pkg/bn/bn_transport"
 	bndynamodb "github.com/non26/tradepkg/pkg/bn/dynamodb_future"
@@ -115,7 +116,7 @@ func RouteFuture(
 	)
 
 	positionHandler := handlers.NewPositionHandler(process)
-	binanceGroup.POST("/position", positionHandler.Handler)
+	binanceGroup.POST("/position", apphandler.HandlerWrapper(positionHandler))
 
 	multiPositionHandler := handlers.NewMultiplePositionHandler(process)
 	binanceGroup.POST("/positions", multiPositionHandler.Handler)
@@ -129,7 +130,7 @@ func RouteFuture(
 	binanceGroup.POST("/set-advanced-position", setAdvancedPositionHandler.Handler)
 
 	// get-advanced-position
-	getAdvancedPositionHandler := handlers.NewSetAdvancedPositionHandler(process)
+	getAdvancedPositionHandler := handlers.NewGetAdvancedPositionHandler(process)
 	binanceGroup.POST("/get-advanced-position", getAdvancedPositionHandler.Handler)
 
 	//manage-position

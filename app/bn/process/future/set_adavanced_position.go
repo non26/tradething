@@ -14,37 +14,37 @@ func (f *future) SetAdvancedPosition(ctx context.Context, positions []*domain.Po
 		response := response.NewSetAdvancedPositionResponse()
 		tradeLookUp, err := f.infraTradeLookUp.LookUp(ctx, position.ToInfraPosition())
 		if err != nil {
-			response.Fail(position.GetClientId())
+			response.Fail(position.GetClientId(), err.Error())
 			responses.Add(response)
 			continue
 		}
 		if tradeLookUp.OpeningPosition.IsFound() {
-			response.Fail(position.GetClientId())
+			response.Fail(position.GetClientId(), "Opening position found")
 			responses.Add(response)
 			continue
 		}
 
 		AdvLookUp, err := f.infraAdvancedPositionLookUp.LookUpByClientId(ctx, position.GetClientId())
 		if err != nil {
-			response.Fail(position.GetClientId())
+			response.Fail(position.GetClientId(), err.Error())
 			responses.Add(response)
 			continue
 		}
 		if AdvLookUp.AdvancedPosition.IsFound() {
-			response.Fail(position.GetClientId())
+			response.Fail(position.GetClientId(), "Advanced position found")
 			responses.Add(response)
 			continue
 		}
 
-		err = f.bnFtAdvancedPosition.Upsert(ctx, &dynamodbmodel.BnFtAdvancedPosition{
-			ClientID:     position.GetClientId(),
-			Symbol:       position.GetSymbol(),
-			PositionSide: position.GetPositionSide(),
-			Side:         position.GetSide(),
-			AmountB:      position.GetEntryQuantity(),
-		})
+		advancedPosition := dynamodbmodel.NewBnFtAdvancedPosition()
+		advancedPosition.ClientID = position.GetClientId()
+		advancedPosition.Symbol = position.GetSymbol()
+		advancedPosition.PositionSide = position.GetPositionSide()
+		advancedPosition.Side = position.GetSide()
+		advancedPosition.AmountB = position.GetEntryQuantity()
+		err = f.bnFtAdvancedPosition.Upsert(ctx, advancedPosition)
 		if err != nil {
-			response.Fail(position.GetClientId())
+			response.Fail(position.GetClientId(), err.Error())
 			responses.Add(response)
 			continue
 		}

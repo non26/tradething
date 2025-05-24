@@ -2,7 +2,6 @@ package process
 
 import (
 	"context"
-	"errors"
 	response "tradething/app/bn/handlers/future/res"
 )
 
@@ -12,7 +11,10 @@ func (f *future) GetAdvancedPosition(ctx context.Context, clientId string) (*res
 		return nil, err
 	}
 	if !lookUp.AdvancedPosition.IsFound() {
-		return nil, errors.New("advanced position not found")
+		return &response.GetAdvancedPositionResponse{
+			ClientId:    clientId,
+			FailMessage: "advanced position not found",
+		}, nil
 	}
 
 	return &response.GetAdvancedPositionResponse{
