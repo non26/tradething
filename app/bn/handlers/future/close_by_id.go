@@ -9,7 +9,7 @@ import (
 )
 
 type ICloseByIdHandler interface {
-	Handler(c echo.Context) error
+	Handler(c echo.Context) (response interface{}, httpStatus int, err error)
 }
 
 type closeByIdHandler struct {
@@ -20,15 +20,15 @@ func NewCloseByIdHandler(processCloseById process.IFuture) ICloseByIdHandler {
 	return &closeByIdHandler{processCloseById}
 }
 
-func (h *closeByIdHandler) Handler(c echo.Context) error {
+func (h *closeByIdHandler) Handler(c echo.Context) (response interface{}, httpStatus int, err error) {
 	request := new(req.ClosePositionByClientIds)
 	if err := c.Bind(request); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return nil, http.StatusBadRequest, err
 	}
 
-	response, err := h.processCloseById.ClosePositionByClientIds(c.Request().Context(), request.ClientIds)
+	response, err = h.processCloseById.ClosePositionByClientIds(c.Request().Context(), request.ClientIds)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return nil, http.StatusInternalServerError, err
 	}
-	return c.JSON(http.StatusOK, response)
+	return response, http.StatusOK, nil
 }

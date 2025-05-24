@@ -8,7 +8,7 @@ import (
 	dynamodbmodel "github.com/non26/tradepkg/pkg/bn/dynamodb_future/models"
 )
 
-func (f *future) SetAdvancedPosition(ctx context.Context, positions []*domain.Position) (*response.SetAdvancedPositionResponses, error) {
+func (f *future) SetAdvancedPosition(ctx context.Context, positions []*domain.Position) ([]response.SetAdvancedPositionResponse, error) {
 	responses := response.NewSetAdvancedPositionResponses()
 	for _, position := range positions {
 		response := response.NewSetAdvancedPositionResponse()
@@ -52,5 +52,5 @@ func (f *future) SetAdvancedPosition(ctx context.Context, positions []*domain.Po
 		responses.Add(response)
 	}
 
-	return responses, nil
+	return responses.Responses, nil
 }

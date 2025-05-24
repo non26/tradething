@@ -12,8 +12,8 @@ func (f *future) GetAdvancedPosition(ctx context.Context, clientId string) (*res
 	}
 	if !lookUp.AdvancedPosition.IsFound() {
 		return &response.GetAdvancedPositionResponse{
-			ClientId:    clientId,
-			FailMessage: "advanced position not found",
+			ClientId: clientId,
+			Message:  "advanced position not found",
 		}, nil
 	}
 

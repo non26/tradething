@@ -6,5 +6,5 @@ type GetAdvancedPositionResponse struct {
 	Side         string `json:"side,omitempty"`
 	AmountB      string `json:"amount_b,omitempty"`
 	PositionSide string `json:"position_side,omitempty"`
-	FailMessage  string `json:"fail_message,omitempty"`
+	Message      string `json:"message,omitempty"`
 }

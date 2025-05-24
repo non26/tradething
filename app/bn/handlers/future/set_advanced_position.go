@@ -16,20 +16,20 @@ func NewSetAdvancedPositionHandler(process process.IFuture) *SetAdvancedPosition
 	return &SetAdvancedPositionHandler{process: process}
 }
 
-func (h *SetAdvancedPositionHandler) Handler(c echo.Context) error {
+func (h *SetAdvancedPositionHandler) Handler(c echo.Context) (response interface{}, httpStatus int, err error) {
 	request := new(req.SetAdvancedPositionReqs)
 	if err := c.Bind(request); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return nil, http.StatusBadRequest, err
 	}
 
 	if err := request.Validate(); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return nil, http.StatusBadRequest, err
 	}
 
-	response, err := h.process.SetAdvancedPosition(c.Request().Context(), request.ToDomain())
+	response, err = h.process.SetAdvancedPosition(c.Request().Context(), request.ToDomain())
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return nil, http.StatusInternalServerError, err
 	}
 
-	return c.JSON(http.StatusOK, response)
+	return response, http.StatusOK, nil
 }
