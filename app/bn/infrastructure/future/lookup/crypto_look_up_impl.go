@@ -32,7 +32,7 @@ func (c *cryptoLookUp) LookUpBySymbol(ctx context.Context, symbol string, positi
 		cryptoCoin.SetNextCountingBy(positionSide)
 	}
 
-	lookup := &domainCryptoSvc.CryptoLookUp{}
+	lookup := domainCryptoSvc.NewCryptoLookUp()
 	lookup.Symbol.SetSymbol(cryptoCoin.Symbol)
 	lookup.Symbol.SetCountingLong(cryptoCoin.CountingLong)
 	lookup.Symbol.SetCountingShort(cryptoCoin.CountingShort)

@@ -48,15 +48,6 @@ func (s *saveBuyPosition) Save(ctx context.Context, _position *position.Position
 		if err != nil {
 			return err
 		}
-		advPosition := position.Position{
-			ClientId:     advPositionLookUp.AdvancedPosition.GetClientId(),
-			Symbol:       advPositionLookUp.AdvancedPosition.GetSymbol(),
-			PositionSide: advPositionLookUp.AdvancedPosition.GetPositionSide(),
-		}
-		err = s.bnFtHistoryTable.Insert(ctx, advPosition.ToHistoryTable())
-		if err != nil {
-			return err
-		}
 	}
 
 	err := s.bnFtOpeningPositionTable.Upsert(ctx, ToOpeningPositionTable(_position))

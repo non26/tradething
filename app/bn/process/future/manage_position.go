@@ -16,7 +16,7 @@ func (f *future) ManagePosition(ctx context.Context, closeClientId []string, adv
 	response.ClosePosition = closePosition
 
 	for _, clientId := range advPositionClientId {
-		advPosition := domain.NewPosition(clientId, "", "", "", "")
+		advPosition := domain.NewPosition().SetClientId(clientId)
 		advPositionRes, err := f.PlaceOrder(ctx, advPosition)
 		if err != nil {
 			return nil, err

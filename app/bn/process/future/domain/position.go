@@ -16,7 +16,7 @@ type Position struct {
 	clientId     string
 }
 
-func NewPosition(clientId string, symbol string, positionSide string, side string, amountB string) *Position {
+func NewPositionWith(clientId string, symbol string, positionSide string, side string, amountB string) *Position {
 	return &Position{
 		clientId:     clientId,
 		symbol:       symbol,
@@ -26,44 +26,53 @@ func NewPosition(clientId string, symbol string, positionSide string, side strin
 	}
 }
 
+func NewPosition() *Position {
+	return &Position{}
+}
+
 func (p *Position) GetPositionSide() string {
 	return p.positionSide
 }
 
-func (p *Position) SetPositionSide(positionSide string) {
+func (p *Position) SetPositionSide(positionSide string) *Position {
 	p.positionSide = strings.ToUpper(positionSide)
+	return p
 }
 
 func (p *Position) GetSide() string {
 	return p.side
 }
 
-func (p *Position) SetSide(side string) {
+func (p *Position) SetSide(side string) *Position {
 	p.side = strings.ToUpper(side)
+	return p
 }
 
 func (p *Position) GetEntryQuantity() string {
 	return p.amountB
 }
 
-func (p *Position) SetEntryQuantity(entryQuantity string) {
+func (p *Position) SetEntryQuantity(entryQuantity string) *Position {
 	p.amountB = entryQuantity
+	return p
 }
 
 func (p *Position) GetSymbol() string {
 	return p.symbol
 }
 
-func (p *Position) SetSymbol(symbol string) {
+func (p *Position) SetSymbol(symbol string) *Position {
 	p.symbol = symbol
+	return p
 }
 
 func (p *Position) GetClientId() string {
 	return p.clientId
 }
 
-func (p *Position) SetClientId(clientId string) {
+func (p *Position) SetClientId(clientId string) *Position {
 	p.clientId = clientId
+	return p
 }
 
 func (p *Position) IsLongPosition() bool {

@@ -134,5 +134,7 @@ func RouteFuture(
 	binanceGroup.POST("/get-advanced-position", apphandler.HandlerWrapper(getAdvancedPositionHandler))
 
 	//manage-position
+	mangePositionHandler := handlers.NewManagePositionHandler(process)
+	binanceGroup.POST("/manage-position", apphandler.HandlerWrapper(mangePositionHandler))
 
 }
