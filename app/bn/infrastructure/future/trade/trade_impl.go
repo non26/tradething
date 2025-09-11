@@ -13,20 +13,20 @@ import (
 )
 
 type trade struct {
-	tradePosition            builder.ITradeBuilder
+	tradeBuilder             builder.ITradeBuilder
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository
 	bnFtCryptoTable          bndynamodb.IBnFtCryptoRepository
 	bnFtHistoryTable         bndynamodb.IBnFtHistoryRepository
 }
 
 func NewTrade(
-	tradePosition builder.ITradeBuilder,
+	tradeBuilder builder.ITradeBuilder,
 	bnFtOpeningPositionTable bndynamodb.IBnFtOpeningPositionRepository,
 	bnFtCryptoTable bndynamodb.IBnFtCryptoRepository,
 	bnFtHistoryTable bndynamodb.IBnFtHistoryRepository,
 ) infra.ITrade {
 	return &trade{
-		tradePosition:            tradePosition,
+		tradeBuilder:             tradeBuilder,
 		bnFtOpeningPositionTable: bnFtOpeningPositionTable,
 		bnFtCryptoTable:          bnFtCryptoTable,
 		bnFtHistoryTable:         bnFtHistoryTable,
@@ -35,7 +35,7 @@ func NewTrade(
 
 func (t *trade) PlacePosition(ctx context.Context, position *position.Position) error {
 	var err error
-	trade := t.tradePosition.GetPosition(ctx, position.PositionSide)
+	trade := t.tradeBuilder.GetTradePosition(ctx, position.PositionSide)
 	if utils.IsBuyPosition(position.Side, position.PositionSide) {
 		err = trade.BuyPosition(ctx, position)
 	} else if utils.IsSellPosition(position.Side, position.PositionSide) {

@@ -8,10 +8,6 @@ import (
 	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
 )
 
-type ITradeBuilder interface {
-	GetPosition(ctx context.Context, position_side string) position.IPosition
-}
-
 type tradeBuilder struct {
 	longPosition  position.IPosition
 	shortPosition position.IPosition
@@ -27,11 +23,13 @@ func NewTradePosition(
 	}
 }
 
-func (t *tradeBuilder) GetPosition(ctx context.Context, position_side string) position.IPosition {
-	if position_side == bnconstant.LONG {
+func (t *tradeBuilder) GetTradePosition(ctx context.Context, position_side string) position.IPosition {
+	switch position_side {
+	case bnconstant.LONG:
 		return t.longPosition
-	} else if position_side == bnconstant.SHORT {
+	case bnconstant.SHORT:
 		return t.shortPosition
+	default:
+		return nil
 	}
-	return nil
 }

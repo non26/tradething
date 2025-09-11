@@ -13,14 +13,14 @@ import (
 )
 
 type savePosition struct {
-	queryPosition builder.ISavePositionBuilder
+	savePoisitionBuilder builder.ISavePositionSideBuilder
 }
 
-func NewSavePosition(queryPosition builder.ISavePositionBuilder) future.ITradeSavePosition {
-	return &savePosition{queryPosition}
+func NewSavePosition(savePoisitionBuilder builder.ISavePositionSideBuilder) future.ITradeSavePosition {
+	return &savePosition{savePoisitionBuilder}
 }
 
 func (s *savePosition) Save(ctx context.Context, position *position.Position, tradeLookup *domainTradeSvc.TradeLookUp, cryptoLookup *domainCryptoSvc.CryptoLookUp, advPositionLookUp *domainAdvPositionSvc.AdvancedPositionLookUp) error {
-	savePositionBySide := s.queryPosition.Get(ctx, position)
+	savePositionBySide := s.savePoisitionBuilder.Get(ctx, position)
 	return savePositionBySide.Save(ctx, position, tradeLookup, cryptoLookup, advPositionLookUp)
 }

@@ -6,8 +6,8 @@ import (
 	infraBuilder "tradething/app/bn/infrastructure/future/builder"
 	infraLookup "tradething/app/bn/infrastructure/future/lookup"
 	infraposition "tradething/app/bn/infrastructure/future/position"
-	infraSave "tradething/app/bn/infrastructure/future/save"
-	infraSavePosition "tradething/app/bn/infrastructure/future/save_position"
+	infraSavePosition "tradething/app/bn/infrastructure/future/save_position_side"
+	infraSave "tradething/app/bn/infrastructure/future/save_side"
 	infraTrade "tradething/app/bn/infrastructure/future/trade"
 	process "tradething/app/bn/process/future"
 
@@ -86,7 +86,7 @@ func RouteFuture(
 		bnFtAdvancedPosition,
 	)
 
-	savePositionBuilder := infraBuilder.NewSavePositionBuilder(
+	savePositionBuilder := infraBuilder.NewSavePositionSideBuilder(
 		saveBuyPosition,
 		saveSellPosition,
 	)

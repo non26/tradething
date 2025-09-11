@@ -21,7 +21,6 @@ func (f *future) PlaceOrder(ctx context.Context, position *domain.Position) (*re
 		if tradeLookUp.OpeningPosition.GetClientId() == position.GetClientId() {
 			return nil, errors.New("duplicate opening position")
 		}
-		// return nil, errors.New("duplicate opening position")
 	}
 
 	// look up advanced position
@@ -39,7 +38,7 @@ func (f *future) PlaceOrder(ctx context.Context, position *domain.Position) (*re
 		)
 	}
 
-	// look up crypto coin
+	// look up crypto symbol
 	cryptoLookUp, err := f.infraCryptoLookUp.LookUpBySymbol(ctx, position.GetSymbol(), position.GetPositionSide())
 	if err != nil {
 		return nil, err
