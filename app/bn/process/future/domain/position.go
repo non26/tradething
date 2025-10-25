@@ -6,14 +6,16 @@ import (
 	infra "tradething/app/bn/infrastructure/future/position"
 
 	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
+	"github.com/shopspring/decimal"
 )
 
 type Position struct {
-	positionSide string
-	side         string
-	amountB      string
-	symbol       string
-	clientId     string
+	positionSide          string
+	side                  string
+	amountB               string
+	symbol                string
+	clientId              string
+	maxAccumulatePosition string
 }
 
 func NewPositionWith(clientId string, symbol string, positionSide string, side string, amountB string) *Position {
@@ -75,6 +77,15 @@ func (p *Position) SetClientId(clientId string) *Position {
 	return p
 }
 
+func (p *Position) GetMaxAccumulatePosition() string {
+	return p.maxAccumulatePosition
+}
+
+func (p *Position) SetMaxAccumulatePosition(maxAccumulatePosition string) *Position {
+	p.maxAccumulatePosition = maxAccumulatePosition
+	return p
+}
+
 func (p *Position) IsLongPosition() bool {
 	return p.positionSide == bnconstant.LONG
 }
@@ -111,6 +122,21 @@ func (p *Position) SetSellSideFrom(positionSide string) {
 	}
 }
 
+func (p *Position) ExceedMaxAccumulatePosition() bool {
+	if p.maxAccumulatePosition != "" {
+		_maxAccumulatePosition, err := decimal.NewFromString(p.maxAccumulatePosition)
+		if err != nil {
+			return false
+		}
+		_amountB, err := decimal.NewFromString(p.amountB)
+		if err != nil {
+			return false
+		}
+		return _amountB.GreaterThan(_maxAccumulatePosition)
+	}
+	return false
+}
+
 func (p *Position) ToInfraPosition() *infra.Position {
 	infraPosition := infra.Position{
 		PositionSide: p.positionSide,
@@ -119,6 +145,18 @@ func (p *Position) ToInfraPosition() *infra.Position {
 		OrderType:    bnconstant.MARKET,
 		ClientId:     p.clientId,
 		Side:         p.side,
+	}
+	return &infraPosition
+}
+
+func (p *Position) ToInfraPositionWith(clientId string, symbol string, positionSide string, side string, amountB string) *infra.Position {
+	infraPosition := infra.Position{
+		PositionSide: positionSide,
+		AmountB:      amountB,
+		Symbol:       symbol,
+		OrderType:    bnconstant.MARKET,
+		ClientId:     clientId,
+		Side:         side,
 	}
 	return &infraPosition
 }

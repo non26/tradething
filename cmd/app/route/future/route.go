@@ -137,4 +137,8 @@ func RouteFuture(
 	mangePositionHandler := handlers.NewManagePositionHandler(process)
 	binanceGroup.POST("/manage-position", apphandler.HandlerWrapper(mangePositionHandler))
 
+	// accumulate-position
+	accumulatePositionHandler := handlers.NewAccumulatePositionHandler(process)
+	binanceGroup.POST("/accumulate-position", apphandler.HandlerWrapper(accumulatePositionHandler))
+
 }
