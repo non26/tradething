@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	"tradething/app/bn/future/market_data/handler/req"
+	"tradething/app/bn/future/market_data/handler/res"
 	"tradething/app/bn/future/market_data/service"
 
 	"github.com/labstack/echo/v4"
@@ -23,12 +24,14 @@ func (h *getKlineHandler) Handler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	kline, err := h.service.GetKline(c.Request().Context(), req.ToDomain())
+	klines, err := h.service.GetKline(c.Request().Context(), req.ToDomain())
 	if err != nil {
 		response := appresponse.NewAppResponse(appresponse.FailCode, err.Error(), nil)
 		return response.SendResponse(http.StatusInternalServerError, c)
 	}
 
-	response := appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, kline)
+	klinesResponse := &res.KlinesResponse{}
+	klinesResponse = klinesResponse.FromDomain(klines)
+	response := appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, klinesResponse)
 	return response.SendResponse(http.StatusOK, c)
 }

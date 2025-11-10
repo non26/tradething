@@ -22,6 +22,7 @@ type Kline struct {
 	NumberOfTrades   int64
 	BuyerBaseVolume  string
 	BuyerQuoteVolume string
+	IsGreenCandle    bool
 }
 
 func (k *Kline) GetPreviousStartAndEndTimeInUnixTimestamp() (int64, int64) {
