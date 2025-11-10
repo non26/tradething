@@ -10,6 +10,9 @@ func (s *subAccountService) GetAllSubAccount(ctx context.Context) ([]*domain.Sub
 	if err != nil {
 		return nil, err
 	}
+	if subAccountsDB == nil {
+		return []*domain.SubAccount{}, nil
+	}
 	subAccounts := make([]*domain.SubAccount, len(subAccountsDB))
 	for i, subAccountDB := range subAccountsDB {
 		subAccounts[i] = &domain.SubAccount{

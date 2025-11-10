@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"net/http"
+	"tradething/app/bn/future/sub_account/handler/res"
 	"tradething/app/bn/future/sub_account/service"
 
 	"github.com/labstack/echo/v4"
@@ -39,6 +40,8 @@ func (h *getHandler[Req]) Handler(c echo.Context) error {
 		return response.SendResponse(http.StatusInternalServerError, c)
 	}
 
-	response := appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, subAccount)
+	responseData := &res.GetSubAccountRes{}
+	responseData = responseData.FromDomain(subAccount)
+	response := appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, responseData)
 	return response.SendResponse(http.StatusOK, c)
 }

@@ -18,7 +18,10 @@ func (r *registerAccountRepository) GetAll(ctx context.Context) ([]*models.BnFtR
 		return nil, err
 	}
 	if result.Items == nil {
-		return []*models.BnFtRegisterAccount{}, nil
+		return nil, nil
+	}
+	if len(result.Items) == 0 {
+		return nil, nil
 	}
 	sub_accounts := []*models.BnFtRegisterAccount{}
 	err = attributevalue.UnmarshalListOfMaps(result.Items, &sub_accounts)

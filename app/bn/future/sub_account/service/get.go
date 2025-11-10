@@ -10,6 +10,9 @@ func (s *subAccountService) GetSubAccount(ctx context.Context, accountId string)
 	if err != nil {
 		return nil, err
 	}
+	if subAccountDB == nil {
+		return nil, nil
+	}
 	subAccount := &domain.SubAccount{
 		AccountId:   subAccountDB.AccountId,
 		AccountName: subAccountDB.AccountName,
