@@ -10,6 +10,11 @@ func (s *currentPositionService) GetAll(ctx context.Context) ([]*domain.Position
 	if err != nil {
 		return nil, err
 	}
+
+	if results == nil {
+		return []*domain.Position{}, nil
+	}
+
 	positions := make([]*domain.Position, len(results))
 	for i, result := range results {
 		positions[i] = &domain.Position{

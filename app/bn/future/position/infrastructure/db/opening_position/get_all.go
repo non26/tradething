@@ -17,6 +17,12 @@ func (r *openingPositionRepository) GetAll(ctx context.Context) ([]*models.BnFtO
 	if err != nil {
 		return nil, err
 	}
+	if response.Items == nil {
+		return nil, nil
+	}
+	if len(response.Items) == 0 {
+		return nil, nil
+	}
 	items := []*models.BnFtOpeningPosition{}
 	err = attributevalue.UnmarshalListOfMaps(response.Items, &items)
 	if err != nil {
