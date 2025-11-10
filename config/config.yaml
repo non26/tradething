@@ -42,3 +42,4 @@ service-name:
 binance-adaptor-future-usdt:
   base-url:
   new-order:
+  klines-candle-stick:
