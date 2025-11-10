@@ -15,7 +15,7 @@ func (r *bnFtHistoryRepository) Insert(ctx context.Context, history *domain.BnFt
 	table.ClientId = history.ClientId
 	table.Symbol = history.Symbol
 	table.PositionSide = history.PositionSide
-	table.CreatedAt = history.CreatedAt
+	table.AccountId = history.AccountId
 	item, err := attributevalue.MarshalMap(table)
 	if err != nil {
 		return err

@@ -11,11 +11,15 @@ func (s *service) GetPositionHistory(ctx context.Context, clientId string) (*dom
 		return nil, err
 	}
 
+	if historyDB == nil {
+		return nil, nil
+	}
+
 	history := &domain.BnFtHistory{
 		ClientId:     historyDB.ClientId,
 		Symbol:       historyDB.Symbol,
 		PositionSide: historyDB.PositionSide,
-		CreatedAt:    historyDB.CreatedAt,
+		AccountId:    historyDB.AccountId,
 	}
 
 	return history, nil

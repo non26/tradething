@@ -4,5 +4,5 @@ type BnFtHistory struct {
 	ClientId     string
 	Symbol       string
 	PositionSide string
-	CreatedAt    string
+	AccountId    string
 }

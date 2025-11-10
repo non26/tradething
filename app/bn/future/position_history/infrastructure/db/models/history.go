@@ -12,7 +12,7 @@ type BnFtHistory struct {
 	ClientId     string `dynamodbav:"client_id" dynamodb:"client_id"` // primary key
 	Symbol       string `dynamodbav:"symbol" dynamodb:"symbol"`
 	PositionSide string `dynamodbav:"position_side" dynamodb:"position_side"`
-	CreatedAt    string `dynamodbav:"created_at" dynamodb:"created_at"`
+	AccountId    string `dynamodbav:"account_id" dynamodb:"account_id"`
 }
 
 func NewBnFtHistoryTable() *BnFtHistory {
@@ -39,7 +39,7 @@ func (b *BnFtHistory) GetPositionSideField() (string, reflect.Type) {
 	return v, t
 }
 
-func (b *BnFtHistory) GetCreatedAtField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "created_at", "dynamodb")
+func (b *BnFtHistory) GetAccountIdField() (string, reflect.Type) {
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "account_id", "dynamodb")
 	return v, t
 }

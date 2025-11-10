@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"net/http"
+	"tradething/app/bn/future/position_history/handler/res"
 	"tradething/app/bn/future/position_history/service"
 
 	"github.com/labstack/echo/v4"
@@ -38,6 +39,8 @@ func (h *getHistoryHandler[Req]) Handler(c echo.Context) error {
 		return response.SendResponse(http.StatusInternalServerError, c)
 	}
 
-	response := appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, history)
+	responseData := &res.GetHistoryRes{}
+	responseData = responseData.FromDomain(history)
+	response := appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, responseData)
 	return response.SendResponse(http.StatusOK, c)
 }
