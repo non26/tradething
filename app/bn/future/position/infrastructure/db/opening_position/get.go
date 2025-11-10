@@ -20,6 +20,13 @@ func (r *openingPositionRepository) Get(ctx context.Context, symbol string, acco
 	if err != nil {
 		return nil, err
 	}
+	if response.Item == nil {
+		return nil, nil
+	}
+	if len(response.Item) == 0 {
+		return nil, nil
+	}
+
 	result := models.BnFtOpeningPosition{}
 	err = attributevalue.UnmarshalMap(response.Item, &result)
 	if err != nil {

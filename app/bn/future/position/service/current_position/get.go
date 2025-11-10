@@ -10,6 +10,9 @@ func (s *currentPositionService) Get(ctx context.Context, symbol string, account
 	if err != nil {
 		return nil, err
 	}
+	if results == nil {
+		return nil, nil
+	}
 	return &domain.Position{
 		ClientId:     results.SymbolAccountId,
 		PositionSide: results.PositionSide,
