@@ -20,6 +20,12 @@ func (r *advancedPositionRepository) Get(ctx context.Context, clientId string) (
 	if err != nil {
 		return nil, err
 	}
+	if response.Item == nil {
+		return nil, nil
+	}
+	if len(response.Item) == 0 {
+		return nil, nil
+	}
 	err = attributevalue.UnmarshalMap(response.Item, &result)
 	if err != nil {
 		return nil, err

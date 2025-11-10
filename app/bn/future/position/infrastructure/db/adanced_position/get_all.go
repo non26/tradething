@@ -17,6 +17,12 @@ func (r *advancedPositionRepository) GetAll(ctx context.Context) ([]*models.BnFt
 	if err != nil {
 		return nil, err
 	}
+	if response.Items == nil {
+		return nil, nil
+	}
+	if len(response.Items) == 0 {
+		return nil, nil
+	}
 	items := []*models.BnFtAdvancedPosition{}
 	err = attributevalue.UnmarshalListOfMaps(response.Items, &items)
 	if err != nil {

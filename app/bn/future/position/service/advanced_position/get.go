@@ -10,6 +10,10 @@ func (s *advancedPositionService) Get(ctx context.Context, clientId string) (*do
 	if err != nil {
 		return nil, err
 	}
+	if results == nil {
+		return nil, nil
+	}
+
 	return &domain.Position{
 		ClientId:     results.ClientID,
 		Symbol:       results.Symbol,

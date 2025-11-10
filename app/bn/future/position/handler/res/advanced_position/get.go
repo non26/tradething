@@ -12,6 +12,9 @@ type GetAdvancedPositionRes struct {
 }
 
 func (r *GetAdvancedPositionRes) FromDomain(position *domain.Position) *GetAdvancedPositionRes {
+	if position == nil {
+		return nil
+	}
 	return &GetAdvancedPositionRes{
 		ClientId:     position.ClientId,
 		Symbol:       position.Symbol,
