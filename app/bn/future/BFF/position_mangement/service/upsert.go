@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"tradething/app/bn/future/BFF/current_position/domain"
+	"tradething/app/bn/future/BFF/position_mangement/domain"
 )
 
 func (s *service) Upsert(ctx context.Context, req *domain.Position) error {

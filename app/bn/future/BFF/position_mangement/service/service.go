@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"tradething/app/bn/future/BFF/current_position/domain"
-	externalapi "tradething/app/bn/future/BFF/current_position/infrastructure/external_api"
+	"tradething/app/bn/future/BFF/position_mangement/domain"
+	externalapi "tradething/app/bn/future/BFF/position_mangement/infrastructure/external_api"
 )
 
 type IService interface {
