@@ -14,9 +14,11 @@ func Router(app *echo.Echo, dbclient *dynamodb.Client) {
 	historyRepository := db.NewBnFtHistoryRepository(dbclient)
 	service := service.NewService(historyRepository)
 
+	group := app.Group("/position-history")
+
 	insertHandler := handler.NewInsertHistoryHandler[req.InsertReq](service)
-	app.POST("/position-history/insert", insertHandler.Handler)
+	group.POST("/insert", insertHandler.Handler)
 
 	getHandler := handler.NewGetHistoryHandler[string](service)
-	app.GET("/position-history/:clientId", getHandler.Handler)
+	group.POST("", getHandler.Handler)
 }

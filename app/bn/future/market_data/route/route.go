@@ -18,10 +18,12 @@ func Router(e *echo.Echo, config *config.AppConfig) {
 
 	service := service.NewService(marketDataAdaptor)
 
+	group := e.Group("/market-data")
+
 	getKlineHandler := handler.NewGetKlineHandler(service)
-	e.POST("/market-data/kline", getKlineHandler.Handler)
+	group.POST("/kline", getKlineHandler.Handler)
 
 	getPreviousKlineHandler := handler.NewGetPreviousKlineHandler(service)
-	e.POST("/market-data/previous/kline", getPreviousKlineHandler.Handler)
+	group.POST("/previous/kline", getPreviousKlineHandler.Handler)
 
 }

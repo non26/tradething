@@ -19,7 +19,7 @@ func NewRoute(e *echo.Echo, dbclient *dynamodb.Client) {
 	group.POST("/upsert", upsertHandler.Handler)
 
 	getHandler := handler.NewGetHandler(service)
-	group.POST("/get", getHandler.Handler)
+	group.POST("/", getHandler.Handler)
 
 	getAllHandler := handler.NewGetAllHandler(service)
 	group.GET("/all", getAllHandler.Handler)

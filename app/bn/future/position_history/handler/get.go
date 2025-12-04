@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"errors"
 	"net/http"
+	"tradething/app/bn/future/position_history/handler/req"
 	"tradething/app/bn/future/position_history/handler/res"
 	"tradething/app/bn/future/position_history/service"
 
@@ -19,11 +19,11 @@ func NewGetHistoryHandler[Req any](service service.IService) IHandler[string] {
 }
 
 func (h *getHistoryHandler[Req]) GetReqBody(c echo.Context) (*string, error) {
-	clientId := c.Param("clientId")
-	if clientId == "" {
-		return nil, errors.New("clientId is required")
+	req := &req.GetReq{}
+	if err := c.Bind(req); err != nil {
+		return nil, err
 	}
-	return &clientId, nil
+	return &req.ClientId, nil
 }
 
 func (h *getHistoryHandler[Req]) Handler(c echo.Context) error {

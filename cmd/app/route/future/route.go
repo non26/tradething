@@ -1,6 +1,7 @@
 package route
 
 import (
+	accumroute "tradething/app/bn/future/accumulation/route"
 	marketdataroute "tradething/app/bn/future/market_data/route"
 	positionroute "tradething/app/bn/future/position/route"
 	positionhistoryroute "tradething/app/bn/future/position_history/route"
@@ -20,4 +21,5 @@ func RouteFuture(
 	marketdataroute.Router(app_echo, config)
 	subaccountroute.Router(app_echo, dynamodbclient)
 	positionhistoryroute.Router(app_echo, dynamodbclient)
+	accumroute.NewRoute(app_echo, dynamodbclient)
 }

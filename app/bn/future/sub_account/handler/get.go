@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"errors"
 	"net/http"
+	"tradething/app/bn/future/sub_account/handler/req"
 	"tradething/app/bn/future/sub_account/handler/res"
 	"tradething/app/bn/future/sub_account/service"
 
@@ -19,11 +19,11 @@ func NewGetHandler[Req any](service service.ISubAccountService) IHandler[string]
 }
 
 func (h *getHandler[Req]) GetReqBody(c echo.Context) (*string, error) {
-	accountId := c.Param("accountId")
-	if accountId == "" {
-		return nil, errors.New("accountId is required")
+	req := &req.GetReq{}
+	if err := c.Bind(req); err != nil {
+		return nil, err
 	}
-	return &accountId, nil
+	return &req.AccountId, nil
 }
 
 func (h *getHandler[Req]) Handler(c echo.Context) error {

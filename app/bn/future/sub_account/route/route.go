@@ -19,8 +19,10 @@ func Router(app *echo.Echo, dbclient *dynamodb.Client) {
 	upsertHandler := handler.NewUpsertHandler[req.UpsertReq](service)
 	deleteHandler := handler.NewDeleteHandler[req.DeleteReq](service)
 
-	app.GET("/sub-account/:accountId", getHandler.Handler)
-	app.GET("/sub-account/all", getAllHandler.Handler)
-	app.POST("/sub-account/upsert", upsertHandler.Handler)
-	app.POST("/sub-account/delete", deleteHandler.Handler)
+	group := app.Group("/sub-account")
+
+	group.POST("", getHandler.Handler)
+	group.GET("/all", getAllHandler.Handler)
+	group.POST("/upsert", upsertHandler.Handler)
+	group.POST("/delete", deleteHandler.Handler)
 }

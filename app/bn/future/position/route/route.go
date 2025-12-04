@@ -26,10 +26,12 @@ func routerCurrentPosition(app *echo.Echo, dbclient *dynamodb.Client) {
 	upsertHandler := handlercurrent.NewUpsertHandler(currentPositionService)
 	deleteHandler := handlercurrent.NewDeleteHandler(currentPositionService)
 
-	app.POST("/position", getHandler.Handler)
-	app.POST("/position/all", getAllHandler.Handler)
-	app.POST("/position/upsert", upsertHandler.Handler)
-	app.POST("/position/delete", deleteHandler.Handler)
+	group := app.Group("/position")
+
+	group.POST("", getHandler.Handler)
+	group.GET("/all", getAllHandler.Handler)
+	group.POST("/upsert", upsertHandler.Handler)
+	group.POST("/delete", deleteHandler.Handler)
 }
 
 func routerAdvancedPosition(app *echo.Echo, dbclient *dynamodb.Client) {
@@ -40,8 +42,10 @@ func routerAdvancedPosition(app *echo.Echo, dbclient *dynamodb.Client) {
 	upsertHandler := handleradv.NewUpsertHandler(advancedPositionService)
 	deleteHandler := handleradv.NewDeleteHandler(advancedPositionService)
 
-	app.POST("/advanced-position", getHandler.Handler)
-	app.POST("/advanced-position/all", getAllHandler.Handler)
-	app.POST("/advanced-position/upsert", upsertHandler.Handler)
-	app.POST("/advanced-position/delete", deleteHandler.Handler)
+	group := app.Group("/advanced-position")
+
+	group.POST("", getHandler.Handler)
+	group.GET("/all", getAllHandler.Handler)
+	group.POST("/upsert", upsertHandler.Handler)
+	group.POST("/delete", deleteHandler.Handler)
 }
