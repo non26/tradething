@@ -4,8 +4,8 @@ port: 8080
 
 dynamodb:
   region: us-west-2
-  ak: acoimy
-  sk: g3gifr
+  ak: ajueh6
+  sk: c3saq
   endpoint: http://localhost:8000
 
 service-name:

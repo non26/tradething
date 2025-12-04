@@ -8,7 +8,6 @@ import (
 )
 
 type BnFtHistory struct {
-	TableName    string `table:"bn_future_history"`
 	ClientId     string `dynamodbav:"client_id" dynamodb:"client_id"` // primary key
 	Symbol       string `dynamodbav:"symbol" dynamodb:"symbol"`
 	PositionSide string `dynamodbav:"position_side" dynamodb:"position_side"`
@@ -20,7 +19,7 @@ func NewBnFtHistoryTable() *BnFtHistory {
 }
 
 func (b *BnFtHistory) GetTableName() string {
-	return utils.GetStructTagValueByIndex(reflect.TypeOf(b).Elem(), "table", 0)
+	return "bn_future_history"
 }
 
 func (b *BnFtHistory) GetKeyClientId() map[string]types.AttributeValue {

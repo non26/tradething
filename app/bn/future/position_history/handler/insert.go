@@ -22,7 +22,7 @@ func (h *insertHistoryHandler[Req]) GetReqBody(c echo.Context) (*req.InsertReq, 
 	if err := c.Bind(req); err != nil {
 		return nil, err
 	}
-	return nil, nil
+	return req, nil
 }
 
 func (h *insertHistoryHandler[Req]) Handler(c echo.Context) error {
