@@ -17,9 +17,11 @@ func RouteFuture(
 	config *config.AppConfig,
 	dynamodbclient *dynamodb.Client,
 ) {
-	positionroute.Router(app_echo, dynamodbclient)
-	marketdataroute.Router(app_echo, config)
-	subaccountroute.Router(app_echo, dynamodbclient)
-	positionhistoryroute.Router(app_echo, dynamodbclient)
-	accumroute.NewRoute(app_echo, dynamodbclient)
+	if config.IsLocal() {
+		positionroute.Router(app_echo, dynamodbclient)
+		marketdataroute.Router(app_echo, config)
+		subaccountroute.Router(app_echo, dynamodbclient)
+		positionhistoryroute.Router(app_echo, dynamodbclient)
+		accumroute.NewRoute(app_echo, dynamodbclient)
+	}
 }
