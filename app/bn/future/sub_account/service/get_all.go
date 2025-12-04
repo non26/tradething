@@ -21,6 +21,7 @@ func (s *subAccountService) GetAllSubAccount(ctx context.Context) ([]*domain.Sub
 			StartDate:   subAccountDB.StartDate,
 			EndDate:     subAccountDB.EndDate,
 		}
+		subAccounts[i].SetExpired()
 	}
 	return subAccounts, nil
 }

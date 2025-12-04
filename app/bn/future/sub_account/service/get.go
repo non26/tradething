@@ -19,5 +19,6 @@ func (s *subAccountService) GetSubAccount(ctx context.Context, accountId string)
 		StartDate:   subAccountDB.StartDate,
 		EndDate:     subAccountDB.EndDate,
 	}
+	subAccount.SetExpired()
 	return subAccount, nil
 }
