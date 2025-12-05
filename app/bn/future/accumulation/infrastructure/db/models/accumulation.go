@@ -8,7 +8,6 @@ import (
 )
 
 type BnFtAccumulation struct {
-	TableName    string `table:"bn_future_accumulation"`
 	AccumID      string `dynamodbav:"accum_id" dynamodb:"accum_id"`
 	ClientID     string `dynamodbav:"client_id" dynamodb:"client_id"`
 	MaxAccum     string `dynamodbav:"max_accum" dynamodb:"max_accum"`
@@ -20,31 +19,31 @@ func NewBnFtAccumulationTable() *BnFtAccumulation {
 }
 
 func (b *BnFtAccumulation) GetTableName() string {
-	return utils.GetStructTagValueByIndex(reflect.TypeOf(b).Elem(), "table", 0)
+	return "bn_future_accumulation"
 }
 
 func (b *BnFtAccumulation) GetKey() map[string]types.AttributeValue {
 	return map[string]types.AttributeValue{
-		"client_id": &types.AttributeValueMemberS{Value: b.AccumID},
+		"client_id": &types.AttributeValueMemberS{Value: b.ClientID},
 	}
 }
 
 func (b *BnFtAccumulation) GetClientIdField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "client_id", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "ClientID", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtAccumulation) GetMaxAccumField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "max_accum", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "MaxAccum", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtAccumulation) GetPresentAccumField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "present_accum", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "PresentAccum", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtAccumulation) GetAccumIdField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "accum_id", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "AccumID", "dynamodb")
 	return v, t
 }

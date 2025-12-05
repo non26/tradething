@@ -25,7 +25,12 @@ func (h *getAllHandler) Handler(c echo.Context) error {
 	}
 
 	responseData := &res.GetAllRes{}
-	responseData.FromDomain(accumulations)
-	response := appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, responseData)
+	responseData = responseData.FromDomain(accumulations)
+	var response *appresponse.AppResponse
+	if responseData == nil {
+		response = appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, nil)
+	} else {
+		response = appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, responseData)
+	}
 	return response.SendResponse(http.StatusOK, c)
 }

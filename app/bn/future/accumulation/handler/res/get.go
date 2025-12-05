@@ -9,9 +9,13 @@ type GetRes struct {
 	PresentAccum string `json:"present_accum"`
 }
 
-func (r *GetRes) FromDomain(accumulation *domain.Accumulation) {
+func (r *GetRes) FromDomain(accumulation *domain.Accumulation) *GetRes {
+	if accumulation == nil {
+		return nil
+	}
 	r.AccumID = accumulation.AccumID
 	r.ClientID = accumulation.ClientID
 	r.MaxAccum = accumulation.MaxAccum
 	r.PresentAccum = accumulation.PresentAccum
+	return r
 }
