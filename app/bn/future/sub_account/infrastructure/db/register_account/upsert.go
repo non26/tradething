@@ -12,15 +12,19 @@ import (
 
 func (r *registerAccountRepository) Upsert(ctx context.Context, sub_account *domain.SubAccount) error {
 	table := models.NewBnFtRegisterAccountTable()
+	table.AccountId = sub_account.AccountId
+	table.AccountName = sub_account.AccountName
+	table.StartDate = sub_account.StartDate
+	table.EndDate = sub_account.EndDate
 	update_config := dynamodbconfig.NewUpdateTable(table)
-	update_config.Set(table.GetAccountIdField, sub_account.AccountId)
 	update_config.Set(table.GetAccountNameField, sub_account.AccountName)
 	update_config.Set(table.GetStartDateField, sub_account.StartDate)
 	update_config.Set(table.GetEndDateField, sub_account.EndDate)
 	_, err := r.db.UpdateItem(ctx, &dynamodb.UpdateItemInput{
-		TableName:        aws.String(table.GetTableName()),
-		Key:              table.GetKeyAccountId(),
-		UpdateExpression: update_config.BuildExpression(),
+		TableName:                 aws.String(table.GetTableName()),
+		Key:                       table.GetKeyAccountId(),
+		UpdateExpression:          update_config.BuildExpression(),
+		ExpressionAttributeValues: update_config.GetExpressionAttributeValues(),
 	})
 	if err != nil {
 		return err

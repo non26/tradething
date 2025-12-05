@@ -32,6 +32,11 @@ func (h *upsertHandler[Req]) Handler(c echo.Context) error {
 		return response.SendResponse(http.StatusBadRequest, c)
 	}
 
+	if err := reqBody.Validate(); err != nil {
+		response := appresponse.NewAppResponse(appresponse.InvalidRequestErrorCode, err.Error(), nil)
+		return response.SendResponse(http.StatusBadRequest, c)
+	}
+
 	err = h.service.UpsertSubAccount(c.Request().Context(), reqBody.ToDomain())
 	if err != nil {
 		response := appresponse.NewAppResponse(appresponse.FailCode, err.Error(), nil)

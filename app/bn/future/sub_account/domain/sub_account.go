@@ -11,7 +11,8 @@ type SubAccount struct {
 }
 
 func (s *SubAccount) IsAccountExpired() bool {
-	return s.EndDate < time.Now().Format("2006-01-02")
+	loc, _ := time.LoadLocation("Asia/Bangkok")
+	return s.EndDate < time.Now().In(loc).Format("2006-01-02")
 }
 
 func (s *SubAccount) SetExpired() {

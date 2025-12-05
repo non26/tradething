@@ -7,6 +7,9 @@ type GetAllSubAccountRes struct {
 }
 
 func (r *GetAllSubAccountRes) FromDomain(subAccounts []*domain.SubAccount) *GetAllSubAccountRes {
+	if len(subAccounts) == 0 {
+		return nil
+	}
 	for _, subAccount := range subAccounts {
 		singleSubAccount := &GetSubAccountRes{}
 		r.SubAccounts = append(r.SubAccounts, singleSubAccount.FromDomain(subAccount))

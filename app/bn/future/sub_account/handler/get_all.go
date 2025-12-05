@@ -30,6 +30,11 @@ func (h *getallHandler[Req]) Handler(c echo.Context) error {
 
 	responseData := &res.GetAllSubAccountRes{}
 	responseData = responseData.FromDomain(subAccounts)
-	response := appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, responseData)
+	var response *appresponse.AppResponse
+	if len(subAccounts) == 0 {
+		response = appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, nil)
+	} else {
+		response = appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, responseData)
+	}
 	return response.SendResponse(http.StatusOK, c)
 }

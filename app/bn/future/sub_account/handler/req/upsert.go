@@ -1,12 +1,15 @@
 package req
 
-import "tradething/app/bn/future/sub_account/domain"
+import (
+	"time"
+	"tradething/app/bn/future/sub_account/domain"
+)
 
 type UpsertReq struct {
-	AccountId   string `json:"accountId"`
-	AccountName string `json:"accountName"`
-	StartDate   string `json:"startDate"`
-	EndDate     string `json:"endDate"`
+	AccountId   string `json:"accountId" binding:"required"`
+	AccountName string `json:"accountName" binding:"required"`
+	StartDate   string `json:"startDate" binding:"required"`
+	EndDate     string `json:"endDate" binding:"required"`
 }
 
 func (r *UpsertReq) ToDomain() *domain.SubAccount {
@@ -16,4 +19,16 @@ func (r *UpsertReq) ToDomain() *domain.SubAccount {
 		StartDate:   r.StartDate,
 		EndDate:     r.EndDate,
 	}
+}
+
+func (r *UpsertReq) Validate() error {
+	_, err := time.Parse(time.RFC3339, r.StartDate)
+	if err != nil {
+		return err
+	}
+	_, err = time.Parse(time.RFC3339, r.EndDate)
+	if err != nil {
+		return err
+	}
+	return nil
 }

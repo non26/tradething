@@ -8,7 +8,6 @@ import (
 )
 
 type BnFtRegisterAccount struct {
-	TableName   string `table:"bn_future_register_account"`
 	AccountId   string `dynamodbav:"account_id" dynamodb:"account_id"`
 	AccountName string `dynamodbav:"account_name" dynamodb:"account_name"`
 	StartDate   string `dynamodbav:"start_date" dynamodb:"start_date"`
@@ -20,7 +19,7 @@ func NewBnFtRegisterAccountTable() *BnFtRegisterAccount {
 }
 
 func (b *BnFtRegisterAccount) GetTableName() string {
-	return utils.GetStructTagValueByIndex(reflect.TypeOf(b).Elem(), "table", 0)
+	return "bn_future_registor_account"
 }
 
 func (b *BnFtRegisterAccount) GetKeyAccountId() map[string]types.AttributeValue {
@@ -30,21 +29,21 @@ func (b *BnFtRegisterAccount) GetKeyAccountId() map[string]types.AttributeValue 
 }
 
 func (b *BnFtRegisterAccount) GetAccountIdField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "account_id", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "AccountId", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtRegisterAccount) GetAccountNameField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "account_name", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "AccountName", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtRegisterAccount) GetStartDateField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "start_date", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "StartDate", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtRegisterAccount) GetEndDateField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "end_date", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "EndDate", "dynamodb")
 	return v, t
 }

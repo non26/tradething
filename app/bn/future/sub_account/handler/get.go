@@ -39,9 +39,13 @@ func (h *getHandler[Req]) Handler(c echo.Context) error {
 		response := appresponse.NewAppResponse(appresponse.FailCode, err.Error(), nil)
 		return response.SendResponse(http.StatusInternalServerError, c)
 	}
-
 	responseData := &res.GetSubAccountRes{}
 	responseData = responseData.FromDomain(subAccount)
-	response := appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, responseData)
+	var response *appresponse.AppResponse
+	if subAccount != nil {
+		response = appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, responseData)
+	} else {
+		response = appresponse.NewAppResponse(appresponse.SubAccountNotRegisteredErrorCode, appresponse.SubAccountNotRegisteredErrorMessage, nil)
+	}
 	return response.SendResponse(http.StatusOK, c)
 }
