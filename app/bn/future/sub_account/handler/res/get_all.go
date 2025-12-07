@@ -6,6 +6,12 @@ type GetAllSubAccountRes struct {
 	SubAccounts []*GetSubAccountRes `json:"sub_accounts"`
 }
 
+func NewGetAllSubAccountRes() *GetAllSubAccountRes {
+	return &GetAllSubAccountRes{
+		SubAccounts: make([]*GetSubAccountRes, 0),
+	}
+}
+
 func (r *GetAllSubAccountRes) FromDomain(subAccounts []*domain.SubAccount) *GetAllSubAccountRes {
 	if len(subAccounts) == 0 {
 		return nil

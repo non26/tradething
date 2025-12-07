@@ -7,6 +7,9 @@ type GetAllRes struct {
 }
 
 func (r *GetAllRes) FromDomain(positions []*domain.Position) *GetAllRes {
+	if len(positions) == 0 {
+		return nil
+	}
 	for _, position := range positions {
 		singlePosition := &GetRes{}
 		r.Positions = append(r.Positions, singlePosition.FromDomain(position))

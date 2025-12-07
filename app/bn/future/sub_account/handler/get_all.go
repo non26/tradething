@@ -28,7 +28,7 @@ func (h *getallHandler[Req]) Handler(c echo.Context) error {
 		return response.SendResponse(http.StatusInternalServerError, c)
 	}
 
-	responseData := &res.GetAllSubAccountRes{}
+	responseData := res.NewGetAllSubAccountRes()
 	responseData = responseData.FromDomain(subAccounts)
 	var response *appresponse.AppResponse
 	if len(subAccounts) == 0 {

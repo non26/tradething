@@ -29,16 +29,16 @@ func (b *BnFtHistory) GetKeyClientId() map[string]types.AttributeValue {
 }
 
 func (b *BnFtHistory) GetSymbolField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "symbol", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "Symbol", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtHistory) GetPositionSideField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "position_side", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "PositionSide", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtHistory) GetAccountIdField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "account_id", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "AccountId", "dynamodb")
 	return v, t
 }

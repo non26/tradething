@@ -33,7 +33,6 @@ func (r *advancedPositionRepository) Upsert(ctx context.Context, position *domai
 		ExpressionAttributeValues: update_config.GetExpressionAttributeValues(),
 	})
 	if err != nil {
-		println(err.Error())
 		return err
 	}
 	return nil
