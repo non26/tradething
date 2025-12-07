@@ -7,6 +7,9 @@ type GetAllAdvancedPositionRes struct {
 }
 
 func (r *GetAllAdvancedPositionRes) FromDomain(positions []*domain.Position) *GetAllAdvancedPositionRes {
+	if len(positions) == 0 {
+		return nil
+	}
 	for _, position := range positions {
 		r.Positions = append(r.Positions, &GetAdvancedPositionRes{
 			ClientId:     position.ClientId,

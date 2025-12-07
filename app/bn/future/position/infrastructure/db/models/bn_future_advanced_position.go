@@ -8,7 +8,6 @@ import (
 )
 
 type BnFtAdvancedPosition struct {
-	TableName    string `table:"bn_future_advanced_position"`
 	ClientID     string `dynamodbav:"client_id" dynamodb:"client_id"`
 	Symbol       string `dynamodbav:"symbol" dynamodb:"symbol"`
 	PositionSide string `dynamodbav:"position_side" dynamodb:"position_side"`
@@ -22,7 +21,7 @@ func NewBnFtAdvancedPositionTable() *BnFtAdvancedPosition {
 }
 
 func (b *BnFtAdvancedPosition) GetTableName() string {
-	return utils.GetStructTagValueByIndex(reflect.TypeOf(b).Elem(), "table", 0)
+	return "bn_future_advanced_position"
 }
 
 func (b *BnFtAdvancedPosition) GetKey() map[string]types.AttributeValue {
@@ -32,26 +31,26 @@ func (b *BnFtAdvancedPosition) GetKey() map[string]types.AttributeValue {
 }
 
 func (b *BnFtAdvancedPosition) GetSymbolField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "symbol", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "Symbol", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtAdvancedPosition) GetPositionSideField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "position_side", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "PositionSide", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtAdvancedPosition) GetSideField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "side", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "Side", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtAdvancedPosition) GetAmountBField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "amount_b", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "AmountB", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtAdvancedPosition) GetAccountIdField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "account_id", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "AccountId", "dynamodb")
 	return v, t
 }

@@ -26,6 +26,11 @@ func (h *getAllHandler) Handler(c echo.Context) error {
 
 	responseData := &res.GetAllAdvancedPositionRes{}
 	responseData = responseData.FromDomain(positions)
-	response := appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, responseData)
+	var response *appresponse.AppResponse
+	if responseData == nil {
+		response = appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, nil)
+	} else {
+		response = appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, responseData)
+	}
 	return response.SendResponse(http.StatusOK, c)
 }
