@@ -42,7 +42,7 @@ func (h *getHandler[Req]) Handler(c echo.Context) error {
 	responseData := &res.GetSubAccountRes{}
 	responseData = responseData.FromDomain(subAccount)
 	var response *appresponse.AppResponse
-	if subAccount != nil {
+	if responseData != nil {
 		response = appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, responseData)
 	} else {
 		response = appresponse.NewAppResponse(appresponse.SubAccountNotRegisteredErrorCode, appresponse.SubAccountNotRegisteredErrorMessage, nil)

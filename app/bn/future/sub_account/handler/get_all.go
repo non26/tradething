@@ -31,7 +31,7 @@ func (h *getallHandler[Req]) Handler(c echo.Context) error {
 	responseData := res.NewGetAllSubAccountRes()
 	responseData = responseData.FromDomain(subAccounts)
 	var response *appresponse.AppResponse
-	if len(subAccounts) == 0 {
+	if responseData == nil {
 		response = appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, nil)
 	} else {
 		response = appresponse.NewAppResponse(appresponse.SuccessCode, appresponse.SuccessMsg, responseData)
