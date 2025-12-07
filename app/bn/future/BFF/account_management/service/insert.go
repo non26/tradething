@@ -7,7 +7,7 @@ import (
 
 func (s *accountManagementService) InsertSubAccount(ctx context.Context, account *domain.Account) error {
 	// TODO: Check if the account already exists
-	err := s.subAccountExternalService.GetSubAccount().UpsertSubAccount(ctx, account.ToSubAccountExtSrv())
+	err := s.subAccountExternalService.Upsert(ctx, account)
 	if err != nil {
 		return err
 	}
