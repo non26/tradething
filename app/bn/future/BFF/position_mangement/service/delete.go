@@ -6,7 +6,7 @@ import (
 )
 
 func (s *service) Delete(ctx context.Context, req *domain.Position) error {
-	err := s.positionService.GetPosition().Delete(ctx, req.Symbol, req.AccountId, req.PositionSide)
+	err := s.positionService.Delete(ctx, req.Symbol, req.AccountId, req.PositionSide)
 	if err != nil {
 		return err
 	}

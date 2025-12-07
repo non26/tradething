@@ -18,7 +18,7 @@ func Router(
 ) {
 	router := app.Group("/position-mangement")
 
-	externalService := externalapi.NewPositionService(currentPositionService, advancedPositionService)
+	externalService := externalapi.NewPositionService(currentPositionService)
 	service := service.NewService(externalService)
 
 	getHandler := handler.NewGetHandler(service)
