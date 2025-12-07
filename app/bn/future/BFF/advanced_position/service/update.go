@@ -8,7 +8,7 @@ import (
 
 func (s *advancedPositionService) Update(ctx context.Context, position *domain.AdvancedPosition) error {
 
-	existingPosition, err := s.advancedService.GetAdvancedPosition().Get(ctx, position.ClientId)
+	existingPosition, err := s.advancedService.Get(ctx, position.ClientId)
 	if err != nil {
 		return err
 	}
@@ -16,7 +16,7 @@ func (s *advancedPositionService) Update(ctx context.Context, position *domain.A
 		return errors.New("position not found")
 	}
 
-	err = s.advancedService.GetAdvancedPosition().Upsert(ctx, position.ToPositionExtSrv())
+	err = s.advancedService.Upsert(ctx, position)
 	if err != nil {
 		return err
 	}
