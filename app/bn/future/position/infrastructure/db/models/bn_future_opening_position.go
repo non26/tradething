@@ -6,11 +6,11 @@ import (
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	bntime "github.com/non26/tradepkg/pkg/bn/bn_time"
 	"github.com/non26/tradepkg/pkg/bn/utils"
 )
 
 type BnFtOpeningPosition struct {
-	TableName       string `table:"bn_future_opening_position"`
 	SymbolAccountId string `dynamodbav:"symbol_account_id" dynamodb:"symbol_account_id"` // primary key
 	PositionSide    string `dynamodbav:"position_side" dynamodb:"position_side"`         // second index
 	ClientId        string `dynamodbav:"client_id" dynamodb:"client_id"`
@@ -24,7 +24,7 @@ func NewBnFtOpeningPositionTable() *BnFtOpeningPosition {
 }
 
 func (b *BnFtOpeningPosition) GetTableName() string {
-	return utils.GetStructTagValueByIndex(reflect.TypeOf(b).Elem(), "table", 0)
+	return "bn_future_opening_position"
 }
 
 func (b *BnFtOpeningPosition) SetSymbolAccountIdKey(symbol string, accountId string) {
@@ -43,26 +43,30 @@ func (b *BnFtOpeningPosition) GetKey() map[string]types.AttributeValue {
 }
 
 func (b *BnFtOpeningPosition) GetPositionSideField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "position_side", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "PositionSide", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtOpeningPosition) GetClientIdField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "client_id", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "ClientId", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtOpeningPosition) GetSideField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "side", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "Side", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtOpeningPosition) GetAmountBField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "amount_b", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "AmountB", "dynamodb")
 	return v, t
 }
 
 func (b *BnFtOpeningPosition) GetCreatedAtField() (string, reflect.Type) {
-	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "created_at", "dynamodb")
+	v, t, _ := utils.GetStructTagValueByField(reflect.TypeOf(b).Elem(), "CreatedAt", "dynamodb")
 	return v, t
+}
+
+func (b *BnFtOpeningPosition) SetCreatedAt() {
+	b.CreatedAt = bntime.GetDBTime()
 }

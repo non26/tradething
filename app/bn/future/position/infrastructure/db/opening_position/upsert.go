@@ -7,7 +7,6 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-	bntime "github.com/non26/tradepkg/pkg/bn/bn_time"
 	dynamodbconfig "github.com/non26/tradepkg/pkg/bn/dynamodb_config"
 )
 
@@ -18,7 +17,7 @@ func (r *openingPositionRepository) Upsert(ctx context.Context, position *domain
 	table.Side = position.Side
 	table.AmountB = position.AmountB
 	table.ClientId = position.ClientId
-	table.CreatedAt = bntime.GetDBTime()
+	table.SetCreatedAt()
 
 	update_config := dynamodbconfig.NewUpdateTable(table)
 	update_config.Set(table.GetSideField, table.Side)

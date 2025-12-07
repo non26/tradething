@@ -7,6 +7,9 @@ type GetAllCurrentPositionRes struct {
 }
 
 func (r *GetAllCurrentPositionRes) FromDomain(positions []*domain.Position) *GetAllCurrentPositionRes {
+	if len(positions) == 0 {
+		return nil
+	}
 	for _, position := range positions {
 		r.Positions = append(r.Positions, &GetCurrentPositionRes{
 			ClientId:     position.ClientId,
