@@ -25,7 +25,7 @@ func (s *tradeService) CloseOrderById(ctx context.Context, clientId string) erro
 	}
 
 	currentPosition.ToSellPosition()
-	s.tradeAdaptor.NewOrder(ctx, currentPosition)
+	err = s.tradeAdaptor.NewOrder(ctx, currentPosition)
 	if err != nil {
 		return err
 	}
