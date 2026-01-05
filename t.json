@@ -1,0 +1,48 @@
+{
+    "bot_name":"consecutive candles",
+    "bot_tag": "cs1",
+    "description":"this bot is taking on consecutive candles util the stop meets the condition",
+    "template_attribute":[
+        {
+            "field_value_type": "string",
+            "field_json": "timeframe",
+            "field_value_example": "4h",
+            "field_possible_value": "1h,2h,3h,4h,6h,8h,12h,1d",
+            "field_description": "timeframe in which the bot will run 1h, 4h, 1d",
+            "is_required": true
+        },
+        {
+            "field_value_type": "string",
+            "field_json": "symbol",
+            "field_value_example": "BTCUSDT",
+            "field_possible_value": "",
+            "field_description": "the symbol on which the bot will run in USDT base asset",
+            "is_required": true
+        },
+        {
+            "field_value_type": "string",
+            "field_json": "position_side",
+            "field_value_example": "LONG",
+            "field_possible_value": "LONG,SHORT,BOTH",
+            "field_description": "the position side on which the bot will run LONG or SHORT",
+            "is_required": true
+        },
+        {
+            "field_value_type": "string",
+            "field_json": "start_date",
+            "field_value_example": "2025-12-23T19:23:19.000Z",
+            "field_possible_value": "",
+            "field_description": "the start date of the bot in format if RFC3339 with timezone",
+            "is_required": false
+        },
+        {
+            "field_value_type": "string",
+            "field_json": "end_date",
+            "field_value_example": "2025-12-23T19:23:19.000Z",
+            "field_possible_value": "",
+            "field_description": "the end date of the bot in format if RFC3339 with timezone",
+            "is_required": false
+        }
+
+    ]
+}
