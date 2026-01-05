@@ -15,6 +15,7 @@ type ICurrentPositionExternalService interface {
 	GetAll(ctx context.Context) ([]*domain.Order, error)
 	Upsert(ctx context.Context, position *domain.Order) error
 	Delete(ctx context.Context, symbol string, accountId string, positionSide string) error
+	ScanWithClientId(ctx context.Context, clientId string) (*domain.Order, error)
 }
 
 func NewCurrentPositionExternalService(currentPositionService service.ICurrentPositionService) ICurrentPositionExternalService {
@@ -59,4 +60,13 @@ func (s *currentPositionExternalService) Delete(ctx context.Context, symbol stri
 		return err
 	}
 	return nil
+}
+
+func (s *currentPositionExternalService) ScanWithClientId(ctx context.Context, clientId string) (*domain.Order, error) {
+	currentPosition, err := s.currentPositionService.ScanWithClientId(ctx, clientId)
+	if err != nil {
+		return nil, err
+	}
+	currentPositionDto := dto.NewPositionDto()
+	return currentPositionDto.ToDomain(currentPosition), nil
 }

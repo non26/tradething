@@ -41,3 +41,11 @@ func (o *Order) IsBuyPosition() bool {
 	}
 	return false
 }
+
+func (o *Order) ToSellPosition() {
+	if o.PositionSide == bnconstant.LONG {
+		o.Side = bnconstant.SELL
+	} else {
+		o.Side = bnconstant.BUY
+	}
+}
