@@ -6,19 +6,20 @@ import (
 )
 
 func (s *currentPositionService) Get(ctx context.Context, symbol string, accountId string, positionSide string) (*domain.Position, error) {
-	results, err := s.repository.Get(ctx, symbol, accountId, positionSide)
+	currentPosition, err := s.repository.Get(ctx, symbol, accountId, positionSide)
 	if err != nil {
 		return nil, err
 	}
-	if results == nil {
+	if currentPosition == nil {
 		return nil, nil
 	}
 	return &domain.Position{
-		ClientId:     results.SymbolAccountId,
-		PositionSide: results.PositionSide,
-		Side:         results.Side,
-		AmountB:      results.AmountB,
-		CreatedAt:    results.CreatedAt,
-		AccountId:    results.GetAccountId(),
+		ClientId:     currentPosition.SymbolAccountId,
+		PositionSide: currentPosition.PositionSide,
+		Side:         currentPosition.Side,
+		AmountB:      currentPosition.AmountB,
+		CreatedAt:    currentPosition.CreatedAt,
+		AccountId:    currentPosition.GetAccountId(),
+		Symbol:       currentPosition.GetSymbol(),
 	}, nil
 }

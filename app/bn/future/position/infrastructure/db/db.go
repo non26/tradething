@@ -11,6 +11,7 @@ type IBnFtOpeningPositionRepository interface {
 	GetAll(ctx context.Context) ([]*models.BnFtOpeningPosition, error)
 	Upsert(ctx context.Context, position *domain.Position) error
 	Delete(ctx context.Context, symbol string, accountId string, positionSide string) error
+	ScanWithClientId(ctx context.Context, clientId string) (*models.BnFtOpeningPosition, error)
 }
 
 type IBnFtAdvancedPositionRepository interface {

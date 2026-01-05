@@ -35,6 +35,10 @@ func (b *BnFtOpeningPosition) GetAccountId() string {
 	return strings.Split(b.SymbolAccountId, "_acc")[1]
 }
 
+func (b *BnFtOpeningPosition) GetSymbol() string {
+	return strings.Split(b.SymbolAccountId, "_acc")[0]
+}
+
 func (b *BnFtOpeningPosition) GetKey() map[string]types.AttributeValue {
 	return map[string]types.AttributeValue{
 		"symbol_account_id": &types.AttributeValueMemberS{Value: b.SymbolAccountId},
