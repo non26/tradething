@@ -12,7 +12,7 @@ import (
 
 type ITradeService interface {
 	NewOrder(ctx context.Context, order *domain.Order) error
-	// CloseOrder(ctx context.Context, order *domain.Order) error
+	CloseOrder(ctx context.Context, order *domain.Order) error
 	// AccumulateOrder(ctx context.Context, order *domain.Order) error
 }
 
