@@ -37,3 +37,12 @@ func (p *PositionHistory) FromDomain(d *domain.Order) *positonHistoryDomain.BnFt
 		AccountId:    d.AccountId,
 	}
 }
+
+// func (p *PositionHistory) FromAdvancedPositionDomain(d *domain.Order) *positonHistoryDomain.BnFtHistory {
+// 	return &positonHistoryDomain.BnFtHistory{
+// 		ClientId:     d.AccumID,
+// 		Symbol:       d.Symbol,
+// 		PositionSide: d.PositionSide,
+// 		AccountId:    d.AccountId,
+// 	}
+// }

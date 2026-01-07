@@ -1,11 +1,14 @@
 package domain
 
-import bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
+import (
+	bnconstant "github.com/non26/tradepkg/pkg/bn/bn_constant"
+	"github.com/shopspring/decimal"
+)
 
 type Order struct {
 	AccumID      string
-	MaxAccum     string
-	Accum        string
+	MaxAccum     string // max accum amount
+	Accum        string // accum amount
 	ClientId     string
 	Symbol       string
 	PositionSide string
@@ -48,4 +51,28 @@ func (o *Order) ToSellPosition() {
 	} else {
 		o.Side = bnconstant.BUY
 	}
+}
+
+func (o *Order) IsAmount1ExceedAmount2(amount1 string, amount2 string) (bool, error) {
+	_amount1, err := decimal.NewFromString(amount1)
+	if err != nil {
+		return false, err
+	}
+	_amount2, err := decimal.NewFromString(amount2)
+	if err != nil {
+		return false, err
+	}
+	return _amount1.GreaterThanOrEqual(_amount2), nil
+}
+
+func (o *Order) AddAmount(amount string, addBy string) (string, error) {
+	_amount, err := decimal.NewFromString(amount)
+	if err != nil {
+		return "", err
+	}
+	_addBy, err := decimal.NewFromString(addBy)
+	if err != nil {
+		return "", err
+	}
+	return _amount.Add(_addBy).String(), nil
 }

@@ -13,7 +13,7 @@ import (
 type ITradeService interface {
 	NewOrder(ctx context.Context, order *domain.Order) error
 	CloseOrderById(ctx context.Context, clientId string) error
-	// AccumulateOrder(ctx context.Context, order *domain.Order) error
+	AccumulateOrder(ctx context.Context, order *domain.Order) error
 }
 
 type tradeService struct {
