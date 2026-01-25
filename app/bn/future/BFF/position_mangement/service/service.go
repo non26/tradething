@@ -14,9 +14,10 @@ type IService interface {
 }
 
 type service struct {
-	positionService externalapi.IPositionExternalService
+	positionService    externalapi.IPositionExternalService
+	positionRepository externalapi.IHistoryPositionExternalService
 }
 
-func NewService(positionService externalapi.IPositionExternalService) IService {
-	return &service{positionService: positionService}
+func NewService(positionService externalapi.IPositionExternalService, positionRepository externalapi.IHistoryPositionExternalService) IService {
+	return &service{positionService: positionService, positionRepository: positionRepository}
 }

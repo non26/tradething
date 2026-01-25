@@ -14,12 +14,13 @@ func Router(
 	app *echo.Echo,
 	dbclient *dynamodb.Client,
 	currentPositionService positionService.ICurrentPositionService,
+	positionRepository externalapi.IHistoryPositionExternalService,
 	advancedPositionService positionService.IAdvancedPositionService,
 ) {
 	router := app.Group("/position-mangement")
 
 	externalService := externalapi.NewPositionService(currentPositionService)
-	service := service.NewService(externalService)
+	service := service.NewService(externalService, positionRepository)
 
 	getHandler := handler.NewGetHandler(service)
 	router.POST("/get", getHandler.Handler)
