@@ -20,13 +20,13 @@ func RegisterRoutes(e *echo.Echo, advPositionService advPositionService.IAdvance
 	router.POST("/insert", insertHandler.Handler)
 
 	updateHandler := handler.NewUpdateHandler(service)
-	router.PUT("/update", updateHandler.Handler)
+	router.POST("/update", updateHandler.Handler)
 
 	deleteHandler := handler.NewDeleteHandler(service)
-	router.DELETE("/delete", deleteHandler.Handler)
+	router.POST("/delete", deleteHandler.Handler)
 
 	getHandler := handler.NewGetHandler(service)
-	router.GET("/get", getHandler.Handler)
+	router.POST("/get", getHandler.Handler)
 
 	getAllHandler := handler.NewGetAllHandler(service)
 	router.GET("/all", getAllHandler.Handler)
