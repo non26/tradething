@@ -1,4 +1,4 @@
-package router
+package route
 
 import (
 	"tradething/app/bn/future/BFF/account_management/handler"

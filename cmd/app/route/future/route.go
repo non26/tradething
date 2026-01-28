@@ -1,9 +1,12 @@
 package route
 
 import (
-	accmanagementroute "tradething/app/bn/future/BFF/account_management/router"
+	accmanagementroute "tradething/app/bn/future/BFF/account_management/route"
+	marketdatecoreserviceroute "tradething/app/bn/future/BFF/market_data/route"
 	accumroute "tradething/app/bn/future/accumulation/route"
+	adaptor "tradething/app/bn/future/market_data/infrastructure/adaptor/market_data"
 	marketdataroute "tradething/app/bn/future/market_data/route"
+	marketdatacoreservice "tradething/app/bn/future/market_data/service"
 	positionroute "tradething/app/bn/future/position/route"
 	positionhistoryroute "tradething/app/bn/future/position_history/route"
 	subaccountroute "tradething/app/bn/future/sub_account/route"
@@ -24,6 +27,10 @@ func RouteFuture(
 	regsiterAccountRepositoryCoreServce := registeraccrepocoreservice.NewRegisterAccountRepository(dynamodbclient)
 	subaccountCoreService := subaccountcoreservice.NewSubAccountService(regsiterAccountRepositoryCoreServce)
 	accmanagementroute.Router(app_echo, subaccountCoreService)
+
+	marketdataAdaptorCoreService := adaptor.NewMarketDataAdaptor(config.BinanceAdaptorFutureUsdt.BaseUrl, config.BinanceAdaptorFutureUsdt.KlinesCandleStick)
+	marketdataCoreService := marketdatacoreservice.NewService(marketdataAdaptorCoreService)
+	marketdatecoreserviceroute.Router(app_echo, marketdataCoreService)
 
 	if config.IsLocal() {
 		positionroute.Router(app_echo, dynamodbclient)
