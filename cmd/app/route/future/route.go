@@ -26,6 +26,10 @@ import (
 	positionhistoryrepocoreservice "tradething/app/bn/future/position_history/infrastructure/db/history"
 	positionhistorycoreservice "tradething/app/bn/future/position_history/service"
 
+	tradebffserviceroute "tradething/app/bn/future/BFF/trade/route"
+	accumulationrepocoreservice "tradething/app/bn/future/accumulation/infrastructure/db/accumulation"
+	accumulationcoreservice "tradething/app/bn/future/accumulation/service"
+
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/labstack/echo/v4"
 )
@@ -52,6 +56,10 @@ func RouteFuture(
 	currentPositionRepositoryCoreService := currentpositionrepocoreservice.NewOpeningPositionRepository(dynamodbclient)
 	currentPositionCoreService := currentpositioncoreservice.NewCurrentPositionService(currentPositionRepositoryCoreService)
 	positionmanagementbffserviceroute.Router(app_echo, currentPositionCoreService, positionHistoryCoreService)
+
+	accumulationRepoCoreService := accumulationrepocoreservice.NewBnFtAccumulationRepository(dynamodbclient)
+	accumulationCoreService := accumulationcoreservice.NewBnFtAccumulationService(accumulationRepoCoreService)
+	tradebffserviceroute.Route(app_echo, config, accumulationCoreService, currentPositionCoreService, advPositionCoreService, positionHistoryCoreService, subaccountCoreService)
 
 	if config.IsLocal() {
 		positionroute.Router(app_echo, dynamodbclient)

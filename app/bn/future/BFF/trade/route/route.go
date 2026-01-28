@@ -1,4 +1,4 @@
-package router
+package route
 
 import (
 	"tradething/app/bn/future/BFF/trade/handler"
@@ -18,7 +18,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func Router(
+func Route(
 	app *echo.Echo,
 	config *config.AppConfig,
 	accumulationCoreService accumulationcoreservice.IService,
