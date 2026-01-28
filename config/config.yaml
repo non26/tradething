@@ -4,8 +4,8 @@ port: 8080
 
 dynamodb:
   region: us-west-2
-  ak: ajueh6
-  sk: c3saq
+  ak: lc383f
+  sk: jmtcmg
   endpoint: http://localhost:8000
 
 service-name:
@@ -13,6 +13,6 @@ service-name:
   binance-spot: BNS
 
 binance-adaptor-future-usdt:
-  base-url:
-  new-order:
-  klines-candle-stick:
+  base-url: http://localhost:8089
+  new-order: /fapi/v1/order
+  klines-candle-stick: /fapi/v1/klines

@@ -8,8 +8,8 @@ import (
 type Kline struct {
 	Symbol           string
 	Interval         string
-	StartTime        int64
-	EndTime          int64
+	StartTime        string
+	EndTime          string
 	Open             string
 	High             string
 	Low              string

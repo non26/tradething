@@ -5,8 +5,8 @@ import "tradething/app/bn/future/BFF/market_data/domain"
 type GetKlineReq struct {
 	Symbol    string `json:"symbol" binding:"required"`
 	Interval  string `json:"interval" binding:"required"`
-	StartTime int64  `json:"startTime,omitempty"`
-	EndTime   int64  `json:"endTime,omitempty"`
+	StartTime string `json:"startTime,omitempty"`
+	EndTime   string `json:"endTime,omitempty"`
 }
 
 func (r *GetKlineReq) ToDomain() *domain.Kline {

@@ -9,15 +9,15 @@ func (k *KlineAdaptorResponse) ToReader() *KlineReaderAdaptorResponse {
 
 	for i, v := range *k {
 		klineReaderAdaptorResponse.KlineData[i] = KlineDataAdaptorResponse{
-			OpenTime:         v[0].(int64),
+			OpenTime:         v[0].(float64),
 			Open:             v[1].(string),
 			High:             v[2].(string),
 			Low:              v[3].(string),
 			Close:            v[4].(string),
 			Volume:           v[5].(string),
-			CloseTime:        v[6].(int64),
+			CloseTime:        v[6].(float64),
 			QuoteVolume:      v[7].(string),
-			NumberOfTrades:   v[8].(int64),
+			NumberOfTrades:   v[8].(float64),
 			BuyerBaseVolume:  v[9].(string),
 			BuyerQuoteVolume: v[10].(string),
 		}
@@ -30,15 +30,15 @@ type KlineReaderAdaptorResponse struct {
 }
 
 type KlineDataAdaptorResponse struct {
-	OpenTime         int64
+	OpenTime         float64
 	Open             string
 	High             string
 	Low              string
 	Close            string
 	Volume           string
-	CloseTime        int64
+	CloseTime        float64
 	QuoteVolume      string
-	NumberOfTrades   int64
+	NumberOfTrades   float64
 	BuyerBaseVolume  string
 	BuyerQuoteVolume string
 }

@@ -10,8 +10,8 @@ import (
 type Kline struct {
 	Symbol           string
 	Interval         string
-	StartTime        int64
-	EndTime          int64
+	StartTime        string
+	EndTime          string
 	Open             string
 	High             string
 	Low              string
@@ -44,10 +44,11 @@ func (k *Kline) GetPreviousStartAndEndTimeInUnixTimestamp() (int64, int64) {
 }
 
 func (k *Kline) ToMarketDataAdaptorKlineRequest() req.KlineRequest {
-	return req.KlineRequest{
+	r := req.KlineRequest{
 		Symbol:    k.Symbol,
 		Interval:  k.Interval,
 		StartTime: k.StartTime,
 		EndTime:   k.EndTime,
 	}
+	return r
 }

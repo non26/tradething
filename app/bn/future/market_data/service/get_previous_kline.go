@@ -3,13 +3,14 @@ package service
 import (
 	"context"
 	"errors"
+	"strconv"
 	"tradething/app/bn/future/market_data/domain"
 )
 
 func (s *service) GetPreviousKline(ctx context.Context, req *domain.Kline) (*domain.Kline, error) {
 	startTime, endTime := req.GetPreviousStartAndEndTimeInUnixTimestamp()
-	req.StartTime = startTime
-	req.EndTime = endTime
+	req.StartTime = strconv.FormatInt(startTime, 10)
+	req.EndTime = strconv.FormatInt(endTime, 10)
 	kline, err := s.marketDataAdaptor.GetKline(ctx, req)
 	if err != nil {
 		return nil, err
