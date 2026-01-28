@@ -20,6 +20,12 @@ import (
 	advpositionrepocoreservice "tradething/app/bn/future/position/infrastructure/db/adanced_position"
 	advpositiocoreservice "tradething/app/bn/future/position/service/advanced_position"
 
+	positionmanagementbffserviceroute "tradething/app/bn/future/BFF/position_mangement/route"
+	currentpositionrepocoreservice "tradething/app/bn/future/position/infrastructure/db/opening_position"
+	currentpositioncoreservice "tradething/app/bn/future/position/service/current_position"
+	positionhistoryrepocoreservice "tradething/app/bn/future/position_history/infrastructure/db/history"
+	positionhistorycoreservice "tradething/app/bn/future/position_history/service"
+
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/labstack/echo/v4"
 )
@@ -40,6 +46,12 @@ func RouteFuture(
 	advPositionRepositoryCoreService := advpositionrepocoreservice.NewAdvancedPositionRepository(dynamodbclient)
 	advPositionCoreService := advpositiocoreservice.NewAdvancedPositionService(advPositionRepositoryCoreService)
 	advpositioncoreserviceroute.RegisterRoutes(app_echo, advPositionCoreService)
+
+	positionHistoryRepositoryCoreService := positionhistoryrepocoreservice.NewBnFtHistoryRepository(dynamodbclient)
+	positionHistoryCoreService := positionhistorycoreservice.NewService(positionHistoryRepositoryCoreService)
+	currentPositionRepositoryCoreService := currentpositionrepocoreservice.NewOpeningPositionRepository(dynamodbclient)
+	currentPositionCoreService := currentpositioncoreservice.NewCurrentPositionService(currentPositionRepositoryCoreService)
+	positionmanagementbffserviceroute.Router(app_echo, currentPositionCoreService, positionHistoryCoreService)
 
 	if config.IsLocal() {
 		positionroute.Router(app_echo, dynamodbclient)
