@@ -28,7 +28,8 @@ func (s *subAccountExternalService) Get(ctx context.Context, accountId string) (
 		return nil, err
 	}
 	subAccountDto := dto.NewSubAccountDto()
-	return subAccountDto.ToDomain(subAccount), nil
+	res := subAccountDto.ToDomain(subAccount)
+	return res, nil
 }
 
 func (s *subAccountExternalService) GetAll(ctx context.Context) ([]*domain.Order, error) {

@@ -16,14 +16,13 @@ type NewOrderReq struct {
 	Type             string `json:"type" binding:"required"`
 }
 
-func (r *NewOrderReq) ToTradeAdaptorNewOrderRequest(d *domain.Order) *NewOrderReq {
-	return &NewOrderReq{
-		AccountId:        d.AccountId,
-		PositionSide:     d.PositionSide,
-		Side:             d.Side,
-		Quantity:         d.AmountB,
-		Symbol:           d.Symbol,
-		NewClientOrderId: d.ClientId,
-		Type:             bnconstant.MARKET,
-	}
+func (r *NewOrderReq) ToTradeAdaptorNewOrderRequest(d *domain.Order) {
+	r.AccountId = d.AccountId
+	r.PositionSide = d.PositionSide
+	r.Side = d.Side
+	r.Quantity = d.AmountB
+	r.Symbol = d.Symbol
+	r.NewClientOrderId = d.ClientId
+	r.Type = bnconstant.MARKET
+
 }

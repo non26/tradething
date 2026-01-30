@@ -22,7 +22,7 @@ func (s *SubAccount) ToDomain(d *subaccountDomain.SubAccount) *domain.Order {
 		return nil
 	}
 	return &domain.Order{
-		AccountId: s.AccountId,
+		AccountId: d.AccountId,
 	}
 }
 

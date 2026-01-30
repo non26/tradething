@@ -23,7 +23,7 @@ func (s *tradeService) NewOrder(ctx context.Context, order *domain.Order) error 
 		return err
 	}
 	if currentPosition != nil {
-		return errors.New(appresponse.FoundCurrentPositionErrorCode)
+		// return errors.New(appresponse.FoundCurrentPositionErrorCode)
 	} else {
 		advancedPosition, err := s.advancedPositionService.Get(ctx, order.ClientId)
 		if err != nil {
