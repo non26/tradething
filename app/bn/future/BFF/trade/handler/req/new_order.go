@@ -1,6 +1,8 @@
 package req
 
-import "tradething/app/bn/future/BFF/trade/domain"
+import (
+	"tradething/app/bn/future/BFF/trade/domain"
+)
 
 type NewOrderReq struct {
 	ClientID     string `json:"client_id"`

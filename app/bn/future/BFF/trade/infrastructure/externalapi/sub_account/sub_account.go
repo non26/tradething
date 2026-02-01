@@ -5,6 +5,8 @@ import (
 	"tradething/app/bn/future/BFF/trade/domain"
 	"tradething/app/bn/future/BFF/trade/infrastructure/externalapi/sub_account/dto"
 	"tradething/app/bn/future/sub_account/service"
+
+	appresponse "github.com/non26/tradepkg/pkg/bn/app_response"
 )
 
 type subAccountExternalService struct {
@@ -25,6 +27,9 @@ func NewSubAccountExternalService(subAccountService service.ISubAccountService) 
 func (s *subAccountExternalService) Get(ctx context.Context, accountId string) (*domain.Order, error) {
 	subAccount, err := s.subAccountService.GetSubAccount(ctx, accountId)
 	if err != nil {
+		if err.Error() == appresponse.SubAccountNotRegisteredErrorCode {
+			return nil, nil
+		}
 		return nil, err
 	}
 	subAccountDto := dto.NewSubAccountDto()

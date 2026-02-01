@@ -36,6 +36,13 @@ func (s *tradeService) AccumulateOrder(ctx context.Context, order *domain.Order)
 		if err != nil {
 			return err
 		}
+		if accumPosition.AccumID != order.AccumID {
+			return errors.New(appresponse.NOTFOUNDACCUMLATIONCODE)
+		}
+		if accumPosition.ClientId != order.ClientId {
+			return errors.New(appresponse.NOTFOUNDCLIENTIDCODE)
+		}
+
 		exceed, err := referencePosition.IsAmount1ExceedAmount2(referencePosition.AmountB, accumPosition.MaxAccum)
 		if err != nil {
 			return err
@@ -50,9 +57,10 @@ func (s *tradeService) AccumulateOrder(ctx context.Context, order *domain.Order)
 			if err != nil {
 				return err
 			}
+			return errors.New(appresponse.EXCEEDMAXACCUMULATIONCODE)
 		}
 		// refPositionAmountBeforeAccum := referencePosition.AmountB
-		refPositionAmountAfterAccum, err := referencePosition.AddAmount(referencePosition.AmountB, order.AmountB)
+		refPositionAmountAfterAccum, err := referencePosition.AddAmount(referencePosition.AmountB, order.Accum)
 		if err != nil {
 			return err
 		}
@@ -61,11 +69,12 @@ func (s *tradeService) AccumulateOrder(ctx context.Context, order *domain.Order)
 		if err != nil {
 			return err
 		}
-		newMaxAccum, err := order.AddAmount(order.MaxAccum, order.Accum)
-		if err != nil {
-			return err
-		}
-		accumPosition.MaxAccum = newMaxAccum
+		// newMaxAccum, err := order.AddAmount(order.MaxAccum, order.Accum)
+		// if err != nil {
+		// 	return err
+		// }
+		// update present accum
+		accumPosition.AmountB = refPositionAmountAfterAccum
 		err = s.accumService.Upsert(ctx, accumPosition)
 		if err != nil {
 			return err

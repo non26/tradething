@@ -36,7 +36,7 @@ func (r *openingPositionRepository) ScanWithClientId(ctx context.Context, client
 		return nil, nil
 	}
 
-	err = attributevalue.UnmarshalListOfMaps(response.Items, &result)
+	err = attributevalue.UnmarshalMap(response.Items[0], &result)
 	if err != nil {
 		return nil, err
 	}

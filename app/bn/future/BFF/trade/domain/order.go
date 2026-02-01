@@ -76,3 +76,14 @@ func (o *Order) AddAmount(amount string, addBy string) (string, error) {
 	}
 	return _amount.Add(_addBy).String(), nil
 }
+
+func (o *Order) IsAdvancedPosition() bool {
+	if o.ClientId != "" && (o.Symbol == "" &&
+		o.AccountId == "" &&
+		o.PositionSide == "" &&
+		o.Side == "" &&
+		o.AmountB == "") {
+		return true
+	}
+	return false
+}
