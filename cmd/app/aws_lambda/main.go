@@ -42,6 +42,7 @@ func init() {
 	app_echo := echo.New()
 	app.MiddlerwareComposing(app_echo)
 	app.HealthCheck(app_echo, _config.HealthCheckMsg)
+	app.UpdateConfig(app_echo, _config)
 	// route
 	route.RouteFuture(app_echo, _config, dynamodbclient)
 
