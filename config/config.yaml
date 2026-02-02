@@ -1,4 +1,5 @@
 environment: local
+health-check-msg: "local-success"
 
 port: 8080
 

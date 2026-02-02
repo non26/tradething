@@ -23,7 +23,7 @@ func main() {
 
 	// echo
 	app_echo := echo.New()
-	app.HealthCheck(app_echo)
+	app.HealthCheck(app_echo, config.HealthCheckMsg)
 	// route
 	route.RouteFuture(app_echo, config, dynamodbclient)
 

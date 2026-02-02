@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func HealthCheck(app *echo.Echo) {
+func HealthCheck(app *echo.Echo, msgs string) {
 	app.GET("/health-check", func(c echo.Context) error {
 		type HealthCheck struct {
 			Message string `json:"message"`
@@ -14,7 +14,7 @@ func HealthCheck(app *echo.Echo) {
 		return c.JSON(
 			http.StatusOK,
 			&HealthCheck{
-				Message: "success",
+				Message: msgs,
 			},
 		)
 	})

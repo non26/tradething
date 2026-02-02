@@ -9,6 +9,8 @@ type AppConfig struct {
 	Dynamodb Dynamodb `mapstructure:"dynamodb" json:"dynamodb"`
 	// BinanceSpotUrl   BinanceSpotUrl   `mapstructure:"binance-spot-url" json:"binance-spot-url"`
 	BinanceAdaptorFutureUsdt BinanceAdaptorFutureUsdt `mapstructure:"binance-adaptor-future-usdt" json:"binance-adaptor-future-usdt"`
+
+	HealthCheckMsg string `mapstructure:"health-check-msg" json:"health-check-msg"`
 }
 
 func (a AppConfig) GetPortWithFormat() string {
