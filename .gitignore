@@ -10,6 +10,9 @@ tradething.zip
 config.json
 config/config.json
 config/config.yaml
+config_uat.json
+config_uat.yaml
+config/config.yaml
 config.yaml
 docker-compose.yml
 Docker
