@@ -8,7 +8,7 @@ import (
 
 func (m *marketData) GetKline(ctx context.Context, req *domain.Kline) ([]*domain.Kline, error) {
 	reqdto := dto.NewEmptyKline()
-
+	reqdto = reqdto.FromDomain(req)
 	kline, err := m.service.GetKline(ctx, reqdto.ToExternalServiceDomain())
 	if err != nil {
 		return nil, err

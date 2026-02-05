@@ -21,7 +21,9 @@ func (a *marketDataAdaptor) GetKline(ctx context.Context, kline *domain.Kline) (
 	}
 
 	url := fmt.Sprintf("%s%s", a.baseUrl, a.klinesCandleStickEndpoint)
-	req, err := http.NewRequestWithContext(ctx, method, url, bytes.NewBuffer(payload))
+	fmt.Print("url", url)
+	fmt.Print("payload", string(payload))
+	req, err := http.NewRequest(method, url, bytes.NewBuffer(payload))
 	if err != nil {
 		return nil, err
 	}

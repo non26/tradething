@@ -14,6 +14,6 @@ service-name:
   binance-spot: BNS
 
 binance-adaptor-future-usdt:
-  base-url: http://localhost:8089
+  base-url: https://hqkzntajki.execute-api.ap-southeast-1.amazonaws.com/prd-adaptor-binance-stg
   new-order: /fapi/v1/order
   klines-candle-stick: /fapi/v1/klines

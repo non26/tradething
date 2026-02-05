@@ -11,7 +11,7 @@ import (
 )
 
 func Router(
-	app *echo.Echo,
+	app *echo.Group,
 	currentPositionService positionService.ICurrentPositionService,
 	positionHistoryService positionhistoryservice.IService,
 ) {

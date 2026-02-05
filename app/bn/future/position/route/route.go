@@ -12,13 +12,13 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func Router(app *echo.Echo, dbclient *dynamodb.Client) {
+func Router(app *echo.Group, dbclient *dynamodb.Client) {
 	routerCurrentPosition(app, dbclient)
 	routerAdvancedPosition(app, dbclient)
 
 }
 
-func routerCurrentPosition(app *echo.Echo, dbclient *dynamodb.Client) {
+func routerCurrentPosition(app *echo.Group, dbclient *dynamodb.Client) {
 	currentPositionRepository := dbcurrent.NewOpeningPositionRepository(dbclient)
 	currentPositionService := servicecurrent.NewCurrentPositionService(currentPositionRepository)
 	getHandler := handlercurrent.NewGetHandler(currentPositionService)
@@ -34,7 +34,7 @@ func routerCurrentPosition(app *echo.Echo, dbclient *dynamodb.Client) {
 	group.POST("/delete", deleteHandler.Handler)
 }
 
-func routerAdvancedPosition(app *echo.Echo, dbclient *dynamodb.Client) {
+func routerAdvancedPosition(app *echo.Group, dbclient *dynamodb.Client) {
 	advancedPositionRepository := dbadvanced.NewAdvancedPositionRepository(dbclient)
 	advancedPositionService := serviceadv.NewAdvancedPositionService(advancedPositionRepository)
 	getHandler := handleradv.NewGetHandler(advancedPositionService)

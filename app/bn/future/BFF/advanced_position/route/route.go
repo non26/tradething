@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func RegisterRoutes(e *echo.Echo, advPositionService advPositionService.IAdvancedPositionService) {
+func RegisterRoutes(e *echo.Group, advPositionService advPositionService.IAdvancedPositionService) {
 	router := e.Group("/advanced-position")
 
 	externalService := externalapi.NewAdvancedPositionExternalService(advPositionService)

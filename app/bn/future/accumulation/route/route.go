@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func NewRoute(e *echo.Echo, dbclient *dynamodb.Client) {
+func NewRoute(e *echo.Group, dbclient *dynamodb.Client) {
 	group := e.Group("/accumulation")
 
 	repository := db.NewBnFtAccumulationRepository(dbclient)

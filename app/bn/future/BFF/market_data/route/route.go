@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func Router(app *echo.Echo, ext externalservice.IService) {
+func Router(app *echo.Group, ext externalservice.IService) {
 	router := app.Group("/market-data")
 
 	infra := infraexternalservice.NewMarketData(ext)

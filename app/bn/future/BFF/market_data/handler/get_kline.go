@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"tradething/app/bn/future/BFF/market_data/handler/req"
 	"tradething/app/bn/future/BFF/market_data/handler/res"
@@ -24,6 +26,8 @@ func (h *getKlineHandler) Handler(c echo.Context) error {
 		response := appresponse.NewAppResponse(appresponse.InvalidRequestErrorCode, err.Error(), nil)
 		return response.SendResponse(http.StatusBadRequest, c)
 	}
+	stringifyReq, _ := json.Marshal(req)
+	fmt.Print("req from handler", string(stringifyReq))
 
 	klines, err := h.service.GetKline(c.Request().Context(), req.ToDomain())
 	if err != nil {

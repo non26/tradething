@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func Router(app *echo.Echo, subaccountService subaccountService.ISubAccountService) {
+func Router(app *echo.Group, subaccountService subaccountService.ISubAccountService) {
 	group := app.Group("/account-management")
 
 	subAccountExternalService := externalapi.NewSubAccountExternalService(subaccountService)

@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func Router(app *echo.Echo, dbclient *dynamodb.Client) {
+func Router(app *echo.Group, dbclient *dynamodb.Client) {
 
 	subAccountRepository := db.NewRegisterAccountRepository(dbclient)
 	service := service.NewSubAccountService(subAccountRepository)

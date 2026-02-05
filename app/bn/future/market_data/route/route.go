@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func Router(e *echo.Echo, config *config.AppConfig) {
+func Router(e *echo.Group, config *config.AppConfig) {
 
 	marketDataAdaptor := adaptor.NewMarketDataAdaptor(
 		config.BinanceAdaptorFutureUsdt.BaseUrl,

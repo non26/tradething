@@ -19,7 +19,7 @@ import (
 )
 
 func Route(
-	app *echo.Echo,
+	app *echo.Group,
 	config *config.AppConfig,
 	accumulationCoreService accumulationcoreservice.IService,
 	cuurentPositonCoreService positioncoreservice.ICurrentPositionService,

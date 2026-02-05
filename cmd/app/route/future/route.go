@@ -39,33 +39,35 @@ func RouteFuture(
 	config *config.AppConfig,
 	dynamodbclient *dynamodb.Client,
 ) {
+	groupBff := app_echo.Group("/bff")
 	regsiterAccountRepositoryCoreServce := registeraccrepocoreservice.NewRegisterAccountRepository(dynamodbclient)
 	subaccountCoreService := subaccountcoreservice.NewSubAccountService(regsiterAccountRepositoryCoreServce)
-	accmanagementroute.Router(app_echo, subaccountCoreService)
+	accmanagementroute.Router(groupBff, subaccountCoreService)
 
 	marketdataAdaptorCoreService := adaptor.NewMarketDataAdaptor(config.BinanceAdaptorFutureUsdt.BaseUrl, config.BinanceAdaptorFutureUsdt.KlinesCandleStick)
 	marketdataCoreService := marketdatacoreservice.NewService(marketdataAdaptorCoreService)
-	marketdatecoreserviceroute.Router(app_echo, marketdataCoreService)
+	marketdatecoreserviceroute.Router(groupBff, marketdataCoreService)
 
 	advPositionRepositoryCoreService := advpositionrepocoreservice.NewAdvancedPositionRepository(dynamodbclient)
 	advPositionCoreService := advpositiocoreservice.NewAdvancedPositionService(advPositionRepositoryCoreService)
-	advpositioncoreserviceroute.RegisterRoutes(app_echo, advPositionCoreService)
+	advpositioncoreserviceroute.RegisterRoutes(groupBff, advPositionCoreService)
 
 	positionHistoryRepositoryCoreService := positionhistoryrepocoreservice.NewBnFtHistoryRepository(dynamodbclient)
 	positionHistoryCoreService := positionhistorycoreservice.NewService(positionHistoryRepositoryCoreService)
 	currentPositionRepositoryCoreService := currentpositionrepocoreservice.NewOpeningPositionRepository(dynamodbclient)
 	currentPositionCoreService := currentpositioncoreservice.NewCurrentPositionService(currentPositionRepositoryCoreService)
-	positionmanagementbffserviceroute.Router(app_echo, currentPositionCoreService, positionHistoryCoreService)
+	positionmanagementbffserviceroute.Router(groupBff, currentPositionCoreService, positionHistoryCoreService)
 
 	accumulationRepoCoreService := accumulationrepocoreservice.NewBnFtAccumulationRepository(dynamodbclient)
 	accumulationCoreService := accumulationcoreservice.NewBnFtAccumulationService(accumulationRepoCoreService)
-	tradebffserviceroute.Route(app_echo, config, accumulationCoreService, currentPositionCoreService, advPositionCoreService, positionHistoryCoreService, subaccountCoreService)
+	tradebffserviceroute.Route(groupBff, config, accumulationCoreService, currentPositionCoreService, advPositionCoreService, positionHistoryCoreService, subaccountCoreService)
 
+	groupCore := app_echo.Group("/core")
 	if config.IsLocal() {
-		positionroute.Router(app_echo, dynamodbclient)
-		marketdataroute.Router(app_echo, config)
-		subaccountroute.Router(app_echo, dynamodbclient)
-		positionhistoryroute.Router(app_echo, dynamodbclient)
-		accumroute.NewRoute(app_echo, dynamodbclient)
+		positionroute.Router(groupCore, dynamodbclient)
+		marketdataroute.Router(groupCore, config)
+		subaccountroute.Router(groupCore, dynamodbclient)
+		positionhistoryroute.Router(groupCore, dynamodbclient)
+		accumroute.NewRoute(groupCore, dynamodbclient)
 	}
 }
