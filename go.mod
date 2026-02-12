@@ -11,7 +11,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.37.1
 	github.com/awslabs/aws-lambda-go-api-proxy v0.16.2
 	github.com/labstack/echo/v4 v4.13.3
-	github.com/non26/tradepkg v0.3.0
+	github.com/non26/tradepkg v0.3.2
 	github.com/shopspring/decimal v1.4.0
 	github.com/spf13/viper v1.19.0
 )

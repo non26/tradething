@@ -4,18 +4,14 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	healthcheckpkg "github.com/non26/tradepkg/pkg/bn/health_check"
 )
 
 func HealthCheck(app *echo.Echo, msgs string) {
-	app.GET("/health-check", func(c echo.Context) error {
-		type HealthCheck struct {
-			Message string `json:"message"`
-		}
+	app.GET(healthcheckpkg.PATH_HEALTHCHECK, func(c echo.Context) error {
 		return c.JSON(
 			http.StatusOK,
-			&HealthCheck{
-				Message: msgs,
-			},
+			healthcheckpkg.NewHealthCheckResponseWith(msgs),
 		)
 	})
 }
